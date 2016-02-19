@@ -1,0 +1,250 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>グランブルーファンタジー攻撃力計算機（新）</title>
+	<link rel="stylesheet" href="css/calc.css" type="text/css">
+	<script type="text/javascript" src="js/job.js"></script>
+	<script type="text/javascript" src="js/calc.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<div id="site_box">
+	<div id="header_box">
+	<h3 class="titlecap">グランブルーファンタジー攻撃力計算機（新）</h3>
+	</DIV>
+
+	<div id="left_box">
+		<h4 class="subtype">基本情報</h4>
+		<FORM name="info">
+			<TABLE class="grbr" id="info_table">
+				<TR>
+					<TH>Rank</TD>
+					<TD><INPUT class="width50" type="text" onChange="update()" id="rank"></TD>
+				</TR>
+				<TR>
+					<TH>騎空艇補正</TD>
+					<TD><INPUT class="width50" type="text" onChange="update()" id="ship_bonus"></TD>
+				</TR>
+				<TR>
+					<TH>属性補正</TD>
+					<TD>
+						<SELECT onChange="update()" id="attribute_type">
+							<OPTION value="normal">無し</OPTION>
+							<OPTION value="good">有利</OPTION>
+							<OPTION value="bad">不利</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TH>HP/MAXHP</TD>
+					<TD><INPUT class="width50" type="text" onChange="update()" id="hp_percent" value=100>%</TD>
+				</TR>
+				</TABLE>
+				<TABLE class="grbr" id="bonus_table">
+				<TR>
+					<TH rowspan="2">発動中の<br>攻撃力ボーナス</TH>
+					<TD><INPUT class="width25" type="text" onChange="update()" id="atk_bonus_percent">%</TD>
+				</TR>
+				<TR>
+					<TD><INPUT class="width50" type="text" onChange="update()" id="atk_bonus_value"></TD>
+				</TR>
+				<TABLE class="grbr" id="job_table">
+				<TR>
+					<TH>ジョブ</TH>
+					<TD>
+						<SELECT onChange="update()" id="job">
+							<OPTION value="fighter">ファイター</OPTION>
+							<OPTION value="knight">ナイト</OPTION>
+							<OPTION value="priest">プリースト</OPTION>
+							<OPTION value="wizard">ウィザード</OPTION>
+							<OPTION value="thief">シーフ</OPTION>
+							<OPTION value="enhancer">エンハンサー</OPTION>
+							<OPTION value="grappler">グラップラー</OPTION>
+							<OPTION value="ranger">レンジャー</OPTION>
+							<OPTION value="harpist">ハーピスト</OPTION>
+							<OPTION value="lancer">ランサー</OPTION>
+							<OPTION value="warrior">ウォーリア</OPTION>
+							<OPTION value="fortress">フォートレス</OPTION>
+							<OPTION value="cleric">クレリック</OPTION>
+							<OPTION value="sorcerer">ソーサラー</OPTION>
+							<OPTION value="raider">レイダー</OPTION>
+							<OPTION value="arcana_sword">アルカナソード</OPTION>
+							<OPTION value="kung_fu">クンフー</OPTION>
+							<OPTION value="marksman">マークスマン</OPTION>
+							<OPTION value="minstrel">ミンストレル</OPTION>
+							<OPTION value="dragoon">ドラグーン</OPTION>
+							<OPTION value="weapon_master">ウェポンマスター</OPTION>
+							<OPTION value="holy_saber">ホーリーセイバー</OPTION>
+							<OPTION value="bishop">ビショップ</OPTION>
+							<OPTION value="harmit">ハーミット</OPTION>
+							<OPTION value="hawkeye">ホークアイ</OPTION>
+							<OPTION value="dark_fencer"></OPTION>
+							<OPTION value="ogre">オーガ</OPTION>
+							<OPTION value="sidewinder">サイドワインダー</OPTION>
+							<OPTION value="superstar">スーパースター</OPTION>
+							<OPTION value="varlkyria">ヴァルキュリア</OPTION>
+							<OPTION value="alchemist">アルケミスト</OPTION>
+							<OPTION value="ninja">忍者</OPTION>
+							<OPTION value="samurai">侍</OPTION>
+							<OPTION value="sword_master">剣聖</OPTION>
+							<OPTION value="gunslinger">ガンスリンガー</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+				</TABLE>
+			</TABLE>
+		</FORM>
+
+		<h4 class="subtype">Zenith Park</h4>
+		<FORM name="info">
+			<TABLE class="grbr" id="zenith_table">
+				<TR>
+					<TH>攻撃力</TH>
+					<TD>
+						<SELECT onChange="update()" id="zenith_atk">
+							<OPTION value="0">無し</OPTION>
+							<OPTION value="1">★</OPTION>
+							<OPTION value="2">★★</OPTION>
+							<OPTION value="3">★★★</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TH>得意武器1</TH>
+					<TD>
+						<SELECT onChange="update()" id="zenith_weapon1">
+							<OPTION value="0">無し</OPTION>
+							<OPTION value="1">★</OPTION>
+							<OPTION value="2">★★</OPTION>
+							<OPTION value="3">★★★</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TH>得意武器2</TH>
+					<TD>
+						<SELECT onChange="update()" id="zenith_weapon2">
+							<OPTION value="0">無し</OPTION>
+							<OPTION value="1">★</OPTION>
+							<OPTION value="2">★★</OPTION>
+							<OPTION value="3">★★★</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TH>属性攻撃力</TH>
+					<TD>
+						<SELECT onChange="update()" id="zenith_attribute">
+							<OPTION value="0">無し</OPTION>
+							<OPTION value="1">★</OPTION>
+							<OPTION value="2">★★</OPTION>
+							<OPTION value="3">★★★</OPTION>
+						</SELECT>
+					</TD>
+				</TR>
+			</TABLE>
+		</FORM>
+
+		<h4 class="subtype">結果</h4>
+		<FORM name="result">
+			<TABLE class="grbr" id="result_table">
+			<TR>
+				<TH>基本値</TD>
+				<TD><div id="basic_atk"></div></TD>
+			</TR>
+			<TR>
+				<TH>表示攻撃力</TD>
+				<TD><div id="showed_atk"></div></TD>
+			</TR>
+			<TR>
+				<TH>総合攻撃力</TD>
+				<TD><div id="total_atk"></div></TD>
+			</TR>
+			</TABLE>
+		</FORM>
+
+		<h4 class="subtype">システム</h4>
+		<FORM name="system">
+			<SELECT class="save_slot">
+				<OPTION value="slot1">SLOT1</OPTION>
+				<OPTION value="slot2">SLOT2</OPTION>
+				<OPTION value="slot3">SLOT3</OPTION>
+				<OPTION value="slot4">SLOT4</OPTION>
+				<OPTION value="slot5">SLOT5</OPTION>
+				<OPTION value="slot6">SLOT6</OPTION>
+				<OPTION value="slot7">SLOT7</OPTION>
+				<OPTION value="slot8">SLOT8</OPTION>
+				<OPTION value="slot9">SLOT9</OPTION>
+				<OPTION value="slot10">SLOT10</OPTION>
+				<OPTION value="slot11">SLOT11</OPTION>
+				<OPTION value="slot12">SLOT12</OPTION>
+				<OPTION value="slot13">SLOT13</OPTION>
+				<OPTION value="slot14">SLOT14</OPTION>
+				<OPTION value="slot15">SLOT15</OPTION>
+				<OPTION value="slot16">SLOT16</OPTION>
+				<OPTION value="slot17">SLOT17</OPTION>
+				<OPTION value="slot18">SLOT18</OPTION>
+				<OPTION value="slot19">SLOT19</OPTION>
+				<OPTION value="slot20">SLOT20</OPTION>
+			</SELECT><br>
+			<input type="button" id="save" value="セーブ" onClick="save_data()">
+			<input type="button" id="load" value="ロード" onClick="load_data()"><br>
+			パーティ名 <input type="text" id="patry_name" value="">
+			<br><br>
+		</FORM>
+	</DIV>
+
+	<div id="right_box">
+		<h4 class="subtype">武器</h4>
+		<FORM name="weapon">
+			<TABLE class="grbr" id="weapon_table">
+		</TABLE>
+		</FORM>
+
+		<h4 class="subtype">召喚獣</h4>
+		<FORM name="summon">
+			<TABLE class="grbr" id="summon_table">
+			<TR>
+				<TH align="center">L</TD>
+				<TH align="center">選</TD>
+				<TH align="center">召喚名</TD>
+				<TH align="center">攻撃力</TD>
+				<TH align="center" COLSPAN="2">加護1</TD>
+				<TH align="center" COLSPAN="2">加護2</TD>
+				<TH align="center">並替・挿入・削除</TD>
+			</TR>
+		</TABLE>
+		</FORM>
+
+		<h4 class="subtype">フレンド召喚</h4>
+		<FORM name="friend">
+			<TABLE class="grbr" id="friend_table">
+			<TR>
+				<TH align="center">L</TD>
+				<TH align="center">選</TD>
+				<TH align="center">召喚名</TD>
+				<TH align="center">攻撃力</TD>
+				<TH align="center" COLSPAN="2">加護1</TD>
+				<TH align="center" COLSPAN="2">加護2</TD>
+				<TH align="center">並替・挿入・削除</TD>
+			</TR>
+
+		</TABLE>
+		</FORM>
+	</div>
+
+	<DIV id="footer_box">
+		<A href="../grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</A><br>
+		<A href="../">トップページ</A><br>
+		<br>
+		■ 開発中<br>
+		<br>
+		　Twitter: @hibino_naoki<br>
+		　グラブルID: 39097 (日比野)<br>
+	</DIV>
+</DIV>
+
+
+
+</BODY>
+</HTML>
