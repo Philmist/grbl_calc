@@ -2,7 +2,7 @@
 window.onload = function(){
   init();
   update();
-}
+};
 
 function init(){
   /* テーブル生成 */
@@ -120,7 +120,7 @@ function weapon_insert(obj){
 
   if (amount >= 20) return;
 
-  if (obj == null) {
+  if (obj === null) {
     $("#weapon_table").append(tr_tag);
   } else {
     $(obj).parents('tr').eq(0).after(tr_tag);
@@ -173,7 +173,7 @@ function summon_insert(obj){
 
   if (amount >= 10) return;
 
-  if (obj == null) {
+  if (obj === null) {
     $("#summon_table").append(tr_tag);
   } else {
     $(obj).parents('tr').eq(0).after(tr_tag);
@@ -226,7 +226,7 @@ function friend_insert(obj){
 
   if (amount >= 5) return;
 
-  if (obj == null) {
+  if (obj === null) {
     $("#friend_table").append(tr_tag);
   } else {
     $(obj).parents('tr').eq(0).after(tr_tag);
@@ -261,6 +261,66 @@ function get_value_int(obj){
   var ret = parseInt( obj.val() );
   if (isNaN(ret)) ret = 0;
   return ret;
+}
+
+
+// 各種パラメータをobject(dict)で受けとってobjectで返す関数
+/*
+  param_obj: 以下のような内容を持つオブジェクト
+  {
+    rank: ランク(Number),
+    ship_bonus: 騎空艇補正(Number),
+    hp_percent: 現在HPの最大HPに対する%(Number),
+    job: 別データで表わされたクラス(職業)を示した文字列(String),
+    zenith: {
+        atk: 0から3の整数で示された星の数(Number),
+        weapon: [0-3の整数で示された得意武器の星の数1つ目(Number), ... ],
+        attribute: 属性攻撃力の星の数(Number)
+      }
+    weapon: [ // 武器1つを配列の要素1つで表わす
+        {
+          atk: 武器攻撃力(Number),
+          type: 武器の種類を表わした文字列(String),
+          skill_level: 武器のスキルレベル(Number),
+          skill_type: [武器のスキル1つ目の種別の文字列(String), 同2つ目 ]
+        }, ...
+      ],
+    summon: [ // 召喚1つを配列の(ry
+        {
+          atk: 召喚の攻撃力(Number),
+          skill: [ // 加護1つを配列の要素1つで表わす
+            {
+              type: 加護種別を表わす文字列(String),
+              percent: 加護のパーセンテージ(Number)
+            }, ...
+          ]
+        }, ...
+      ],
+    atk_bonus: {
+      percent: 攻撃力ボーナスのパーセンテージ(%, Number),
+      value: 攻撃力ボーナスの値(Number)
+    }
+  }
+*/
+function calculate(param_obj) {
+  // 基本攻撃力の算出
+  var basic_atk = param_obj.rank * 40 + 1000;
+  if (param_obj.rank < 2) {
+    basic_atk = 1000;
+  } else if (param_obj.rank > 100) {
+    basic_atk -= (param_obj.rank - 100) * 20;
+  }
+  var showed_atk = basic_atk;
+
+  // ゼニス攻撃力の算出
+  var zenith_atk = 0;
+  if (param_obj.zenith.atk == 1) {
+    zenith_atk = 500;
+  } else if (param_obj.zenith.atk == 2) {
+    zenith_atk = 1500;
+  } else if (param_obj.zenith.atk == 3) {
+    zenith_atk = 3000;
+  }
 }
 
 
@@ -302,7 +362,7 @@ function update(){
   /* 使用武器・召喚判定 */
   var use_weapon = 0;
   for (var i=0; i<weapon_amount; i++) {
-    if ( $(".weapon_select").eq(i).prop("checked") == true ) {
+    if ( $(".weapon_select").eq(i).prop("checked") === true ) {
       if (use_weapon < 10) {
         select_weapon[use_weapon] = i;
         use_weapon++;
@@ -312,7 +372,7 @@ function update(){
 
   var use_summon = 0;
   for (var i=0; i<summon_amount; i++) {
-    if ( $(".summon_select").eq(i).prop("checked") == true ) {
+    if ( $(".summon_select").eq(i).prop("checked") === true ) {
       if (use_summon < 5) {
         select_summon[use_summon] = i;
         use_summon++;
@@ -322,7 +382,7 @@ function update(){
 
   var use_friend = 0;
   for (var i=0; i<friend_amount; i++) {
-    if ( $(".friend_select").eq(i).prop("checked") == true ) {
+    if ( $(".friend_select").eq(i).prop("checked") === true ) {
       select_friend = i;
       break;
     }
@@ -411,7 +471,7 @@ function update(){
       var skill_level = get_value_int( $(".weapon_skill_lv").eq(index) );
       var skill_type = $(skill_class_name[j]).eq(index).val();
 
-      if (skill_level == 0) continue;
+      if (skill_level === 0) continue;
 
       if (skill_type == "kj1") {
         if (skill_level < 10) {
