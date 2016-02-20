@@ -264,6 +264,18 @@ function get_value_int(obj){
 }
 
 
+// 外部からjob_dataとしてJSONデータを取りこむ
+function get_job_data(url) {
+  var job_request = new Request(url ? "data/job_data.json" : url);
+  // Promiseオブジェクトを返すことで待つことを可能にする
+  // see_also: http://qiita.com/koki_cheese/items/c559da338a3d307c9d88
+  return fetch(job_request).then(function(data) {
+    var job_data = data.json();
+    return job_data;
+  });
+}
+
+
 // 各種パラメータをobject(dict)で受けとってobjectで返す関数
 /*
   param_obj: 以下のような内容を持つオブジェクト
@@ -272,10 +284,11 @@ function get_value_int(obj){
     ship_bonus: 騎空艇補正(Number),
     hp_percent: 現在HPの最大HPに対する%(Number),
     job: 別データで表わされたクラス(職業)を示した文字列(String),
+    affinity: 'good' | 'bad' | (それ以外) の文字列で示される属性補正(String),
     zenith: {
-        atk: 0から3の整数で示された星の数(Number),
-        weapon: [0-3の整数で示された得意武器の星の数1つ目(Number), ... ],
-        attribute: 属性攻撃力の星の数(Number)
+        atk: 星の数(0から3の整数)(Number),
+        weapon: [得意武器1つ目の星の数(0-3の整数)(Number), ... ],
+        attribute: 属性攻撃力の星の数(0-3の整数)(Number)
       }
     weapon: [ // 武器1つを配列の要素1つで表わす
         {
@@ -301,8 +314,15 @@ function get_value_int(obj){
       value: 攻撃力ボーナスの値(Number)
     }
   }
+  job_data: 以下のような内容を持つオブジェクト
+  {
+    "(職業の英語名)": {
+      specialty: ["(得意武器の英語名)", ... ],
+      atk_bonus: 攻撃力ボーナス(Number)
+    }, ...
+  }
 */
-function calculate(param_obj) {
+function calculate(param_obj, job_data) {
   // 基本攻撃力の算出
   var basic_atk = param_obj.rank * 40 + 1000;
   if (param_obj.rank < 2) {
@@ -321,6 +341,159 @@ function calculate(param_obj) {
   } else if (param_obj.zenith.atk == 3) {
     zenith_atk = 3000;
   }
+
+  // 召喚加護の計算
+  var divine_percent = {
+    attribute: 0,
+    character: 0,
+    magna: 0,
+    unknown: 0,
+    zeus: 0
+  };
+  param_obj.summon.forEach(function(summon) {
+    summon.skill.forEach(function (divine) {
+      divine_percent[divine.type] += divine.percent;
+    });
+  });
+
+  // 武器攻撃力の計算
+  showed_atk += function () {  // 表示攻撃力に処理で得られた総合武器攻撃力を加算する
+    var total_atk = 0;
+    var zenith_bonus = [0, 1, 3, 5];  // 各zenithの星に対応する追加ボーナス%
+    param_obj.weapon.forEach(function(weapon) {
+      var atk = weapon.atk;  // 基礎攻撃力
+      var specialty_basic = 100;  // 得意武器倍率
+      var specialty_bonus = 0;  // Zenith追加%
+      var job_status = job_data[param_obj.job];  // 該当ジョブのデータを取得
+      if (job_status) {  // もし該当ジョブが存在するのなら
+        // 得意武器の一覧を見て...
+        for (var i = 0; i < job_status.specialty.length; i++) {
+          // 得意武器が現在見ている武器と一致するなら倍率(%)を上げる
+          if (job_status.specialty[i] == weapon.type) {
+            specialty_basic = 120;
+            specialty_bonus = zenith_bonus[param_obj.zenith.weapon[i]];
+            specialty_bonus = specialty_bonus ? 0 : specialty_bonus;
+          }
+        }
+      }
+      // 武器攻撃力に倍率をかける
+      atk = atk * (specialty_basic + specialty_bonus) / 100;
+      // 全武器攻撃力を更新する
+      total_atk += atk;
+    });
+    return total_atk;
+  };
+
+  // 召喚攻撃力
+  showed_atk += function () {
+    var total = 0;
+    param_obj.summon.forEach(function(summon) {
+      total += summon.atk;
+    });
+    return total;
+  };
+
+  // ジョブボーナス
+  // TODO: 外部ファイルから読みこみも考えるべき
+  showed_atk += param_obj.atk_bonus.value;
+  showed_atk = showed_atk * param_obj.atk_bonus.percent / 100;
+
+
+  /* スキル */
+
+  // 属性補正
+  var attribute_bonus = 0;
+  attribute_bonus += function() {
+    var zenith_bonus = [0, 1, 3, 5];
+    var result = 0;
+    result += param_obj.zenith.attribute ? zenith_bonus[0] : zenith_bonus[param_obj.zenith.attribute];
+    if (param_obj.affinity == "good") {
+      result += 50;
+    } else if (param_obj.affinity == "bad") {
+      result -= 25;
+    }
+    return result;
+  };
+
+  // 武器ごとのスキル計算
+  /// 変数の初期化
+  var total_skill = {
+    baha: {percent: 0},
+    koujin: {percent: 0},
+    magna: {percent: 0, backwater: 0},
+    normal: {backwater: 0},
+    unknown: {percent: 0},
+    collabo: {percent: 0}
+  };
+  var hp_p_n = param_obj.hp_percent / 100;
+  var hp_coefficient = 2 * hp_p_n * hp_p_n - 5 * hp_p_n + 3; // = 2 * (hp_p_n ** 2) - 5 * hp_p_n + 3
+  /// スキルとパラメータの集計
+  param_obj.weapon.forEach(function(weapon) {
+    if (weapon.skill_level === 0) return;  // スキルレベル0はスキル未取得
+
+    // スキルごとの計算
+    if (weapon.skill_type == "kj1") {  // 攻刃(小)
+      if (weapon.skill_level < 10) {
+        total_skill.koujin.percent += 0 + weapon.skill_level;
+      } else {
+        total_skill.koujin.percent += 10 + (weapon.skill_level - 10) * 0.4;
+      }
+    } else if (weapon.skill_type == "kj2") {  // 攻刃(中)
+      if (weapon.skill_level < 10) {
+        total_skill.koujin.percent += 2 + weapon.skill_level;
+      } else {
+        total_skill.koujin.percent += 12 + (weapon.skill_level - 10) * 0.5;
+      }
+    } else if (weapon.skill_type == "kj3") {  // 攻刃(大)
+      if (weapon.skill_level < 10) {
+        total_skill.koujin.percent += 5 + weapon.skill_level;
+      } else {
+        total_skill.koujin.percent += 15 + (weapon.skill_level - 10) * 0.6;
+      }
+    } else if (weapon.skill_type == "kj4") {  // 攻刃II
+      if (weapon.skill_level < 10) {
+        total_skill.koujin.percent += 6 + weapon.skill_level;
+      } else {
+        total_skill.koujin.percent += 16 + (weapon.skill_level - 10) * 0.8;
+      }
+    } else if (weapon.skill_type == "mkj1") {  // M攻刃
+      if (weapon.skill_level < 10) {
+        total_skill.magna.percent += 2 + weapon.skill_level;
+      } else {
+        total_skill.magna.percent += 12 + (weapon.skill_level - 10) * 0.5;
+      }
+    } else if (weapon.skill_type == "mkj2") {  // M攻刃II
+      if (weapon.skill_level < 10) {
+        total_skill.magna.percent += 5 + weapon.skill_level;
+      } else {
+        total_skill.magna.percent += 15 + (weapon.skill_level - 10) * 0.6;
+      }
+    } else if (weapon.skill_type == "unk1") {  // アンノウンI
+      if (weapon.skill_level < 10) {
+        total_skill.unknown.percent += 2 + weapon.skill_level;
+      } else {
+        total_skill.unknown.percent += 12;
+      }
+    } else if (weapon.skill_type == "unk2") {  // アンノウンII
+      if (weapon.skill_level < 10) {
+        total_skill.unknown.percent += 5 + weapon.skill_level;
+      } else {
+        total_skill.unknown.percent += 15;
+      }
+    } else if (weapon.skill_type == "bha") {  // バハ攻
+      if (weapon.skill_level < 10) {
+        total_skill.baha.percent += 19 + weapon.skill_level;
+      } else {
+        total_skill.baha.percent += 30;
+      }
+    } else if (weapon.skill_type == "bhah") {  // バハ攻HP
+      if (weapon.skill_level < 10) {
+        total_skill.baha.percent += 9.5 + weapon.skill_level / 2;
+      } else {
+        total_skill.baha.percent += 15;
+      }
+    }
+  });
 }
 
 
