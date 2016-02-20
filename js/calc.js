@@ -427,73 +427,143 @@ function calculate(param_obj, job_data) {
   };
   var hp_p_n = param_obj.hp_percent / 100;
   var hp_coefficient = 2 * hp_p_n * hp_p_n - 5 * hp_p_n + 3; // = 2 * (hp_p_n ** 2) - 5 * hp_p_n + 3
+  /// スキルの計算をするための関数を定義
+  //// ロジックの異なる部分を引数として受けとり関数として返す
+  //// type_str: "baha" | "koujin" | "magna" | "normal" | "unknown" | "collabo"
+  //// lv_check_func: 引数としてskill_levelを受けとり条件を判断する関数
+  //// true_func: lv_check_funcで返された結果が真のときskill_levelを受けとり加算する%を返す関数
+  //// false_func: ほぼ同上だが偽の場合
+  function pfunc_gen (type_str, lv_check_func, true_func, false_func) {
+    return function (level) {
+      if (lv_check_func(level)) {
+        total_skill[type_str]["percent"] += true_func(level);
+      } else {
+        total_skill[type_str]["percent"] += false_func(level);
+      }
+    };
+  }
+  //// この関数は背水に対応
+  //// ほぼ上の関数と一緒だが以下の部分が相違
+  //// true_func, false_func: skill_levelを受けとりcoefficientを計算する関数
+  function bwfunc_gen (type_str, lv_check_func, true_func, false_func) {
+    return function (level) {
+      var bw_coefficient = 0;
+      if (lv_check_func(level)) {
+        bw_coefficient = true_func(level);
+      } else {
+        bw_coefficient = false_func(level);
+      }
+      total_skill[type_str]["backwater"] += hp_coefficient * bw_coefficient / 3;
+    };
+  }
+  var CHECK_LEVEL = 10;
+  //// 渡された数値がCHECK_LEVELより下かどうかをチェックする関数
+  function less_than_chklv(n) { return (n < CHECK_LEVEL); }
+  //// addval + (lv - subval) * mulvalを計算する関数を返す関数
+  function pcalc_gen(addval, subval, mulval) {
+    return function(lv) {
+      return addval + (lv - subval) * mulval;
+    };
+  }
+  /// スキルと関数を対応させる
+  var skill_calc_dict = {
+    "kj1": pfunc_gen(
+      "koujin", less_than_chklv,
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0.4)
+    ),
+    "kj2": pfunc_gen(
+      "koujin", less_than_chklv,
+      pcalc_gen(2, 0, 1), pcalc_gen(12, CHECK_LEVEL, 0.5)
+    ),
+    "kj3": pfunc_gen(
+      "koujin", less_than_chklv,
+      pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
+    ),
+    "kj4": pfunc_gen(
+      "koujin", less_than_chklv,
+      pcalc_gen(6, 0, 1), pcalc_gen(16, CHECK_LEVEL, 0.8)
+    ),
+    "mkj1": pfunc_gen(
+      "magna", less_than_chklv,
+      pcalc_gen(2, 0, 1), pcalc_gen(12, CHECK_LEVEL, 0.5)
+    ),
+    "mkj2": pfunc_gen(
+      "magna", less_than_chklv,
+      pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
+    ),
+    "unk1": pfunc_gen(
+      "unknown", less_than_chklv,
+      pcalc_gen(2, 0, 1), pcalc_gen(12, 0, 0)  // (15,0,0) -> 15 + (lv - 0) * 0
+    ),
+    "unk2": pfunc_gen(
+      "unknown", less_than_chklv,
+      pcalc_gen(5, 0, 1), pcalc_gen(15, 0, 0)
+    ),
+    "str": pfunc_gen(
+      "collabo", less_than_chklv,
+      pcalc_gen(5, 0, 1), pcalc_gen(15, 0, 0)
+    ),
+    "bha": pfunc_gen(
+      "baha", less_than_chklv,
+      pcalc_gen(19, 0, 1), pcalc_gen(30, 0, 0)
+    ),
+    "bhah": pfunc_gen(
+      "baha", less_than_chklv,
+      pcalc_gen(9.5, 0, 0.5), pcalc_gen(15, 0, 0)
+    ),
+    "bw1": bwfunc_gen(
+      "normal", less_than_chklv,
+      function (l) { return -0.3 + l * 1.8; },
+      function (l) { return 18 + (l - CHECK_LEVEL) / 5 * 3; }
+    ),
+    "bw2": bwfunc_gen(
+      "normal", less_than_chklv,
+      function (l) { return -0.4 + l * 2.4; },
+      function (l) { return 24 + (l - CHECK_LEVEL) / 5 * 3; }
+    ),
+    "bw3": bwfunc_gen(
+      "normal", less_than_chklv,
+      function (l) { return -0.5 + l * 3.0; },
+      function (l) { return 30 + (l - CHECK_LEVEL) / 5 * 3; }
+    ),
+    "mbw1": bwfunc_gen(
+      "magna", less_than_chklv,
+      function (l) { return -0.3 + l * 1.8; },
+      function (l) { return 18 + (l - CHECK_LEVEL) / 5 * 3; }
+    ),
+    "mbw2": bwfunc_gen(
+      "magna", less_than_chklv,
+      function (l) { return -0.5 + l * 3.0; },
+      function (l) { return 30 + (l - CHECK_LEVEL) / 5 * 3; }
+    )
+  };
   /// スキルとパラメータの集計
   param_obj.weapon.forEach(function(weapon) {
     if (weapon.skill_level === 0) return;  // スキルレベル0はスキル未取得
-
     // スキルごとの計算
-    if (weapon.skill_type == "kj1") {  // 攻刃(小)
-      if (weapon.skill_level < 10) {
-        total_skill.koujin.percent += 0 + weapon.skill_level;
-      } else {
-        total_skill.koujin.percent += 10 + (weapon.skill_level - 10) * 0.4;
-      }
-    } else if (weapon.skill_type == "kj2") {  // 攻刃(中)
-      if (weapon.skill_level < 10) {
-        total_skill.koujin.percent += 2 + weapon.skill_level;
-      } else {
-        total_skill.koujin.percent += 12 + (weapon.skill_level - 10) * 0.5;
-      }
-    } else if (weapon.skill_type == "kj3") {  // 攻刃(大)
-      if (weapon.skill_level < 10) {
-        total_skill.koujin.percent += 5 + weapon.skill_level;
-      } else {
-        total_skill.koujin.percent += 15 + (weapon.skill_level - 10) * 0.6;
-      }
-    } else if (weapon.skill_type == "kj4") {  // 攻刃II
-      if (weapon.skill_level < 10) {
-        total_skill.koujin.percent += 6 + weapon.skill_level;
-      } else {
-        total_skill.koujin.percent += 16 + (weapon.skill_level - 10) * 0.8;
-      }
-    } else if (weapon.skill_type == "mkj1") {  // M攻刃
-      if (weapon.skill_level < 10) {
-        total_skill.magna.percent += 2 + weapon.skill_level;
-      } else {
-        total_skill.magna.percent += 12 + (weapon.skill_level - 10) * 0.5;
-      }
-    } else if (weapon.skill_type == "mkj2") {  // M攻刃II
-      if (weapon.skill_level < 10) {
-        total_skill.magna.percent += 5 + weapon.skill_level;
-      } else {
-        total_skill.magna.percent += 15 + (weapon.skill_level - 10) * 0.6;
-      }
-    } else if (weapon.skill_type == "unk1") {  // アンノウンI
-      if (weapon.skill_level < 10) {
-        total_skill.unknown.percent += 2 + weapon.skill_level;
-      } else {
-        total_skill.unknown.percent += 12;
-      }
-    } else if (weapon.skill_type == "unk2") {  // アンノウンII
-      if (weapon.skill_level < 10) {
-        total_skill.unknown.percent += 5 + weapon.skill_level;
-      } else {
-        total_skill.unknown.percent += 15;
-      }
-    } else if (weapon.skill_type == "bha") {  // バハ攻
-      if (weapon.skill_level < 10) {
-        total_skill.baha.percent += 19 + weapon.skill_level;
-      } else {
-        total_skill.baha.percent += 30;
-      }
-    } else if (weapon.skill_type == "bhah") {  // バハ攻HP
-      if (weapon.skill_level < 10) {
-        total_skill.baha.percent += 9.5 + weapon.skill_level / 2;
-      } else {
-        total_skill.baha.percent += 15;
-      }
-    }
+    weapon.skill_type.forEach(function(skill_type) {
+      skill_calc_dict[skill_type](weapon.skill_level);
+    });
   });
+
+  // 総合計算
+  showed_atk = Math.round(showed_atk);
+  var total_atk = showed_atk;
+  total_atk *= (100 + (total_skill.baha.percent + total_skill.koujin.percent * divine_percent.zeus / 100)) / 100;
+  total_atk *= (100 + total_skill.normal.backwater * divine_percent.zeus / 100) / 100;
+  total_atk *= (100 + total_skill.magna.percent * divine_percent.zeus / 100) / 100;
+  total_atk *= (100 + total_skill.magna.backwater * divine_percent.magna / 100) / 100;
+  total_atk *= (100 + (total_skill.collabo.percent + total_skill.unknown.percent * divine_percent.unknown / 100)) / 100;
+  total_atk *= (divine_percent.attribute + attribute_bonus) / 100;
+  total_atk *= (100 + param_obj.ship_bonus) / 100;
+  total_atk = Math.round(total_atk);
+
+  // 結果の返却
+  return {
+    "basic_atk": basic_atk,
+    "showed_atk": showed_atk,
+    "total_atk": total_atk
+  };
 }
 
 
