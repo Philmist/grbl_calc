@@ -322,7 +322,7 @@ function get_job_data(url) {
     }, ...
   }
 */
-function calculate(param_obj, job_data) {
+function calculate_atkval(param_obj, job_data) {
   // 基本攻撃力の算出
   var basic_atk = param_obj.rank * 40 + 1000;
   if (param_obj.rank < 2) {
@@ -344,14 +344,14 @@ function calculate(param_obj, job_data) {
 
   // 召喚加護の計算
   var divine_percent = {
-    attribute: 0,
-    character: 0,
-    magna: 0,
-    unknown: 0,
-    zeus: 0
+    attribute: 100,
+    character: 100,
+    magna: 100,
+    unknown: 100,
+    zeus: 100
   };
   param_obj.summon.forEach(function(summon) {
-    summon.skill.forEach(function (divine) {
+    summon.skill.forEach(function(divine) {
       divine_percent[divine.type] += divine.percent;
     });
   });
@@ -364,12 +364,12 @@ function calculate(param_obj, job_data) {
       var atk = weapon.atk;  // 基礎攻撃力
       var specialty_basic = 100;  // 得意武器倍率
       var specialty_bonus = 0;  // Zenith追加%
-      var job_status = job_data[param_obj.job];  // 該当ジョブのデータを取得
-      if (job_status) {  // もし該当ジョブが存在するのなら
+      var job = job_data[param_obj.job];  // 該当ジョブのデータを取得
+      if (job) {  // もし該当ジョブが存在するのなら
         // 得意武器の一覧を見て...
-        for (var i = 0; i < job_status.specialty.length; i++) {
+        for (var i = 0; i < job.specialty.length; i++) {
           // 得意武器が現在見ている武器と一致するなら倍率(%)を上げる
-          if (job_status.specialty[i] == weapon.type) {
+          if (job.specialty[i] == weapon.type) {
             specialty_basic = 120;
             specialty_bonus = zenith_bonus[param_obj.zenith.weapon[i]];
             specialty_bonus = specialty_bonus ? 0 : specialty_bonus;
@@ -382,7 +382,7 @@ function calculate(param_obj, job_data) {
       total_atk += atk;
     });
     return total_atk;
-  };
+  } ();
 
   // 召喚攻撃力
   showed_atk += function () {
@@ -391,12 +391,12 @@ function calculate(param_obj, job_data) {
       total += summon.atk;
     });
     return total;
-  };
+  } ();
 
   // ジョブボーナス
   // TODO: 外部ファイルから読みこみも考えるべき
   showed_atk += param_obj.atk_bonus.value;
-  showed_atk = showed_atk * param_obj.atk_bonus.percent / 100;
+  showed_atk = showed_atk * (100 + param_obj.atk_bonus.percent) / 100;
 
 
   /* スキル */
@@ -413,7 +413,7 @@ function calculate(param_obj, job_data) {
       result -= 25;
     }
     return result;
-  };
+  } ();
 
   // 武器ごとのスキル計算
   /// 変数の初期化
@@ -513,28 +513,28 @@ function calculate(param_obj, job_data) {
     ),
     "bw1": bwfunc_gen(
       "normal", less_than_chklv,
-      function (l) { return -0.3 + l * 1.8; },
-      function (l) { return 18 + (l - CHECK_LEVEL) / 5 * 3; }
+      (l) => (-0.3 + l * 1.8),
+      (l) => (18 + (l - CHECK_LEVEL) / 5 * 3)
     ),
     "bw2": bwfunc_gen(
       "normal", less_than_chklv,
-      function (l) { return -0.4 + l * 2.4; },
-      function (l) { return 24 + (l - CHECK_LEVEL) / 5 * 3; }
+      (l) => (-0.4 + l * 2.4),
+      (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
     ),
     "bw3": bwfunc_gen(
       "normal", less_than_chklv,
-      function (l) { return -0.5 + l * 3.0; },
-      function (l) { return 30 + (l - CHECK_LEVEL) / 5 * 3; }
+      (l) => (-0.5 + l * 3.0),
+      (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
     ),
     "mbw1": bwfunc_gen(
       "magna", less_than_chklv,
-      function (l) { return -0.3 + l * 1.8; },
-      function (l) { return 18 + (l - CHECK_LEVEL) / 5 * 3; }
+      (l) => (-0.3 + l * 1.8),
+      (l) => (18 + (l - CHECK_LEVEL) / 5 * 3)
     ),
     "mbw2": bwfunc_gen(
       "magna", less_than_chklv,
-      function (l) { return -0.5 + l * 3.0; },
-      function (l) { return 30 + (l - CHECK_LEVEL) / 5 * 3; }
+      (l) => (-0.5 + l * 3.0),
+      (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
     )
   };
   /// スキルとパラメータの集計
