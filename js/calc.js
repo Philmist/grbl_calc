@@ -382,7 +382,7 @@ function calculate_atkval(param_obj, job_data) {
       total_atk += atk;
     });
     return total_atk;
-  } ();
+  } ();  // 定義した無名関数を即時実行する
 
   // 召喚攻撃力
   showed_atk += function () {
@@ -391,7 +391,7 @@ function calculate_atkval(param_obj, job_data) {
       total += summon.atk;
     });
     return total;
-  } ();
+  } ();  // 無名関数の即時実行
 
   // ジョブボーナス
   // TODO: 外部ファイルから読みこみも考えるべき
@@ -413,7 +413,7 @@ function calculate_atkval(param_obj, job_data) {
       result -= 25;
     }
     return result;
-  } ();
+  } ();  // 無名関数の即時実行
 
   // 武器ごとのスキル計算
   /// 変数の初期化

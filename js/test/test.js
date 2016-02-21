@@ -2,7 +2,7 @@
 // 以下のテストコードはmochaが読みこまれていて、
 // expectがglobalとしてあることを想定している
 
-// mocha+chaiのテストコードサンプル
+// mocha+exceptのテストコードサンプル
 describe('Array', function() {
   describe('#indexOf()', function () {
     it('should return -1 when the value is not present', function () {
@@ -85,5 +85,16 @@ describe('calc.js', function() {
     it('デフォルトでは計算攻撃力は1000', function() {
       expect(calculate_atkval(param_for_test, job_data).total_atk).to.be(1000);
     });
+  });
+});
+
+describe("get_param.js", function() {
+  it("val2intは数でないものを渡された時0を返す", function() {
+    expect(val2int("NOT A NUMBER")).to.be(0);
+  });
+  it("val2intは数の文字列を渡されたら数を返す", function() {
+    expect(val2int("0")).to.be(0);
+    expect(val2int("110.5")).to.be(110.5);
+    expect(val2int("-5")).to.be(-5);
   });
 });
