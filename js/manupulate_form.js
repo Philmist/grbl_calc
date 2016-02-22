@@ -84,3 +84,191 @@ function get_value_from_form() {
     "atk_bonus": atk_bonus
   };
 }
+
+
+// [value, 表示文字列]の組を受けとってoption内に展開する関数
+function create_option_from_pair(tp_str) {
+  var r = "";
+  tp_str.forEach(function (i) {
+    r = r + `<option value="${i[0]}">${i[1]}</option>`;
+  });
+  return r;
+}
+
+// option文字列を展開する関数
+var expanded_option = {};
+function expand_option_str () {
+  // 短縮名
+  var a2opt = create_option_from_pair;
+  // テンプレート用対応定義
+  var tp_summon_kind = [
+    ["none", "無し"],
+    ["attribute", "属性"],
+    ["character", "キャラ"],
+    ["magna", "マグナ"],
+    ["unknown", "ｱﾝﾉｳﾝ"],
+    ["zeus", "ｾﾞｳｽ枠"]
+  ];
+  var tp_weapon_kind = [
+    ["sword", "剣"],
+    ["dagger", "短剣"],
+    ["spear", "槍"],
+    ["axe", "斧"],
+    ["stuff", "杖"],
+    ["gun", "銃"],
+    ["knuckle", "格闘"],
+    ["bow", "弓"],
+    ["instrument", "楽器"],
+    ["blade", "刀"]
+  ];
+  var tp_weapon_skill_type = [
+    ["none", "無し"],
+    ["kj1", "攻刃(小)"],
+    ["kj2", "攻刃(中)"],
+    ["kj3", "攻刃(大)"],
+    ["kj4", "攻刃Ⅱ"],
+    ["bw1", "背水(小)"],
+    ["bw2", "背水(中)"],
+    ["bw3", "背水(大)"],
+    ["mkj1", "Ｍ攻刃"],
+    ["mkj2", "Ｍ攻刃Ⅱ"],
+    ["mbw1", "Ｍ背水"],
+    ["mbw2", "Ｍ背水Ⅱ"],
+    ["bha", "バハ攻"],
+    ["bhah", "バハ攻HP"],
+    ["unk1", "ｱﾝﾉｳﾝⅠ"],
+    ["unk2", "ｱﾝﾉｳﾝⅡ"],
+    ["str", "ｺﾗﾎﾞ枠"]
+  ];
+  var tp_weapon_skill_lv = [
+    ["0", "無し"],
+    ["1", "1"],
+    ["2", "2"],
+    ["3", "3"],
+    ["4", "4"],
+    ["5", "5"],
+    ["6", "6"],
+    ["7", "7"],
+    ["8", "8"],
+    ["9", "9"],
+    ["10", "10"],
+    ["11", "11"],
+    ["12", "12"],
+    ["13", "13"],
+    ["14", "14"],
+    ["15", "15"]
+  ];
+  // オブジェクトに代入する
+  expanded_option.summon_kind = a2opt(tp_summon_kind);
+  expanded_option.weapon_kind = a2opt(tp_weapon_kind);
+  expanded_option.weapon_skill_type = a2opt(tp_weapon_skill_type);
+  expanded_option.weapon_skill_lv = a2opt(tp_weapon_skill_lv);
+}
+expand_option_str();  // 即実行
+
+// 指定されたクラス(String)の中にいくつ要素があるかを数える
+var count_elem_in_class = (cls_str) => ( $(cls_str).length );
+
+var get_weapon_amount = () => ( count_elem_in_class(".weapon_tr") );
+var get_summon_amount = () => ( count_elem_in_class(".summon_tr") );
+var get_friend_amount = () => ( count_elem_in_class(".friend_tr") );
+
+
+
+// 武器表の操作関数群
+
+function weapon_insert(obj) {
+  var tr_tag = `
+  <tr class="weapon_tr">
+  <td><input type="checkbox" class="weapon_lock" value="lock"></td>
+  <td><input type="checkbox" onChange="update()" class="weapon_select" value="select"></td>
+  <td><input type="text" class="weapon_name width150" onChange="update()"></td>
+  <td><input type="text" class="weapon_atk width50" onChange="update()"></td>
+  <td>
+  <select onchange="update()" class="weapon_kind">
+  ${expanded_option.weapon_kind}
+  </select>
+  </td>
+  <td>
+  <select onchange="update()" class="weapon_skill_type1">
+  ${expanded_option.weapon_skill_type}
+  </select>
+  </td>
+  <td>
+  <select onchange="update()" class="weapon_skill_type2">
+  ${expanded_option.weapon_skill_type}
+  </select>
+  </td>
+  <td>
+  <select onchange="update()" class="weapon_skill_lv">
+  ${expanded_option.weapon_skill_lv}
+  </select>
+  </td>
+  <td>
+  <input type="button" id="up" value="▲" onClick="sort_up(this)">
+  <input type="button" id="down" value="▼" onClick="sort_down(this)">
+  <input type="button" id="ins" value="+" onClick="weapon_insert(this)">
+  <input type="button" id="del" value="-" onClick="weapon_delete(this)">
+  </td>
+  </tr>
+  `;
+
+  var amount = get_weapon_amount();
+
+  if (amount >= 20) return;
+
+  if (obj === null) {
+    $("#weapon_table").append(tr_tag);
+  } else {
+    $(obj).parents('tr').eq(0).after(tr_tag);
+  }
+}
+
+function weapon_delete(obj){
+  var amount = get_weapon_amount();
+
+  if (amount <= 10) return;
+
+  $(obj).parents('tr').eq(0).remove();
+}
+
+
+// 召喚表の操作関数群
+
+function summon_insert(obj) {
+  var tr_tag = `
+  <tr class="summon_tr">
+  <td><input type="checkbox" class="summon_lock" value="lock"></td>
+  <td><input type="checkbox" onChange="update()" class="summon_select" value="select"></td>
+  <td><input type="text" class="summon_name width150" onChange="update()"></td>
+  <td><input type="text" class="summon_atk width50" onChange="update()"></td>
+  <td>
+  <select onchange="update()" class="summon_kind1">
+  ${expanded_option.summon_kind}
+  </select>
+  </td>
+  <td><input type="text" class="summon_percent1 width25" onChange="update()">%</td>
+  <select onchange="update()" class="summon_kind2">
+  ${expanded_option.summon_kind}
+  </select>
+  </td>
+  <td><input type="text" class="summon_percent2 width25" onChange="update()">%</td>
+  <td>
+  <input type="button" id="up" value="▲" onClick="sort_up(this)">
+  <input type="button" id="down" value="▼" onClick="sort_down(this)">
+  <input type="button" id="ins" value="+" onClick="summon_insert(this)">
+  <input type="button" id="del" value="-" onClick="summon_delete(this)">
+  </td>
+  </tr>
+  `;
+
+  var amount = get_weapon_amount();
+
+  if (amount >= 20) return;
+
+  if (obj === null) {
+    $("#weapon_table").append(tr_tag);
+  } else {
+    $(obj).parents('tr').eq(0).after(tr_tag);
+  }
+}
