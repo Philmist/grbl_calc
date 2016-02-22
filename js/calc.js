@@ -98,7 +98,7 @@ function calculate_atkval(param_obj, job_data) {
   };
   param_obj.summon.forEach(function(summon) {
     summon.skill.forEach(function(divine) {
-      divine_percent[divine.type] += divine.percent;
+      if (divine.type) { divine_percent[divine.type] += divine.percent; }
     });
   });
 
@@ -288,7 +288,7 @@ function calculate_atkval(param_obj, job_data) {
     if (weapon.skill_level === 0) return;  // スキルレベル0はスキル未取得
     // スキルごとの計算
     weapon.skill_type.forEach(function(skill_type) {
-      skill_calc_dict[skill_type](weapon.skill_level);
+      if (skill_type != "none") { skill_calc_dict[skill_type](weapon.skill_level); }
     });
   });
 

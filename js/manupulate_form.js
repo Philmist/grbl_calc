@@ -7,7 +7,7 @@ var val2int = (v) => (isNaN(v) ? 0 : Number(v));
 // jQueryが読みこまれているのが前提
 function get_value_from_form() {
   var gv2i = (v) => (val2int(v.val()));  // get value to int
-  var gv2s = (v) => (String(v.val()));  // get value to string
+  var gv2s = (v) => (v.val());  // get value to string
 
   // 基礎情報
   var rank = gv2i($("#rank"));
@@ -37,11 +37,11 @@ function get_value_from_form() {
       r.atk = gv2i($(this).find("input.summon_atk"));
       r.skill = [
         {
-          type: gv2s( $(this).find("input.summon_kind1") ),
+          type: gv2s( $(this).find("select.summon_kind1") ),
           percent: gv2i( $(this).find("input.summon_percent1") )
         },
         {
-          type: gv2s( $(this).find("input.summon_kind2") ),
+          type: gv2s( $(this).find("select.summon_kind2") ),
           percent: gv2i( $(this).find("input.summon_percent2") )
         }
       ];
@@ -58,7 +58,7 @@ function get_value_from_form() {
     if ($(this).find(".weapon_select").first().prop("checked") === true) {
       var r = {};
       r.atk = gv2i($(this).find("input.weapon_atk"));
-      r.type = gv2s($(this).find("input.weapon_atk"));
+      r.type = gv2s($(this).find("select.weapon_kind"));
       r.skill_level = gv2i($(this).find("select.weapon_skill_lv"));
       r.skill_type = [
         gv2s($(this).find("select.weapon_skill_type1")),
@@ -248,6 +248,7 @@ function summon_insert(obj) {
   </select>
   </td>
   <td><input type="text" class="summon_percent1 width25" onChange="update()">%</td>
+  <td>
   <select onchange="update()" class="summon_kind2">
   ${expanded_option.summon_kind}
   </select>
