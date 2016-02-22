@@ -88,7 +88,7 @@ describe('calc.js', function() {
   });
 });
 
-describe("get_param.js", function() {
+describe("manupulate_form.js", function() {
   it("val2intは数でないものを渡された時0を返す", function() {
     expect(val2int("NOT A NUMBER")).to.be(0);
   });

@@ -265,11 +265,13 @@ function get_value_int(obj){
 
 
 // 外部からjob_dataとしてJSONデータを取りこむ
+var job_promise;
 function get_job_data(url) {
-  var job_request = new Request(url ? "data/job_data.json" : url);
+  var job_request = new Request(url ? url : "data/job_data.json");
+  job_promise = job_promise || fetch(job_request);
   // Promiseオブジェクトを返すことで待つことを可能にする
   // see_also: http://qiita.com/koki_cheese/items/c559da338a3d307c9d88
-  return fetch(job_request).then(function(data) {
+  return job_promise.then(function(data) {
     var job_data = data.json();
     return job_data;
   });
@@ -372,7 +374,7 @@ function calculate_atkval(param_obj, job_data) {
           if (job.specialty[i] == weapon.type) {
             specialty_basic = 120;
             specialty_bonus = zenith_bonus[param_obj.zenith.weapon[i]];
-            specialty_bonus = specialty_bonus ? 0 : specialty_bonus;
+            specialty_bonus = specialty_bonus ? specialty_bonus: 0;
           }
         }
       }
@@ -406,7 +408,7 @@ function calculate_atkval(param_obj, job_data) {
   attribute_bonus += function() {
     var zenith_bonus = [0, 1, 3, 5];
     var result = 0;
-    result += param_obj.zenith.attribute ? zenith_bonus[0] : zenith_bonus[param_obj.zenith.attribute];
+    result += param_obj.zenith.attribute ? zenith_bonus[param_obj.zenith.attribute]  : zenith_bonus[0];
     if (param_obj.affinity == "good") {
       result += 50;
     } else if (param_obj.affinity == "bad") {
