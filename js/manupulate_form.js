@@ -262,13 +262,125 @@ function summon_insert(obj) {
   </tr>
   `;
 
-  var amount = get_weapon_amount();
+  var amount = get_summon_amount();
 
-  if (amount >= 20) return;
+  if (amount >= 10) return;
 
   if (obj === null) {
-    $("#weapon_table").append(tr_tag);
+    $("#summon_table").append(tr_tag);
   } else {
     $(obj).parents('tr').eq(0).after(tr_tag);
   }
 }
+
+function summon_delete(obj){
+  var amount = get_summon_amount();
+
+  if (amount <= 5) return;
+
+  $(obj).parents('tr').eq(0).remove();
+}
+
+
+// フレンド関連表の操作関数
+
+function friend_insert(obj) {
+  var tr_tag = `
+  <tr class="friend_tr">
+  <td><input type="checkbox" class="friend_lock" value="lock"></td>
+  <td><input type="checkbox" onChange="update()" class="friend_select" value="select"></td>
+  <td><input type="text" class="friend_name width150" onChange="update()"></td>
+  <td><input type="text" class="friend_atk width50" onChange="update()"></td>
+  <td>
+  <select onchange="update()" class="friend_kind1">
+  ${expanded_option.summon_kind}
+  </select>
+  </td>
+  <td><input type="text" class="friend_percent1 width25" onChange="update()">%</td>
+  <select onchange="update()" class="friend_kind2">
+  ${expanded_option.summon_kind}
+  </select>
+  </td>
+  <td><input type="text" class="friend_percent2 width25" onChange="update()">%</td>
+  <td>
+  <input type="button" id="up" value="▲" onClick="sort_up(this)">
+  <input type="button" id="down" value="▼" onClick="sort_down(this)">
+  <input type="button" id="ins" value="+" onClick="friend_insert(this)">
+  <input type="button" id="del" value="-" onClick="friend_delete(this)">
+  </td>
+  </tr>
+  `;
+
+  var amount = get_friend_amount();
+
+  if (amount >= 5) return;
+
+  if (obj === null) {
+    $("#friend_table").append(tr_tag);
+  } else {
+    $(obj).parents('tr').eq(0).after(tr_tag);
+  }
+}
+
+function friend_delete(obj){
+  var amount = get_friend_amount();
+
+  if (amount <= 1) return;
+
+  $(obj).parents('tr').eq(0).remove();
+}
+
+
+// 列上下
+
+function sort_up(obj){
+  var this_tr = $(obj).parents('tr').eq(0);
+  var prev_tr = this_tr.prev('tr');
+
+  prev_tr.remove();
+  this_tr.after(prev_tr);
+}
+
+function sort_down(obj){
+  var this_tr = $(obj).parents('tr').eq(0);
+  var next_tr = this_tr.next('tr');
+
+  next_tr.remove();
+  this_tr.before(next_tr);
+}
+
+
+// 全体の初期化 (Promise版)
+var init = new Promise(function(resolve, reject) {
+  /* テーブル生成 */
+  for (var i=0; i<10; i++) {
+    weapon_insert(null);
+  }
+  for (var i=0; i<5; i++) {
+    summon_insert(null);
+  }
+  for (var i=0; i<1; i++) {
+    friend_insert(null);
+  }
+
+  // 全て終わったことを通知する
+  resolve();
+});
+
+// 計算結果の表示
+function update() {
+  var param = get_value_from_form();
+  var result = calculate_atkval(param, job_json);
+  $("#basic_atk").text(result.basic_atk);
+  $("#showed_atk").text(result.showed_atk);
+  $("#total_atk").text(result.total_atk);
+  return result;
+}
+
+
+// 全体が読みこまれた時の処理
+// calc.jsが読みこまれていないと動作しない
+$(document).ready( function() {
+  var get_job_promise = get_job_data();
+  get_job_promise.then(init).then(update);
+});
