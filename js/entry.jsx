@@ -1,3 +1,5 @@
+// vim: sts=2 sw=2 ts=2 expandtab
+
 require("../css/calc.css");
 
 var React = require("react");
@@ -9,7 +11,11 @@ var forms = require("./form_module.jsx");
 
 var CalculatorBody = React.createClass({
   render: function() {
-    return (<h1>Hello!</h1>);
+    return (
+      <div>
+        Hello!
+      </div>
+    );
   }
 });
 

@@ -1,3 +1,5 @@
+// vim: sts=2 sw=2 ts=2 expandtab
+
 var React = require("react");
 var ReactDOM = require("react-dom");
 
@@ -42,3 +44,21 @@ var Weapon = React.createClass({
     return (<h1>Weapon</h1>);
   }
 });
+
+
+// 召喚獣部分
+var Summon = React.createClass({
+  render: function() {
+    return (<h1>Summon</h1>);
+  }
+});
+
+
+// フレンド部分
+var Friend = React.createClass({
+  render: function() {
+    return (<h1>Friend</h1>);
+  }
+});
+
+
