@@ -74,7 +74,7 @@ var JobSelector = React.createClass({
 
 // rank/騎空艇補正/属性補正/HP割合
 var PlayerStats = React.createClass({
-  handleChange: function() {
+  handleChange: function(event) {
   },
   render: function() {
     return (
@@ -133,7 +133,7 @@ var PlayerStats = React.createClass({
 
 // 攻撃力ボーナス
 var AtkBonus = React.createClass({
-  handleChange: function() {
+  handleChange: function(event) {
   },
   render: function() {
     return (
@@ -166,12 +166,109 @@ var Zenith = React.createClass({
     return (
       <div>
         <header className="subtype">Zenith Perk</header>
+        <table className="grbr" id="zenith_table">
+          <tbody>
+            <ZenithAttack
+              parameter={this.props.parameter}
+              onChangeParameter={this.props.onChangeParameter}
+            />
+            <ZenithWeapon1
+              parameter={this.props.parameter}
+              onChangeParameter={this.props.onChangeParameter}
+            />
+            <ZenithWeapon2
+              parameter={this.props.parameter}
+              onChangeParameter={this.props.onChangeParameter}
+            />
+            <ZenithAttribute
+              parameter={this.props.parameter}
+              onChangeParameter={this.props.onChangeParameter}
+            />
+          </tbody>
+        </table>
       </div>
     );
   }
 });
 
-var zenithStarList = [[0,"無し"], [1, "★"], [2, "★★"], [3,"★★★"]];
+function renderZenithSelector(onChangeFunc, id) {
+  var zenith_list = [[0,"無し"], [1, "★"], [2, "★★"], [3,"★★★"]];
+  var option_list = [];
+  for (var i=0; i < zenith_list.length; i++) {
+    option_list.push(
+      <option value={zenith_list[i][0]} key={zenith_list[i][0]}>{zenith_list[i][1]}</option>
+    );
+  }
+  return (
+    <select onChange={onChangeFunc} id={id} ref={id} >
+      {option_list}
+    </select>
+  );
+}
+
+var ZenithAttack = React.createClass({
+  handleChange: function(event) {
+  },
+  render: function() {
+    var elem = renderZenithSelector(this.handleChange, "zenith_atk");
+    return (
+      <tr>
+        <th>攻撃力</th>
+        <td>
+          {elem}
+        </td>
+      </tr>
+    );
+  }
+});
+
+var ZenithWeapon1 = React.createClass({
+  handleChange: function(event) {
+  },
+  render: function() {
+    var elem = renderZenithSelector(this.handleChange, "zenith_weapon1");
+    return (
+      <tr>
+        <th>得意武器1</th>
+        <td>
+          {elem}
+        </td>
+      </tr>
+    );
+  }
+});
+
+var ZenithWeapon2 = React.createClass({
+  handleChange: function(event) {
+  },
+  render: function() {
+    var elem = renderZenithSelector(this.handleChange, "zenith_weapon2");
+    return (
+      <tr>
+        <th>得意武器2</th>
+        <td>
+          {elem}
+        </td>
+      </tr>
+    );
+  }
+});
+
+var ZenithAttribute = React.createClass({
+  handleChange: function(event) {
+  },
+  render: function() {
+    var elem = renderZenithSelector(this.handleChange, "zenith_attribute");
+    return (
+      <tr>
+        <th>属性攻撃力</th>
+        <td>
+          {elem}
+        </td>
+      </tr>
+    );
+  }
+});
 
 
 // 結果表示欄
@@ -305,12 +402,61 @@ var FriendTableHeader = React.createClass({
 });
 
 
+// 計算機の骨格
+var CalculatorBody = React.createClass({
+  getInitialState: function() {
+    return {
+      param: {
+        rank: 1,  // ランク
+        ship_bonus: 0,  // 騎空艇補正
+        hp_percent: 100,  // 現HPの割合(%)
+        job: "fighter",  // "data/job_data.json"で定義されている職業(クラス)
+        affinity: "none",  // 相性(none/good/bad)
+        zenith: {  // Zenith Perk
+          atk: 0,  // 攻撃力の星(0-3)
+          weapon: [0, 0],  // 武器1, 武器2の星(0-3)
+          attribute: 0  // 属性攻撃力の星(0-3)
+        },
+        weapon: [],  // 武器
+        summon: [],
+        atk_bonus: {  // 攻撃力ボーナス
+          percent: 0,  // %
+          value: 0  // 値
+        },
+        friend: {
+        }
+      }
+    };
+  },
+  updateParams: function(obj) {
+    this.setState({param: Object.assign(this.state.param, obj)});
+  },
+  setAllParams: function(param) {
+    this.setState({param: param});
+  },
+  render: function() {
+    return (
+      <div id="site_box">
+        <div id="header_box">
+          <header className="titlecap">グランブルーファンタジー攻撃力計算機（新）</header>
+        </div>
+        <div id="left_box">
+          <BasicInformation parameter={this.state.param} onChangeParameter={this.updateParams} />
+          <Zenith parameter={this.state.param} onChangeParameter={this.updateParams} />
+          <Result parameter={this.state.param} />
+          <System parameter={this.state.param} setParamFunc={this.setAllParams} />
+        </div>
+        <div id="right_box">
+          <Weapon parameter={this.state.param} onChangeParameter={this.updateParams} />
+          <Summon parameter={this.state.param} onChangeParameter={this.updateParams} />
+          <Friend parameter={this.state.param} onChangeParameter={this.updateParams} />
+        </div>
+      </div>
+    );
+  }
+});
+
+
 // 外部に名前を出す
-module.exports.BasicInformation = BasicInformation;
-module.exports.Zenith = Zenith;
-module.exports.System = System;
-module.exports.Weapon = Weapon;
-module.exports.Summon = Summon;
-module.exports.Friend = Friend;
-module.exports.Result = Result;
+module.exports = CalculatorBody;
 
