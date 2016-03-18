@@ -1,6 +1,6 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-import { Component } from "react";
+import React, { Component } from "react";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
@@ -61,8 +61,9 @@ class System extends Component {
 // 計算機の骨格
 class CalculatorBody extends Component {
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       param: {
         rank: 1,  // ランク
         ship_bonus: 0,  // 騎空艇補正
@@ -84,6 +85,7 @@ class CalculatorBody extends Component {
         }
       }
     };
+
   }
 
   updateParams(obj) {

@@ -28,10 +28,9 @@ class JobSelector extends Component {
 // ジョブ選択コンポーネント
 class Job extends Component {
 
-  getInitialState() {
-    return {
-      job: {}
-    };
+  constructor(props) {
+    super(props);
+    this.state = { job: {} };
   }
 
   componentDidMount() {

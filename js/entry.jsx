@@ -1,7 +1,7 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
 // 必要なスタイルシートを読みこむ
-require("../css/calc.css");
+import "../css/calc.css";
 
 // 必要なライブラリを読みこむ
 import React from "react";
