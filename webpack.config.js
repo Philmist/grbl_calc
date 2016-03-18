@@ -1,4 +1,6 @@
 // vim: sts=2 sw=2 ts=2 expandtab
+// Webpack2用のコンフィグファイルです。
+// 必ず Webpack@~2.1.0-beta 以上で使ってください。
 var path = require("path");
 var loaders = [
   {
