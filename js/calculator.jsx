@@ -1,22 +1,23 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-var React = require("react");
-var DragDropContext = require("react-dnd").DragDropContext;
-var HTML5Backend = require("react-dnd-html5-backend");
+import { Component } from "react";
+import { DragDropContext } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
 
-var BasicInformation = require("./basic_information.jsx");
-var Zenith = require("./zenith.jsx");
-var Weapon = require("./weapon.jsx");
-var Summon = require("./summon.jsx");
-var Friend = require("./friend.jsx");
+import BasicInformation from "./basic_information.jsx";
+import Zenith from "./zenith.jsx";
+import Weapon from "./weapon.jsx";
+import Summon from "./summon.jsx";
+import Friend from "./friend.jsx";
 
-var grbl_calc = require("./calc.js");
+import { calculate_atkval } from "./calc.js";
 
 
 // 結果表示欄
-var Result = React.createClass({
-  render: function() {
-    var res = grbl_calc.calculate_atkval(this.props.parameter);
+class Result extends Component {
+
+  render() {
+    let res = calculate_atkval(this.props.parameter);
     return (
       <section>
         <header className="subtype">結果</header>
@@ -39,24 +40,28 @@ var Result = React.createClass({
       </section>
     );
   }
-});
+
+};
 
 
 // システム部分
-var System = React.createClass({
-  render: function() {
+class System extends Component {
+
+  render() {
     return (
       <section>
         <header className="subtype">システム</header>
       </section>
     );
   }
-});
+
+};
 
 
 // 計算機の骨格
-var CalculatorBody = React.createClass({
-  getInitialState: function() {
+class CalculatorBody extends Component {
+
+  getInitialState() {
     return {
       param: {
         rank: 1,  // ランク
@@ -79,14 +84,17 @@ var CalculatorBody = React.createClass({
         }
       }
     };
-  },
-  updateParams: function(obj) {
+  }
+
+  updateParams(obj) {
     this.setState({param: Object.assign(this.state.param, obj)});
-  },
-  setAllParams: function(param) {
+  }
+
+  setAllParams(param) {
     this.setState({param: param});
-  },
-  render: function() {
+  }
+
+  render() {
     return (
       <div id="site_box">
         <div id="header_box">
@@ -106,9 +114,8 @@ var CalculatorBody = React.createClass({
       </div>
     );
   }
-});
+};
 
 
-// 外部に名前を出す
-module.exports = DragDropContext(HTML5Backend)(CalculatorBody);
-
+// デコレートしたクラスをエクスポート
+export default DragDropContext(HTML5Backend)(CalculatorBody);

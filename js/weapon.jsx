@@ -1,13 +1,12 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-var React = require("react");
-
-var grbl_calc = require("./calc.js");
+import React, { Component } from "react";
 
 
 // 武器部分
-var Weapon = React.createClass({
-  render: function() {
+export default class Weapon extends Component {
+
+  render() {
     return (
       <section>
         <header className="subtype">武器</header>
@@ -37,20 +36,24 @@ var Weapon = React.createClass({
       </section>
     );
   }
-});
+
+};
 
 
-var WeaponRows = React.createClass({
-  render: function() {
+class WeaponRows extends Component {
+
+  render() {
     return (
       <WeaponRow />
     );
   }
-});
+
+};
 
 
-var WeaponRow = React.createClass({
-  render: function() {
+class WeaponRow extends Component {
+
+  render() {
     return (
       <tr>
         <td>
@@ -90,8 +93,5 @@ var WeaponRow = React.createClass({
       </tr>
     );
   }
-});
 
-
-// 外部にクラスをエクスポート
-module.exports = Weapon;
+};

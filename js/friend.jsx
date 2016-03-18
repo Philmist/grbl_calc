@@ -1,28 +1,10 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-var React = require("react");
+import React, { Component } from "react";
 
-var grbl_calc = require("./calc.js");
+class FriendTableHeader extends Component {
 
-
-// フレンド部分
-var Friend = React.createClass({
-  render: function() {
-    return (
-      <section>
-        <header className="subtype">フレンド召喚</header>
-        <form>
-          <table className="grbr" id="friend_table">
-            <FriendTableHeader />
-          </table>
-        </form>
-      </section>
-    );
-  }
-});
-
-var FriendTableHeader = React.createClass({
-  render: function() {
+  render() {
     return (
       <thead>
         <tr>
@@ -37,8 +19,24 @@ var FriendTableHeader = React.createClass({
       </thead>
     );
   }
-});
+
+};
 
 
-// 外部にクラスをエクスポート
-module.exports = Friend;
+// フレンド部分
+export default class Friend extends Component {
+
+  render() {
+    return (
+      <section>
+        <header className="subtype">フレンド召喚</header>
+        <form>
+          <table className="grbr" id="friend_table">
+            <FriendTableHeader />
+          </table>
+        </form>
+      </section>
+    );
+  }
+
+};

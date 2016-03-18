@@ -1,14 +1,12 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-var React = require("react");
-var ReactDOM = require("react-dom");
-
-var grbl_calc = require("./calc.js");
+import React, { Component } from "react";
 
 
 // Zenith入力欄
-var Zenith = React.createClass({
-  render: function() {
+export default class Zenith extends Component {
+
+  render() {
     return (
       <div>
         <header className="subtype">Zenith Perk</header>
@@ -35,7 +33,8 @@ var Zenith = React.createClass({
       </div>
     );
   }
-});
+
+};
 
 function renderZenithSelector(onChangeFunc, id) {
   var zenith_list = [[0,"無し"], [1, "★"], [2, "★★"], [3,"★★★"]];
@@ -52,10 +51,12 @@ function renderZenithSelector(onChangeFunc, id) {
   );
 }
 
-var ZenithAttack = React.createClass({
-  handleChange: function(event) {
-  },
-  render: function() {
+class ZenithAttack extends Component {
+
+  handleChange(event) {
+  }
+
+  render() {
     var elem = renderZenithSelector(this.handleChange, "zenith_atk");
     return (
       <tr>
@@ -66,12 +67,15 @@ var ZenithAttack = React.createClass({
       </tr>
     );
   }
-});
 
-var ZenithWeapon1 = React.createClass({
-  handleChange: function(event) {
-  },
-  render: function() {
+};
+
+class ZenithWeapon1 extends Component{
+
+  handleChange(event) {
+  }
+
+  render() {
     var elem = renderZenithSelector(this.handleChange, "zenith_weapon1");
     return (
       <tr>
@@ -82,12 +86,15 @@ var ZenithWeapon1 = React.createClass({
       </tr>
     );
   }
-});
 
-var ZenithWeapon2 = React.createClass({
-  handleChange: function(event) {
-  },
-  render: function() {
+};
+
+class ZenithWeapon2 extends Component {
+
+  handleChange(event) {
+  }
+
+  render() {
     var elem = renderZenithSelector(this.handleChange, "zenith_weapon2");
     return (
       <tr>
@@ -98,12 +105,15 @@ var ZenithWeapon2 = React.createClass({
       </tr>
     );
   }
-});
 
-var ZenithAttribute = React.createClass({
-  handleChange: function(event) {
-  },
-  render: function() {
+};
+
+class ZenithAttribute extends Component {
+
+  handleChange(event) {
+  }
+
+  render() {
     var elem = renderZenithSelector(this.handleChange, "zenith_attribute");
     return (
       <tr>
@@ -114,8 +124,5 @@ var ZenithAttribute = React.createClass({
       </tr>
     );
   }
-});
 
-
-// 外部にクラスをエクスポート
-module.exports = Zenith;
+};

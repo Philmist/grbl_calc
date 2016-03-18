@@ -1,31 +1,53 @@
-var css_loader = { test: /\.css$/, loader: "style!css" }
-var jsx_loader = { test: /\.jsx$/, loader: "jsx-loader"}
+// vim: sts=2 sw=2 ts=2 expandtab
+var path = require("path");
+var loaders = [
+  {
+    test: /\.css$/,
+    loader: "css",
+    query: {
+      name: '[name].[ext]'
+    }
+  },
+  {
+    test: /\.jsx$/,
+    loader: "babel",
+    exclude: /(node_modules|bower_components)/,
+    query: {
+      presets: ['react', 'babel-preset-es2015-native-modules']
+    }
+  }
+];
 
 module.exports = [
   {
-    entry: "./js/entry.jsx",
+    entry: {
+      js: "./js/entry.jsx",
+    },
     output: {
-      path: __dirname,
       filename: "./dist/bundle.js"
     },
     module: {
-      loaders: [
-        css_loader, jsx_loader
-      ]
+      loaders: loaders,
     },
-    externals: {
-      jquery: "jQuery"
+    resolve: {
+      extensions: [".js", ".jsx", ".css"],
+      modules: [
+        "node_modules"
+      ]
     }
   },
   {
     entry: "mocha!./js/test/test.js",
     output: {
-      path: __dirname,
       filename: "./dist/test_bundle.js"
     },
     module: {
-      loaders: [
-        css_loader, jsx_loader
+      loaders: loaders,
+    },
+    resolve: {
+      extensions: [".js", ".jsx", ".css"],
+      modules: [
+        "node_modules"
       ]
     },
     externals: {

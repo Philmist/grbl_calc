@@ -4,7 +4,7 @@
 // jQueryが必要
 var job_promise;
 var job_json;
-module.exports.get_job_data = function (url) {
+function get_job_data (url) {
   var job_request = url ? url : "data/job_data.json";
   job_promise = job_promise || fetch(job_request);
   // Promiseオブジェクトを返すことで待つことを可能にする
@@ -69,7 +69,7 @@ module.exports.get_job_data = function (url) {
     }, ...
   }
 */
-module.exports.calculate_atkval = function (param_obj, job_data) {
+function calculate_atkval (param_obj, job_data) {
   // 基本攻撃力の算出
   var basic_atk = param_obj.rank * 40 + 1000;
   if (param_obj.rank < 2) {
@@ -312,3 +312,7 @@ module.exports.calculate_atkval = function (param_obj, job_data) {
     "total_atk": total_atk
   };
 }
+
+
+// 外部に関数をエクスポート
+export { get_job_data, calculate_atkval };

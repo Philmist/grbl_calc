@@ -1,24 +1,11 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-var React = require("react");
-
-var grbl_calc = require("./calc.js");
+import React, { Component } from "react";
 
 
-// 召喚獣部分
-var Summon = React.createClass({
-  render: function() {
-    return (
-      <section>
-        <header className="subtype">召喚獣</header>
-        <SummonTable parameter={this.props.parameter} onChangeParameter={this.props.onChangeParameter} />
-      </section>
-    );
-  }
-});
+class SummonTable extends Component {
 
-var SummonTable = React.createClass({
-  render: function() {
+  render() {
     return (
       <form>
         <table className="grbr" id="summon_table">
@@ -27,10 +14,12 @@ var SummonTable = React.createClass({
       </form>
     );
   }
-});
 
-var SummonTableHeader = React.createClass({
-  render: function() {
+};
+
+class SummonTableHeader extends Component {
+
+  render() {
     return (
       <thead>
         <tr>
@@ -45,8 +34,18 @@ var SummonTableHeader = React.createClass({
       </thead>
     );
   }
-});
+
+};
 
 
-// 外部にクラスをエクスポート
-module.exports = Summon;
+// 召喚獣部分
+export default class Summon extends Component {
+  render() {
+    return (
+      <section>
+        <header className="subtype">召喚獣</header>
+        <SummonTable parameter={this.props.parameter} onChangeParameter={this.props.onChangeParameter} />
+      </section>
+    );
+  }
+};

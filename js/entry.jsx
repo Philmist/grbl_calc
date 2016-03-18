@@ -4,11 +4,11 @@
 require("../css/calc.css");
 
 // 必要なライブラリを読みこむ
-var React = require("react");
-var ReactDOM = require("react-dom");
+import React from "react";
+import ReactDOM from "react-dom";
 
 // 必要なユーザースクリプトを読みこむ
-var Calculator = require("./calculator.jsx");
+import Calculator from "./calculator.jsx";
 
 
 // 最終的な結果をDOMにして注入する
