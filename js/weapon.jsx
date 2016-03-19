@@ -2,6 +2,8 @@
 
 import React, { Component } from "react";
 
+import ItemTypes from "./const/item_types";
+
 
 // 武器部分
 export default class Weapon extends Component {
