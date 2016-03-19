@@ -13,8 +13,8 @@ describe('Array', function() {
 });
 
 
-var get_job_data = require("../calc.js").get_job_data;
-var calculate_atkval = require("../calc.js").calculate_atkval;
+var get_job_data = require("../atk_calc.js").get_job_data;
+var calculate_atkval = require("../atk_calc.js").calculate_atkval;
 // calc.jsのテスト
 describe('calc.js', function() {
   // このテストで使用する変数

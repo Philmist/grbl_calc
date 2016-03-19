@@ -10,11 +10,12 @@ import Weapon from "./weapon.jsx";
 import Summon from "./summon.jsx";
 import Friend from "./friend.jsx";
 
-import { calculate_atkval } from "./calc.js";
+import { calculate_atkval } from "./atk_calc.js";
 
 
 // 結果表示欄
-class Result extends Component {
+@DragDropContext(HTML5Backend)
+export default class Result extends Component {
 
   render() {
     let res = calculate_atkval(this.props.parameter);
@@ -120,4 +121,4 @@ class CalculatorBody extends Component {
 
 
 // デコレートしたクラスをエクスポート
-export default DragDropContext(HTML5Backend)(CalculatorBody);
+// export default DragDropContext(HTML5Backend)(CalculatorBody);

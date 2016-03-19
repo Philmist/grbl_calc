@@ -11,15 +11,21 @@ var loaders = [
     }
   },
   {
-    test: /\.jsx$/,
+    // 正規表現なので.jsと.jsxの両方がひっかかります
+    test: /\.jsx?$/,
     loader: "babel",
+    // node_modulesとかの中を変換されてもちょっと困る
     exclude: /(node_modules|bower_components)/,
     query: {
-      presets: ['react', 'babel-preset-es2015-native-modules']
+      plugins: ['transform-runtime'],
+      // プリセットは順序が大事
+      // stage-0でES7を変換してから残りをやっつけます
+      presets: ['stage-0', 'babel-preset-es2015-native-modules', 'react']
     }
   }
 ];
 
+// webpack(1|2)は同時にいくつかのファイルをバンドルできます
 module.exports = [
   {
     entry: {

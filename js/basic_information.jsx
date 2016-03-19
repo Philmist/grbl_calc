@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 
-import { get_job_data } from "./calc.js";
+import { get_job_data } from "./atk_calc.js";
 
 
 // ジョブ1つを表わす項目
