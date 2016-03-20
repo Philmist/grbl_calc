@@ -1,18 +1,17 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
 import React, { Component } from "react";
-
-import { get_job_data } from "./atk_calc.js";
+import { connect } from "react-redux";
 
 
 // ジョブ1つを表わす項目
 class JobSelector extends Component {
 
   render() {
-    var values = [];
-    for (var prop in this.props.job) {
+    var values = new Array();
+    for (var i in this.props.job) {
       values.push(
-        <option value={prop} key={prop}>{this.props.job[prop].name}</option>
+        <option value={i} key={i}>{this.props.job[i].name}</option>
       );
     }
     return (
@@ -28,19 +27,6 @@ class JobSelector extends Component {
 // ジョブ選択コンポーネント
 class Job extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { job: {} };
-  }
-
-  componentDidMount() {
-    get_job_data().then(function(d) {
-      this.setState({
-        job: d
-      });
-    }.bind(this));
-  }
-
   render() {
     return (
       <table className="grbr" id="job_table">
@@ -48,11 +34,7 @@ class Job extends Component {
           <tr>
             <th>ジョブ</th>
             <td>
-              <JobSelector
-                parameter={this.props.parameter}
-                onChangeParameter={this.props.onChangeParameter}
-                job={this.state.job}
-              />
+              <JobSelector job={this.props.job} />
             </td>
           </tr>
         </tbody>
@@ -162,9 +144,9 @@ export default class BasicInformation extends Component {
     return (
       <section>
         <header className="subtype">基本情報</header>
-        <PlayerStats parameter={this.props.parameter} onChangeParameter={this.props.onChangeParameter} />
-        <AtkBonus parameter={this.props.parameter} onChangeParameter={this.props.onChangeParameter} />
-        <Job parameter={this.props.parameter} onChangeParameter={this.props.onChangeParameter} />
+        <PlayerStats />
+        <AtkBonus />
+        <Job job={this.props.job} />
       </section>
     );
   }

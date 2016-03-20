@@ -28,10 +28,7 @@ export default class Weapon extends Component {
               </tr>
             </thead>
             <tbody>
-              <WeaponRows
-                parameter={this.props.parameter}
-                onChangeParameter={this.props.onChangeParameter}
-              />
+              <WeaponRows />
             </tbody>
           </table>
         </form>

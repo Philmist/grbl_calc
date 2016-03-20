@@ -1,6 +1,7 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
@@ -10,25 +11,15 @@ import Weapon from "./weapon.jsx";
 import Summon from "./summon.jsx";
 import Friend from "./friend.jsx";
 
+import * as REDCONST from "./const/reducer_type.js";
 import { get_job_data, calculate_atkval } from "./atk_calc.js";
 
 
 // 結果表示欄
 class Result extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { job_data : {} };
-  }
-
-  componentDidMount() {
-    get_job_data.then(function(d) {
-      this.setState({job_data : d});
-    });
-  }
-
   render() {
-    let res = calculate_atkval(this.props.parameter, this.state.job_data);
+    var res = calculate_atkval(this.props.parameter, this.props.job);
     return (
       <section>
         <header className="subtype">結果</header>
@@ -69,67 +60,82 @@ class System extends Component {
 };
 
 
+// 計算機の骨格に計算結果を注入する関数
+function mapStateToCalculatorBodyProps(state, props) {
+  return {
+    params: {
+      rank: 1,  // ランク
+      ship_bonus: 0,  // 騎空艇補正
+      hp_percent: 100,  // 現HPの割合(%)
+      job: "fighter",  // "data/job_data.json"で定義されている職業(クラス)
+      affinity: "none",  // 相性(none/good/bad)
+      zenith: {  // Zenith Perk
+        atk: 0,  // 攻撃力の星(0-3)
+        weapon: [0, 0],  // 武器1, 武器2の星(0-3)
+        attribute: 0  // 属性攻撃力の星(0-3)
+      },
+      weapon: [],  // 武器
+      summon: [],
+      atk_bonus: {  // 攻撃力ボーナス
+        percent: 0,  // %
+        value: 0  // 値
+      },
+      friend: {
+      }
+    },
+    job: state.job
+  }
+}
+
+const mapDispatchToCalculatorBodyProps = {
+  update_job_data: () => {
+    return function (dispatch, getState) {
+      dispatch({
+        selector: REDCONST.selector.JOB,
+        type: REDCONST.job_type.FETCHING
+      });
+      get_job_data().then(
+        (data) => {
+          dispatch({
+            selector: REDCONST.selector.JOB,
+            type: REDCONST.job_type.ASSIGN,
+            job: data
+          });
+        }
+      );
+    };
+  }
+}
+
 // 計算機の骨格
 @DragDropContext(HTML5Backend)
-export default class CalculatorBody extends Component {
+class CalculatorBody extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      param: {
-        rank: 1,  // ランク
-        ship_bonus: 0,  // 騎空艇補正
-        hp_percent: 100,  // 現HPの割合(%)
-        job: "fighter",  // "data/job_data.json"で定義されている職業(クラス)
-        affinity: "none",  // 相性(none/good/bad)
-        zenith: {  // Zenith Perk
-          atk: 0,  // 攻撃力の星(0-3)
-          weapon: [0, 0],  // 武器1, 武器2の星(0-3)
-          attribute: 0  // 属性攻撃力の星(0-3)
-        },
-        weapon: [],  // 武器
-        summon: [],
-        atk_bonus: {  // 攻撃力ボーナス
-          percent: 0,  // %
-          value: 0  // 値
-        },
-        friend: {
-        }
-      }
-    };
-
-  }
-
-  updateParams(obj) {
-    this.setState({param: Object.assign(this.state.param, obj)});
-  }
-
-  setAllParams(param) {
-    this.setState({param: param});
+  componentDidMount() {
+    this.props.update_job_data();
   }
 
   render() {
+    var { job, params } = this.props;
     return (
       <div id="site_box">
         <div id="header_box">
           <header className="titlecap">グランブルーファンタジー攻撃力計算機（新）</header>
         </div>
         <div id="left_box">
-          <BasicInformation parameter={this.state.param} onChangeParameter={this.updateParams} />
-          <Zenith parameter={this.state.param} onChangeParameter={this.updateParams} />
-          <Result parameter={this.state.param} />
-          <System parameter={this.state.param} setParamFunc={this.setAllParams} />
+          <BasicInformation job={job} />
+          <Zenith />
+          <Result job={job} parameter={params} />
+          <System />
         </div>
         <div id="right_box">
-          <Weapon parameter={this.state.param} onChangeParameter={this.updateParams} />
-          <Summon parameter={this.state.param} onChangeParameter={this.updateParams} />
-          <Friend parameter={this.state.param} onChangeParameter={this.updateParams} />
+          <Weapon />
+          <Summon />
+          <Friend />
         </div>
       </div>
     );
   }
 };
 
-
-// デコレートしたクラスをエクスポート
-// export default DragDropContext(HTML5Backend)(CalculatorBody);
+export default connect(mapStateToCalculatorBodyProps, mapDispatchToCalculatorBodyProps)(CalculatorBody);

@@ -31,6 +31,7 @@ var loaders = [
 // webpack(1|2)は同時にいくつかのファイルをバンドルできます
 module.exports = [
   {
+    devtool: "eval",
     entry: {
       js: "./js/entry.jsx",
     },
