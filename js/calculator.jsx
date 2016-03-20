@@ -10,15 +10,25 @@ import Weapon from "./weapon.jsx";
 import Summon from "./summon.jsx";
 import Friend from "./friend.jsx";
 
-import { calculate_atkval } from "./atk_calc.js";
+import { get_job_data, calculate_atkval } from "./atk_calc.js";
 
 
 // 結果表示欄
-@DragDropContext(HTML5Backend)
-export default class Result extends Component {
+class Result extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { job_data : {} };
+  }
+
+  componentDidMount() {
+    get_job_data.then(function(d) {
+      this.setState({job_data : d});
+    });
+  }
 
   render() {
-    let res = calculate_atkval(this.props.parameter);
+    let res = calculate_atkval(this.props.parameter, this.state.job_data);
     return (
       <section>
         <header className="subtype">結果</header>
@@ -60,7 +70,8 @@ class System extends Component {
 
 
 // 計算機の骨格
-class CalculatorBody extends Component {
+@DragDropContext(HTML5Backend)
+export default class CalculatorBody extends Component {
 
   constructor(props) {
     super(props);

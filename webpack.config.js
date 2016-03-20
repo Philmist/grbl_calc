@@ -4,13 +4,16 @@
 var path = require("path");
 var loaders = [
   {
+    // CSS Modules(https://github.com/css-modules/css-modules)
+    // を使うための設定
     test: /\.css$/,
-    loader: "css",
-    query: {
-      name: '[name].[ext]'
-    }
+    loader: [
+      "style",
+      { loader: "css", query: {name: '[name].[ext]'} }
+    ]
   },
   {
+    // JSXとJSを使うための設定 (Babel6で変換します)
     // 正規表現なので.jsと.jsxの両方がひっかかります
     test: /\.jsx?$/,
     loader: "babel",
@@ -20,7 +23,7 @@ var loaders = [
       plugins: ['transform-runtime'],
       // プリセットは順序が大事
       // stage-0でES7を変換してから残りをやっつけます
-      presets: ['stage-0', 'babel-preset-es2015-native-modules', 'react']
+      presets: ['stage-0', 'react', 'es2015-webpack']
     }
   }
 ];
