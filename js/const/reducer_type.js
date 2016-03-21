@@ -8,5 +8,13 @@ export const job = {
 export const weapon = {
   APPEND: "WEAPON_APPEND",
   DELETE: "WEAPON_DELETE",
+  REPLACE: "WEAPON_REPLACE",
   MOVE: "WEAPON_MOVE"
+};
+
+export const summon = {
+  APPEND: "SUMMON_APPEND",
+  DELETE: "SUMMON_DELETE",
+  REPLACE: "SUMMON_REPLACE",
+  MOVE: "SUMMON_MOVE"
 };

@@ -71,17 +71,7 @@ export default class Weapon extends Component {
         <form name="weapon">
           <table className="grbr" id="weapon_table" ref="weapon_table">
             <thead>
-              <tr>
-                <th>鍵</th>
-                <th>選</th>
-                <th className="width150">名前</th>
-                <th className="width50">攻撃力</th>
-                <th>種別</th>
-                <th>スキル1</th>
-                <th>スキル2</th>
-                <th>LV</th>
-                <th>並替・挿入・削除</th>
-              </tr>
+              <WeaponTableHeader />
             </thead>
             <tbody>
               <WeaponRows />
@@ -92,6 +82,25 @@ export default class Weapon extends Component {
     );
   }
 
+};
+
+
+// 武器テーブルのヘッダ
+// 最近導入されたstatelessな書き方の例
+var WeaponTableHeader = (props) => {
+  return (
+    <tr>
+      <th>鍵</th>
+      <th>選</th>
+      <th className="width150">名前</th>
+      <th className="width50">攻撃力</th>
+      <th>種別</th>
+      <th>スキル1</th>
+      <th>スキル2</th>
+      <th>LV</th>
+      <th>並替・挿入・削除</th>
+    </tr>
+  );
 };
 
 
