@@ -69,7 +69,7 @@ export default class Weapon extends Component {
       <section>
         <header className="subtype">武器</header>
         <form name="weapon">
-          <table className="grbr" id="weapon_tabel" ref="weapon_table">
+          <table className="grbr" id="weapon_table" ref="weapon_table">
             <thead>
               <tr>
                 <th>鍵</th>
