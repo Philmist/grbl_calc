@@ -14,6 +14,7 @@ import Friend from "./friend.jsx";
 import * as REDCONST from "./const/reducer_type.js";
 import { get_job_data, calculate_atkval } from "./atk_calc.js";
 
+import "../css/calc.css";
 
 // 結果表示欄
 class Result extends Component {
@@ -91,13 +92,11 @@ const mapDispatchToCalculatorBodyProps = {
   update_job_data: () => {
     return function (dispatch, getState) {
       dispatch({
-        selector: REDCONST.selector.JOB,
         type: REDCONST.job_type.FETCHING
       });
       get_job_data().then(
         (data) => {
           dispatch({
-            selector: REDCONST.selector.JOB,
             type: REDCONST.job_type.ASSIGN,
             job: data
           });

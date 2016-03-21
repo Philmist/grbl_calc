@@ -18,20 +18,14 @@ import * as RC from "./const/reducer_type.js";
 // jobを保管するstateのreducer
 // action = { selector: "JOB", type: "ASSIGN", job: data }
 export function job_reducer(state = {}, action) {
-  if (action.selector === RC.selector.JOB) {
-    switch (action.type) {
-            case RC.job_type.ASSIGN:
-                    return Object.assign({}, state, action.job);
-            default:
-                    return state;
-    }
+  if (action.type === RC.job_type.ASSIGN) {
+      return Object.assign({}, state, action.job);
   } else {
-    return state;
+      return state;
   }
 }
 
-
-// パラメータを保管するstateのreducer
-export function param_reducer(state = {}, action) {
+// weaponを保管するstateのreducer
+export function weapon_reducer(state = [], action) {
   return state;
 }

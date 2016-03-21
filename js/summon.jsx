@@ -2,6 +2,8 @@
 
 import React, { Component } from "react";
 
+import "../css/calc.css";
+
 
 class SummonTable extends Component {
 

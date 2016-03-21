@@ -2,6 +2,8 @@
 
 import React, { Component } from "react";
 
+import "../css/calc.css";
+
 
 // Zenith入力欄
 export default class Zenith extends Component {

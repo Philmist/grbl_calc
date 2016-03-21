@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+import "../css/calc.css";
 
 // ジョブ1つを表わす項目
 class JobSelector extends Component {
@@ -151,5 +152,3 @@ export default class BasicInformation extends Component {
     );
   }
 };
-
-
