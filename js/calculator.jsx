@@ -12,7 +12,8 @@ import Summon from "./summon.jsx";
 import Friend from "./friend.jsx";
 
 import * as REDCONST from "./const/reducer_type.js";
-import { get_job_data, calculate_atkval } from "./atk_calc.js";
+import calculate_atkval from "./atk_calc.js";
+import get_job_data from "./get_job_data.js";
 
 import "../css/calc.css";
 
@@ -91,13 +92,11 @@ function mapStateToCalculatorBodyProps(state, props) {
 const mapDispatchToCalculatorBodyProps = {
   update_job_data: () => {
     return function (dispatch, getState) {
-      dispatch({
-        type: REDCONST.job_type.FETCHING
-      });
+      dispatch({ type: REDCONST.job.FETCHING });
       get_job_data().then(
         (data) => {
           dispatch({
-            type: REDCONST.job_type.ASSIGN,
+            type: REDCONST.job.ASSIGN,
             job: data
           });
         }

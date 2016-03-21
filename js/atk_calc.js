@@ -1,27 +1,5 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-// 外部からjob_dataとしてJSONデータを取りこむ
-// jQueryが必要
-var job_promise = {};
-var job_json = {};
-function get_job_data (job_url) {
-  let url = job_url ? job_url : "data/job_data.json";
-  job_promise[url] = job_promise[url] || fetch(url);
-  // Promiseオブジェクトを返すことで待つことを可能にする
-  // see_also: http://qiita.com/koki_cheese/items/c559da338a3d307c9d88
-  return job_promise[url].then(function(response) {
-    if (job_json[url]) {
-      return Promise.resolve(job_json[url]);
-    } else {
-      return Promise.resolve(response).then(function(j) {
-        job_json[url] = j.json();
-        return job_json[url];
-      });
-    }
-  });
-}
-
-
 // 各種パラメータをobject(dict)で受けとってobjectで返す関数
 /*
   param_obj: 以下のような内容を持つオブジェクト
@@ -68,7 +46,7 @@ function get_job_data (job_url) {
     }, ...
   }
 */
-function calculate_atkval (param_obj, job_data) {
+export default function calculate_atkval (param_obj, job_data) {
   // 基本攻撃力の算出
   var basic_atk = param_obj.rank * 40 + 1000;
   if (param_obj.rank < 2) {
@@ -311,7 +289,3 @@ function calculate_atkval (param_obj, job_data) {
     "total_atk": total_atk
   };
 }
-
-
-// 外部に関数をエクスポート
-export { get_job_data, calculate_atkval };

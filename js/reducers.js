@@ -18,7 +18,7 @@ import * as RC from "./const/reducer_type.js";
 // jobを保管するstateのreducer
 // action = { selector: "JOB", type: "ASSIGN", job: data }
 export function job_reducer(state = {}, action) {
-  if (action.type === RC.job_type.ASSIGN) {
+  if (action.type === RC.job.ASSIGN) {
       return Object.assign({}, state, action.job);
   } else {
       return state;
