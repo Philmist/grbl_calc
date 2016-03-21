@@ -34,6 +34,6 @@ export function weapon_reducer(state = [], action) {
 }
 
 // 召喚を保管するstateのreducer
-export function summon_reducer(state = [], action {
+export function summon_reducer(state = [], action) {
   return state;
 }
