@@ -13,13 +13,19 @@ import { Provider } from "react-redux";
 
 // 必要なユーザースクリプトを読みこむ
 import Calculator from "./calculator.jsx";
-import { job_reducer } from "./reducers.js";
+import * as reducers from "./reducers.js";
 
 
 const loggerMiddleware = createLogger();
 
 // reducerを組みあわせて新しいreducerを作る
-const reducer = combineReducers({ job: job_reducer });
+const reducer = combineReducers(
+  { job: reducers.job_data,
+    weapon: reducers.weapon,
+    summon: reducers.summon,
+    basicinfo: reducers.basicinfo
+  }
+);
 // 組みあわせたreducerを使って新しいstoreを作る
 const store = createStore(
   reducer,

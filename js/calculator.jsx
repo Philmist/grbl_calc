@@ -64,28 +64,25 @@ class System extends Component {
 
 // 計算機の骨格に計算結果を注入する関数
 function mapStateToCalculatorBodyProps(state, props) {
+  let basicinfo = state.basicinfo;
+  let job = state.job;
+  let weapon = state.weapon;
+  let summon = state.summon;
   return {
     params: {
-      rank: 1,  // ランク
-      ship_bonus: 0,  // 騎空艇補正
-      hp_percent: 100,  // 現HPの割合(%)
-      job: "fighter",  // "data/job_data.json"で定義されている職業(クラス)
-      affinity: "none",  // 相性(none/good/bad)
-      zenith: {  // Zenith Perk
-        atk: 0,  // 攻撃力の星(0-3)
-        weapon: [0, 0],  // 武器1, 武器2の星(0-3)
-        attribute: 0  // 属性攻撃力の星(0-3)
-      },
-      weapon: [],  // 武器
-      summon: [],
-      atk_bonus: {  // 攻撃力ボーナス
-        percent: 0,  // %
-        value: 0  // 値
-      },
+      rank: basicinfo.data.rank,  // ランク
+      ship_bonus: basicinfo.data.ship_bonus,  // 騎空艇補正
+      hp_percent: basicinfo.data.hp_percent,  // 現HPの割合(%)
+      job: basicinfo.data.job,  // "data/job_data.json"で定義されている職業(クラス)
+      affinity: basicinfo.data.affinity,  // 相性(none/good/bad)
+      zenith: basicinfo.data.zenith,
+      weapon: weapon.data,  // 武器
+      summon: summon.data,
+      atk_bonus: basicinfo.data.atk_bonus,
       friend: {
       }
     },
-    job: state.job
+    job: job.data
   }
 }
 

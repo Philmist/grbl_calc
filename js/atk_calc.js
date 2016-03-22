@@ -213,6 +213,10 @@ export default function calculate_atkval (param_obj, job_data) {
       "koujin", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(6, 0, 1), pcalc_gen(16, CHECK_LEVEL, 0.8)
     ),
+    "km1": pfunc_gen(
+      "koujin", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0,4)
+    ),
     "mkj1": pfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(2, 0, 1), pcalc_gen(12, CHECK_LEVEL, 0.5)

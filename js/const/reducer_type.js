@@ -5,6 +5,12 @@ export const job = {
   FETCHING: "JOB_FETCHING"
 };
 
+export const job_state = {
+  ASSIGNED: "JOBSTATE_ASSIGNED",
+  FETCHING: "JOBSTATE_FETCHING",
+  UNASSIGNED: "JOBSTATE_UNASSIGNED"
+};
+
 export const weapon = {
   APPEND: "WEAPON_APPEND",
   DELETE: "WEAPON_DELETE",
