@@ -63,8 +63,9 @@ export function basicinfo(state, action) {
   };
 
   // actionによる分岐
+  var retval = Object.assign({}, { data: default_value }, state);
+  return retval;
   if (action) {
-    var retval = Object.assign({}, { data: default_value }, state);
     return retval;
   } else if (state === undefined) {  // stateがundefinedなら初期値を返す
     return { data: default_value };
