@@ -76,6 +76,9 @@ export default class Weapon extends Component {
             <tbody>
               <WeaponRows />
             </tbody>
+            <tfoot>
+              <WeaponTableHeader />
+            </tfoot>
           </table>
         </form>
       </section>
@@ -86,23 +89,28 @@ export default class Weapon extends Component {
 
 
 // 武器テーブルのヘッダ
-// 最近導入されたstatelessな書き方の例
-var WeaponTableHeader = (props) => {
-  return (
-    <tr>
-      <th>鍵</th>
-      <th>選</th>
-      <th className="width150">名前</th>
-      <th className="width50">攻撃力</th>
-      <th>種別</th>
-      <th>スキル1</th>
-      <th>スキル2</th>
-      <th>LV</th>
-      <th>並替・挿入・削除</th>
-    </tr>
-  );
+class WeaponTableHeader extends Component {
+  render() {
+    return (
+      <tr>
+        <th>鍵</th>
+        <th>選</th>
+        <th className="width150">名前</th>
+        <th className="width50">攻撃力</th>
+        <th>種別</th>
+        <th>スキル1</th>
+        <th>スキル2</th>
+        <th>LV</th>
+        <th>並替・挿入・削除</th>
+      </tr>
+    );
+  }
 };
 
+
+// 武器並び全体にプロパティを注入する関数
+function mapStateToWeaponRowsProps(state) {
+}
 
 // 武器の並び全体を表わすクラス
 class WeaponRows extends Component {
@@ -122,12 +130,13 @@ class WeaponRow extends Component {
     return (
       <option value={key[0]} key={key[0]}>{key[1]}</option>
     );
-  };
+  }
+
+  e_kind = WEAPON_KIND.map(this.create_optfunc);
+  e_skill_type = SKILL_TYPE.map(this.create_optfunc);
+  e_skill_lv = SKILL_LV.map(this.create_optfunc);
 
   render() {
-    let e_kind = WEAPON_KIND.map(this.create_optfunc);
-    let e_skill_type = SKILL_TYPE.map(this.create_optfunc);
-    let e_skill_lv = SKILL_LV.map(this.create_optfunc);
     return (
       <tr>
         <td>
@@ -144,22 +153,22 @@ class WeaponRow extends Component {
         </td>
         <td>
           <select className="weapon_kind">
-            {e_kind}
+            {this.e_kind}
           </select>
         </td>
         <td>
           <select className="weapon_skill_type1">
-            {e_skill_type}
+            {this.e_skill_type}
           </select>
         </td>
         <td>
           <select className="weapon_skill_type2">
-            {e_skill_type}
+            {this.e_skill_type}
           </select>
         </td>
         <td>
           <select className="weapon_skill_lv">
-            {e_skill_lv}
+            {this.e_skill_lv}
           </select>
         </td>
         <td>

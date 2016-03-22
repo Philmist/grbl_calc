@@ -3,6 +3,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+import { fetch_job_data } from "./actions.js";
+
 import "../css/calc.css";
 
 // ジョブ1つを表わす項目
@@ -140,7 +142,7 @@ class AtkBonus extends Component {
 
 
 // 基礎情報入力欄
-export default class BasicInformation extends Component {
+class BasicInformation extends Component {
   render() {
     return (
       <section>
@@ -152,3 +154,4 @@ export default class BasicInformation extends Component {
     );
   }
 };
+export default connect((state) => ({ job: state.job }))(BasicInformation);

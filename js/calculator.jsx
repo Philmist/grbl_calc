@@ -13,7 +13,7 @@ import Friend from "./friend.jsx";
 
 import * as REDCONST from "./const/reducer_type.js";
 import calculate_atkval from "./atk_calc.js";
-import get_job_data from "./get_job_data.js";
+import { fetch_job_data } from "./actions.js";
 
 import "../css/calc.css";
 
@@ -62,52 +62,40 @@ class System extends Component {
 };
 
 
-// 計算機の骨格に計算結果を注入する関数
-function mapStateToCalculatorBodyProps(state, props) {
+// 計算機の骨格propsに計算結果を注入する関数
+function mapStateToCalculatorBodyProps(state) {
   let basicinfo = state.basicinfo;
   let job = state.job;
   let weapon = state.weapon;
   let summon = state.summon;
   return {
     params: {
-      rank: basicinfo.data.rank,  // ランク
-      ship_bonus: basicinfo.data.ship_bonus,  // 騎空艇補正
-      hp_percent: basicinfo.data.hp_percent,  // 現HPの割合(%)
-      job: basicinfo.data.job,  // "data/job_data.json"で定義されている職業(クラス)
-      affinity: basicinfo.data.affinity,  // 相性(none/good/bad)
-      zenith: basicinfo.data.zenith,
-      weapon: weapon.data,  // 武器
-      summon: summon.data,
-      atk_bonus: basicinfo.data.atk_bonus,
+      rank: basicinfo.rank,  // ランク
+      ship_bonus: basicinfo.ship_bonus,  // 騎空艇補正
+      hp_percent: basicinfo.hp_percent,  // 現HPの割合(%)
+      job: basicinfo.job,  // "data/job_data.json"で定義されている職業(クラス)
+      affinity: basicinfo.affinity,  // 相性(none/good/bad)
+      zenith: basicinfo.zenith,
+      weapon: weapon,  // 武器
+      summon: summon,
+      atk_bonus: basicinfo.atk_bonus,
       friend: {
       }
     },
-    job: job.data
+    job: job
   }
 }
 
-const mapDispatchToCalculatorBodyProps = {
-  update_job_data: () => {
-    return function (dispatch, getState) {
-      dispatch({ type: REDCONST.job.FETCHING });
-      get_job_data().then(
-        (data) => {
-          dispatch({
-            type: REDCONST.job.ASSIGN,
-            job: data
-          });
-        }
-      );
-    };
-  }
-}
+// 計算機の骨格propsに注入されて状態を更新するための関数群
+var mapDispatchToCalculatorBodyProps = {
+  fetch_job_data: fetch_job_data,
+};
 
 // 計算機の骨格
-@DragDropContext(HTML5Backend)
 class CalculatorBody extends Component {
 
   componentDidMount() {
-    this.props.update_job_data();
+    this.props.fetch_job_data();
   }
 
   render() {
@@ -118,7 +106,7 @@ class CalculatorBody extends Component {
           <header className="titlecap">グランブルーファンタジー攻撃力計算機（新）</header>
         </div>
         <div id="left_box">
-          <BasicInformation job={job} />
+          <BasicInformation />
           <Zenith />
           <Result job={job} parameter={params} />
           <System />
@@ -131,6 +119,7 @@ class CalculatorBody extends Component {
       </div>
     );
   }
-};
-
-export default connect(mapStateToCalculatorBodyProps, mapDispatchToCalculatorBodyProps)(CalculatorBody);
+}
+CalculatorBody = connect(mapStateToCalculatorBodyProps, mapDispatchToCalculatorBodyProps)(CalculatorBody);
+CalculatorBody = DragDropContext(HTML5Backend)(CalculatorBody);
+export default CalculatorBody;

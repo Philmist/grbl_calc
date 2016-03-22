@@ -1,14 +1,18 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-export const job = {
-  ASSIGN: "JOB_ASSIGN",
-  FETCHING: "JOB_FETCHING"
+export const state = {
+  FETCHING: "DATA_FETCHING",
+  LOADED: "DATA_LOADED",
+  ERROR: "DATA_ERROR"
 };
 
-export const job_state = {
-  ASSIGNED: "JOBSTATE_ASSIGNED",
-  FETCHING: "JOBSTATE_FETCHING",
-  UNASSIGNED: "JOBSTATE_UNASSIGNED"
+export const data_type = {
+  JOB: "TYPE_JOB"
+};
+
+export const job = {
+  ASSIGN: "JOB_ASSIGN",
+  DELETE: "JOB_DELETE"
 };
 
 export const weapon = {

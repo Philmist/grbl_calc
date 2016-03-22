@@ -22,8 +22,7 @@ var loaders = [
     query: {
       plugins: ['transform-runtime'],
       // プリセットは順序が大事
-      // stage-0でES7を変換してから残りをやっつけます
-      presets: ['stage-0', 'react', 'es2015-webpack']
+      presets: ['react', 'es2015-webpack', 'stage-0']
     }
   }
 ];

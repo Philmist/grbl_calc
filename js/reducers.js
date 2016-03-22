@@ -1,6 +1,6 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-import * as RCONST from "./const/reducer_type.js";
+import * as RC from "./const/reducer_type.js";
 
 /*
  * reducerの定義
@@ -18,13 +18,11 @@ import * as RCONST from "./const/reducer_type.js";
 
 // jobのデータを保管するstateのreducer
 // action = { selector: "JOB", type: "ASSIGN", job: data }
-export function job_data(state = { state: RCONST.job_state.UNASSIGNED }, action) {
-  if (action.type === RCONST.job.ASSIGN) {  // 渡されたのでstateを更新する
+export function job_data(state = {}, action) {
+  if (action.type === RC.job.ASSIGN) {  // 渡されたのでstateを更新する
     // 新しいオブジェクトに現在のstateとactionで渡されたjobを結合する
     // これを Object.assign(state, action.job) とすると悲しみを生む
-    return Object.assign({}, state, { data: action.job }, { state: RCONST.job_state.ASSIGNED });
-  } else if (action.type === RCONST.job.FETCHING) {  // 読みこみ中…
-    return Object.assign({}, state, { state: RCONST.job_state.FETCHING });
+    return Object.assign({}, state, action.job );
   } else {  // 関係無かったのでstateはそのまま
     return state;
   }
@@ -32,12 +30,12 @@ export function job_data(state = { state: RCONST.job_state.UNASSIGNED }, action)
 
 // 武器を保管するstateのreducer
 export function weapon(state, action) {
-  return { data: [] };
+  return [];
 }
 
 // 召喚を保管するstateのreducer
 export function summon(state, action) {
-  return { data: [] };
+  return [];
 }
 
 // 基本情報を保管するstateのreducer
@@ -48,7 +46,7 @@ export function basicinfo(state, action) {
     weapon: [0, 0],
     attribute: 0
   };
-  var atk_bonus ={
+  var atk_bonus = {
     percent: 0,
     value: 0
   };
@@ -63,14 +61,23 @@ export function basicinfo(state, action) {
   };
 
   // actionによる分岐
-  var retval = Object.assign({}, { data: default_value }, state);
-  return retval;
+  var retval = Object.assign({}, default_value, state);
   if (action) {
     return retval;
   } else if (state === undefined) {  // stateがundefinedなら初期値を返す
-    return { data: default_value };
+    return default_value;
   } else {  // 俺には関係無かったぜ！
     return state;
   }
 }
 
+// 各種のstate(読みこみ中など)を管理するreducer
+export function component_state(state, action) {
+  if (action.type === RC.state.FETCHING) {  // データ読みこみ中
+    return Object.assign({}, state, { [action.selector]: RC.state.FETCHING });  // 計算プロパティを使う
+  } else if (action.type === RC.state.LOADED) {  // データ読みこみ終了
+    return Object.assign({}, state, { [action.selector]: RC.state.LOADED });
+  }
+  // デフォルト値
+  return {};
+}

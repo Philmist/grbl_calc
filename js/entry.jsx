@@ -20,10 +20,12 @@ const loggerMiddleware = createLogger();
 
 // reducerを組みあわせて新しいreducerを作る
 const reducer = combineReducers(
-  { job: reducers.job_data,
+  {
+    job: reducers.job_data,
     weapon: reducers.weapon,
     summon: reducers.summon,
-    basicinfo: reducers.basicinfo
+    basicinfo: reducers.basicinfo,
+    component_state: reducers.component_state
   }
 );
 // 組みあわせたreducerを使って新しいstoreを作る
