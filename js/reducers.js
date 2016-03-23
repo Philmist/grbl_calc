@@ -29,13 +29,13 @@ export function job_data(state = {}, action) {
 }
 
 // 武器を保管するstateのreducer
-export function weapon(state, action) {
-  return [];
+export function weapon(state = [], action) {
+  return state;
 }
 
 // 召喚を保管するstateのreducer
-export function summon(state, action) {
-  return [];
+export function summon(state = [], action) {
+  return state;
 }
 
 // 基本情報を保管するstateのreducer
@@ -61,23 +61,51 @@ export function basicinfo(state, action) {
   };
 
   // actionによる分岐
-  var retval = Object.assign({}, default_value, state);
-  if (action) {
-    return retval;
+  var retval = Object.assign({}, default_value, state);  // あらかじめ新しいObjectを作っておく
+  if (action.type == RC.basic.ATK_PERCENT) {
+    let atk_obj = Object.assign({}, state.atk_bonus, { percent: action.value });
+    retval = Object.assign(retval, atk_obj);
+  } else if (action.type == RC.basic.ATK_VALUE) {
+    let atk_obj = Object.assign({}, state.atk_bonus, { value: action.value });
+    retval = Object.assign(retval, atk_obj);
+  } else if (action.type == RC.basic.ZENITH_ATK) {
+    let zenith_obj = Object.assign({}, state.zenith, { atk: action.value });
+    retval = Object.assign(retval, zenith_obj);
+  } else if (action.type == RC.basic.ZENITH_ATTR) {
+    let zenith_obj = Object.assign({}, state.zenith, { attribute: action.value });
+    retval = Object.assign(retval, zenith_obj);
+  } else if (action.type == RC.basic.ZENITH_WEAPON) {
+    let zenith_obj = Object.assign({}, state.zenith, { weapon: action.value });
+    retval = Object.assign(retval, zenith_obj);
+  } else if (action.type == RC.basic.RANK) {
+    retval = Object.assign(retval, { rank: action.value });
+  } else if (action.type == RC.basic.SHIP_BONUS) {
+    retval = Object.assign(retval, { ship_bonus: action.value });
+  } else if (action.type == RC.basic.HP_PERCENT) {
+    retval = Object.assign(retval, { hp_percent: action.value });
+  } else if (action.type == RC.basic.AFFINITY) {
+    if (action.value == "good" || action.value == "bad") {
+      retval = Object.assign(retval, { affinity: action.value });
+    } else {
+      retval = Object.assign(retval, { affinity: "none" });
+    }
+  } else if (action.type == RC.basic.JOB) {
+    retval = Object.assign(retval, { job: String(action.value) });
   } else if (state === undefined) {  // stateがundefinedなら初期値を返す
     return default_value;
   } else {  // 俺には関係無かったぜ！
     return state;
   }
+  return retval;
 }
 
 // 各種のstate(読みこみ中など)を管理するreducer
-export function component_state(state, action) {
-  if (action.type === RC.state.FETCHING) {  // データ読みこみ中
-    return Object.assign({}, state, { [action.selector]: RC.state.FETCHING });  // 計算プロパティを使う
-  } else if (action.type === RC.state.LOADED) {  // データ読みこみ終了
-    return Object.assign({}, state, { [action.selector]: RC.state.LOADED });
-  }
-  // デフォルト値
-  return {};
+export function component_state(state = {}, action) {
+  let retval = state;
+  Object.keys(RC.state).forEach((i) => {
+    if (action.type === RC.state[i] && action.selector) {
+      retval = Object.assign({}, state, { [action.selector]: RC.state[i] });
+    }
+  });
+  return retval;
 }
