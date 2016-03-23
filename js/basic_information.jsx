@@ -1,11 +1,14 @@
 // vim: sts=2 sw=2 ts=2 expandtab
+// 色々な基礎情報部分を入力させるコンポーネント群
 
+// モジュールのインポート
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import * as actions from "./actions.js";
 
 import "../css/calc.css";
+
 
 // ジョブ1つを表わす項目
 class JobSelector extends Component {
@@ -18,7 +21,7 @@ class JobSelector extends Component {
       );
     }
     return (
-      <select id="job" ref="job">
+      <select id="job">
         {values}
       </select>
     );
@@ -64,7 +67,7 @@ class Rank extends Component {
             className="width50"
             type="text"
             onChange={::this.handleChange}  // thisをbindしている
-            ref="rank" id="rank"
+            id="rank"
             value={this.props.rank}
           />
         </td>
@@ -95,7 +98,7 @@ class ShipBonus extends Component {
             className="width50"
             type="text"
             onChange={::this.handleChange}
-            ref="ship_bonus" id="ship_bonus"
+            id="ship_bonus"
             value={this.props.ship_bonus}
           />
         </td>
@@ -121,7 +124,7 @@ class AttributeBonus extends Component {
       <tr>
         <th>属性補正</th>
         <td>
-          <select onchange={::this.handleChange} ref="attribute_type" id="attribute_type">
+          <select onchange={::this.handleChange} id="attribute_type">
             <option value="normal">無し</option>
             <option value="good">有利</option>
             <option value="bad">不利</option>
@@ -149,7 +152,7 @@ class HPPercent extends Component {
           <input
             className="width50" type="text"
             onChange={::this.handleChange}
-            ref="hp_percent" id="hp_percent"
+            id="hp_percent"
             value={this.props.hp_percent}
           />
           %
@@ -186,25 +189,31 @@ class PlayerStats extends Component {
 // 攻撃力ボーナス
 class AtkBonus extends Component {
 
-  handleChange(event) {
+  percentChange(event) {
+    this.props.set_atk_percent(event.target.value);
+  }
+
+  valueChange(event) {
+    this.props.set_atk_value(event.target.value);
   }
 
   render() {
+    console.log(this.props);
     return (
       <table className="grbr" id="bonus_table">
         <tbody>
           <tr>
             <th rowSpan="2">発動中の<br />攻撃力ボーナス</th>
             <td>
-              <input className="width25" type="text" onChange={this.handleChange}
-                ref="atk_bonus_percent" id="atk_bonus_percent" />
+              <input className="width25" type="text" onChange={::this.percentChange}
+                id="atk_bonus_percent" value={this.props.atk_bonus_percent} />
               %
             </td>
           </tr>
           <tr>
             <td>
-              <input className="width50" type="text" onChange={this.handleChange}
-                ref="atk_bonus_value" id="atk_bonus_value" />
+              <input className="width50" type="text" onChange={::this.valueChange}
+                id="atk_bonus_value" value={this.props.atk_bonus_value} />
             </td>
           </tr>
         </tbody>
@@ -213,6 +222,17 @@ class AtkBonus extends Component {
   }
 
 }
+function mapStateToAtkBonusProps(state) {
+  return {
+    atk_bonus_percent: state.basicinfo.atk_bonus.percent,
+    atk_bonus_value: state.basicinfo.atk_bonus.value
+  };
+}
+var mapActionCreatorsToAtkBonusProps = {
+  set_atk_percent: actions.set_atk_percent,
+  set_atk_value: actions.set_atk_value
+};
+AtkBonus = connect(mapStateToAtkBonusProps, mapActionCreatorsToAtkBonusProps)(AtkBonus);
 
 
 // 基礎情報入力欄

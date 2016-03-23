@@ -87,7 +87,7 @@ function mapStateToCalculatorBodyProps(state) {
 }
 
 // 計算機の骨格propsに注入されて状態を更新するための関数群
-var mapDispatchToCalculatorBodyProps = {
+var mapActionCreatorsToCalculatorBodyProps = {
   fetch_job_data: fetch_job_data,
 };
 
@@ -120,6 +120,6 @@ class CalculatorBody extends Component {
     );
   }
 }
-CalculatorBody = connect(mapStateToCalculatorBodyProps, mapDispatchToCalculatorBodyProps)(CalculatorBody);
+CalculatorBody = connect(mapStateToCalculatorBodyProps, mapActionCreatorsToCalculatorBodyProps)(CalculatorBody);
 CalculatorBody = DragDropContext(HTML5Backend)(CalculatorBody);
 export default CalculatorBody;

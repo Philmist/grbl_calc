@@ -60,14 +60,21 @@ export function basicinfo(state, action) {
     atk_bonus: atk_bonus
   };
 
-  // actionによる分岐
+  // stateがまだ何もないなら初期値を返す
+  if (state === undefined) {
+    return default_value;
+  }
+
   var retval = Object.assign({}, default_value, state);  // あらかじめ新しいObjectを作っておく
+
+  // actionによる分岐
   if (action.type == RC.basic.ATK_PERCENT) {
+    console.log(state);
     let atk_obj = Object.assign({}, state.atk_bonus, { percent: action.value });
-    retval = Object.assign(retval, atk_obj);
+    retval = Object.assign(retval, { atk_bonus: atk_obj });
   } else if (action.type == RC.basic.ATK_VALUE) {
     let atk_obj = Object.assign({}, state.atk_bonus, { value: action.value });
-    retval = Object.assign(retval, atk_obj);
+    retval = Object.assign(retval, { atk_bonus: atk_obj });
   } else if (action.type == RC.basic.ZENITH_ATK) {
     let zenith_obj = Object.assign({}, state.zenith, { atk: action.value });
     retval = Object.assign(retval, zenith_obj);
@@ -91,17 +98,20 @@ export function basicinfo(state, action) {
     }
   } else if (action.type == RC.basic.JOB) {
     retval = Object.assign(retval, { job: String(action.value) });
-  } else if (state === undefined) {  // stateがundefinedなら初期値を返す
-    return default_value;
   } else {  // 俺には関係無かったぜ！
     return state;
   }
+
   return retval;
 }
 
 // 各種のstate(読みこみ中など)を管理するreducer
 export function component_state(state = {}, action) {
+  // 返り値を入れる変数を作って…
   let retval = state;
+  // あらかじめ定義されている状態に一致するかを調べる
+  // 一致すれば新しい状態を作る
+  // { [foo]: bar } は foo = "meow"のとき、{ meow: bar }と同じ
   Object.keys(RC.state).forEach((i) => {
     if (action.type === RC.state[i] && action.selector) {
       retval = Object.assign({}, state, { [action.selector]: RC.state[i] });
