@@ -69,7 +69,6 @@ export function basicinfo(state, action) {
 
   // actionによる分岐
   if (action.type == RC.basic.ATK_PERCENT) {
-    console.log(state);
     let atk_obj = Object.assign({}, state.atk_bonus, { percent: action.value });
     retval = Object.assign(retval, { atk_bonus: atk_obj });
   } else if (action.type == RC.basic.ATK_VALUE) {
