@@ -63,7 +63,6 @@ const SKILL_LV = [
 
 // 武器部分全体の構成
 export default class Weapon extends Component {
-
   render() {
     return (
       <section>
@@ -84,7 +83,6 @@ export default class Weapon extends Component {
       </section>
     );
   }
-
 };
 
 
@@ -114,18 +112,15 @@ function mapStateToWeaponRowsProps(state) {
 
 // 武器の並び全体を表わすクラス
 class WeaponRows extends Component {
-
   render() {
     return (
       <WeaponRow />
     );
   }
-
 };
 
 
 class WeaponRow extends Component {
-
   create_optfunc(key) {
     return (
       <option value={key[0]} key={key[0]}>{key[1]}</option>
@@ -180,5 +175,4 @@ class WeaponRow extends Component {
       </tr>
     );
   }
-
-};
+}

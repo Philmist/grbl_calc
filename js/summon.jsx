@@ -67,7 +67,6 @@ function create_optfunc(key) {
   );
 }
 
-
 class SummonTableRow extends Component {
 
   skind = SUMMON_KIND.map((i) => create_optfunc(i));

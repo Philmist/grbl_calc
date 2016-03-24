@@ -12,7 +12,6 @@ import "../css/calc.css";
 
 // ジョブ1つを表わす項目
 class JobSelector extends Component {
-
   render() {
     var values = new Array();
     for (var i in this.props.job) {
@@ -26,13 +25,11 @@ class JobSelector extends Component {
       </select>
     );
   }
-
 }
 
 
 // ジョブ選択コンポーネント
 class Job extends Component {
-
   render() {
     return (
       <table className="grbr" id="job_table">
@@ -47,17 +44,14 @@ class Job extends Component {
       </table>
     );
   }
-
 }
 
 
 // ランク
 class Rank extends Component {
-
   handleChange(event) {
     this.props.set_rank(event.target.value);
   }
-
   render() {
     return (
       <tr>
@@ -74,7 +68,6 @@ class Rank extends Component {
       </tr>
     );
   }
-
 }
 Rank = connect(
   (state) => ({ rank: state.basicinfo.rank }),
@@ -84,11 +77,9 @@ Rank = connect(
 
 // 艇補正
 class ShipBonus extends Component {
-
   handleChange(event) {
     this.props.set_ship_bonus(event.target.value);
   }
-
   render() {
     return (
       <tr>
@@ -115,10 +106,8 @@ ShipBonus = connect(
 
 // 属性補正
 class AttributeBonus extends Component {
-
   handleChange() {
   }
-
   render() {
     return (
       <tr>
@@ -133,17 +122,14 @@ class AttributeBonus extends Component {
       </tr>
     );
   }
-
 }
 
 
 // HP%
 class HPPercent extends Component {
-
   handleChange(event) {
     this.props.set_hp_percent(event.target.value);
   }
-
   render() {
     return (
       <tr>
@@ -160,7 +146,6 @@ class HPPercent extends Component {
       </tr>
     );
   }
-
 }
 HPPercent = connect(
   (state) => ({ hp_percent: state.basicinfo.hp_percent }), { set_hp_percent: actions.set_hp_percent }
@@ -169,7 +154,6 @@ HPPercent = connect(
 
 // プレイヤー情報
 class PlayerStats extends Component {
-
   render() {
     return (
       <table className="grbr" id="info_table">
@@ -182,23 +166,18 @@ class PlayerStats extends Component {
       </table>
     );
   }
-
 }
 
 
 // 攻撃力ボーナス
 class AtkBonus extends Component {
-
   percentChange(event) {
     this.props.set_atk_percent(event.target.value);
   }
-
   valueChange(event) {
     this.props.set_atk_value(event.target.value);
   }
-
   render() {
-    console.log(this.props);
     return (
       <table className="grbr" id="bonus_table">
         <tbody>
@@ -220,7 +199,6 @@ class AtkBonus extends Component {
       </table>
     );
   }
-
 }
 function mapStateToAtkBonusProps(state) {
   return {

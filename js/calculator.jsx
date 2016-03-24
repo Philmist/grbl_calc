@@ -19,7 +19,6 @@ import "../css/calc.css";
 
 // 結果表示欄
 class Result extends Component {
-
   render() {
     var res = calculate_atkval(this.props.parameter, this.props.job);
     return (
@@ -44,13 +43,11 @@ class Result extends Component {
       </section>
     );
   }
-
 };
 
 
 // システム部分
 class System extends Component {
-
   render() {
     return (
       <section>
@@ -58,7 +55,6 @@ class System extends Component {
       </section>
     );
   }
-
 };
 
 
@@ -93,13 +89,11 @@ var mapActionCreatorsToCalculatorBodyProps = {
 
 // 計算機の骨格
 class CalculatorBody extends Component {
-
   componentDidMount() {
     this.props.fetch_job_data();
   }
-
   render() {
-    var { job, params } = this.props;
+    var { job, params } = this.props;  // var job = this.props.job; (略)
     return (
       <div id="site_box">
         <div id="header_box">
