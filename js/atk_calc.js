@@ -66,6 +66,7 @@ export default function calculate_atkval (param_obj, job_data) {
   } else if (param_obj.zenith.atk == 3) {
     zenith_atk = 3000;
   }
+  showed_atk += zenith_atk;
 
   // 召喚加護の計算
   var divine_percent = {
