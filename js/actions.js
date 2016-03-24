@@ -65,3 +65,59 @@ export var set_ship_bonus = createfunc_dispatch_number(RC.basic.SHIP_BONUS);
 // 最大HPに対する現HPの割合をセットするアクション
 export var set_hp_percent = createfunc_dispatch_number(RC.basic.HP_PERCENT);
 
+// 属性相性をセットするアクション
+export function set_affinity(affinity) {
+  return function (dispatch) {
+    if (affinity == "good" || affinity == "bad") {
+      dispatch({ type: RC.basic.AFFINITY, value: affinity });
+    } else {
+      dispatch({ type: RC.basic.AFFINITY, value: "normal" });
+    }
+  };
+}
+
+
+// Zenith関係
+
+export function set_zenith_atk(param) {
+  return function (dispatch) {
+    let atk_val = Number(param);
+    if (atk_val >= 0 && atk_val <= 3) {
+      dispatch({ type: RC.basic.ZENITH_ATK, value: atk_val });
+    } else {
+      console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_ATK + " : " + String(param));
+    }
+  };
+}
+
+export function set_zenith_attr(param) {
+  return function (dispatch) {
+    let attr_val = Number(param);
+    if (attr_val >= 0 && attr_val <= 3) {
+      dispatch({ type: RC.basic.ZENITH_ATTR, value: attr_val });
+    } else {
+      console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_ATTR + " : " + String(param));
+    }
+  };
+}
+
+export function set_zenith_weapon(param) {
+  return function (dispatch) {
+    if (!(param instanceof Array)) {
+      console.warn("Parameter is not Array (" + RC.basic.ZENITH_WEAPON + ")");
+    } else if (param.length != 2) {
+      console.warn("Parameter length is not 2 (" + RC.basic.ZENITH_WEAPON + ")");
+    } else {
+      // TODO: もっとマシな書き方を考えるべき
+      let w0 = Number(param[0]);
+      let w1 = Number(param[1]);
+      if (isNaN(w0) || isNaN(w1)) {
+        console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
+      } else if ((w0 >= 0 && w0 <= 3) && (w1 >= 0 && w1 <= 3)) {
+        dispatch({ type: RC.basic.ZENITH_WEAPON, value: [w0, w1] });
+      } else {
+        console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
+      }
+    }
+  };
+}

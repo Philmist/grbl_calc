@@ -99,21 +99,21 @@ class ShipBonus extends Component {
 
 }
 ShipBonus = connect(
-  (state) => ({ ship_bonus: state.basicinfo.ship_bonus }),
-    { set_ship_bonus: actions.set_ship_bonus }
+  (state) => ({ ship_bonus: state.basicinfo.ship_bonus }), { set_ship_bonus: actions.set_ship_bonus }
 )(ShipBonus);
 
 
 // 属性補正
 class AttributeBonus extends Component {
-  handleChange() {
+  handleChange(event) {
+    this.props.set_affinity(event.target.value);
   }
   render() {
     return (
       <tr>
         <th>属性補正</th>
         <td>
-          <select onchange={::this.handleChange} id="attribute_type">
+          <select onChange={::this.handleChange} id="attribute_type" value={this.props.affinity}>
             <option value="normal">無し</option>
             <option value="good">有利</option>
             <option value="bad">不利</option>
@@ -123,6 +123,10 @@ class AttributeBonus extends Component {
     );
   }
 }
+AttributeBonus = connect(
+  (state) => ({ affinity: state.basicinfo.affinity }),
+    { set_affinity: actions.set_affinity }
+)(AttributeBonus);
 
 
 // HP%

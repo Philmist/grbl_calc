@@ -54,7 +54,7 @@ export function basicinfo(state, action) {
     rank: 1,
     ship_bonus: 0,
     hp_percent: 100,
-    affinity: "none",
+    affinity: "normal",
     job: "fighter",
     zenith: zenith,
     atk_bonus: atk_bonus
@@ -76,13 +76,13 @@ export function basicinfo(state, action) {
     retval = Object.assign(retval, { atk_bonus: atk_obj });
   } else if (action.type == RC.basic.ZENITH_ATK) {
     let zenith_obj = Object.assign({}, state.zenith, { atk: action.value });
-    retval = Object.assign(retval, zenith_obj);
+    retval = Object.assign(retval, { zenith: zenith_obj });
   } else if (action.type == RC.basic.ZENITH_ATTR) {
     let zenith_obj = Object.assign({}, state.zenith, { attribute: action.value });
-    retval = Object.assign(retval, zenith_obj);
+    retval = Object.assign(retval, { zenith: zenith_obj });
   } else if (action.type == RC.basic.ZENITH_WEAPON) {
     let zenith_obj = Object.assign({}, state.zenith, { weapon: action.value });
-    retval = Object.assign(retval, zenith_obj);
+    retval = Object.assign(retval, { zenith: zenith_obj });
   } else if (action.type == RC.basic.RANK) {
     retval = Object.assign(retval, { rank: action.value });
   } else if (action.type == RC.basic.SHIP_BONUS) {
@@ -93,7 +93,7 @@ export function basicinfo(state, action) {
     if (action.value == "good" || action.value == "bad") {
       retval = Object.assign(retval, { affinity: action.value });
     } else {
-      retval = Object.assign(retval, { affinity: "none" });
+      retval = Object.assign(retval, { affinity: "normal" });
     }
   } else if (action.type == RC.basic.JOB) {
     retval = Object.assign(retval, { job: String(action.value) });
