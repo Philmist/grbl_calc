@@ -2,6 +2,6 @@
 
 // アイテム種別を表わす定数定義
 export default {
-  WEAPON: "weapon",
-  SUMMON: "summon"
+  WEAPON: "type_weapon",
+  SUMMON: "type_summon"
 }

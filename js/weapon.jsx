@@ -4,6 +4,7 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { DragSource, DropTarget } from "react-dnd";
 
 import ItemTypes from "./const/item_types";
 
@@ -72,9 +73,7 @@ export default class Weapon extends Component {
             <thead>
               <WeaponTableHeader />
             </thead>
-            <tbody>
-              <WeaponRows />
-            </tbody>
+              <WeaponTableBody />
             <tfoot>
               <WeaponTableHeader />
             </tfoot>
@@ -91,6 +90,7 @@ class WeaponTableHeader extends Component {
   render() {
     return (
       <tr>
+        <th>■</th>
         <th>鍵</th>
         <th>選</th>
         <th className="width150">名前</th>
@@ -107,19 +107,44 @@ class WeaponTableHeader extends Component {
 
 
 // 武器並び全体にプロパティを注入する関数
-function mapStateToWeaponRowsProps(state) {
+function mapStateToWeaponTableBodyProps(state) {
 }
 
 // 武器の並び全体を表わすクラス
-class WeaponRows extends Component {
+class WeaponTableBody extends Component {
   render() {
     return (
-      <WeaponRow />
+      <tbody>
+        <WeaponRow index={0} />
+      </tbody>
     );
   }
 };
 
 
+const WeaponRowSource = {
+  beginDrag() {
+    return {};
+  }
+};
+function collectSourceWeaponRow(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging()
+  };
+}
+const WeaponRowTarget = {
+  drop(props, monitor) {
+    console.log(props);
+  }
+};
+function collectTargetWeaponRow(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
+  };
+}
 class WeaponRow extends Component {
   create_optfunc(key) {
     return (
@@ -132,8 +157,10 @@ class WeaponRow extends Component {
   e_skill_lv = SKILL_LV.map(this.create_optfunc);
 
   render() {
-    return (
+    const { isDragging, connectDragSource, connectDragPreview, connectDropTarget } = this.props;
+    return connectDropTarget(connectDragPreview(
       <tr>
+        {connectDragSource(<td style={ { cursor: 'move' } }>■</td>)}
         <td>
           <input type="checkbox" className="weapon_lock" />
         </td>
@@ -173,6 +200,8 @@ class WeaponRow extends Component {
           <input type="button" id="del" value="-" />
         </td>
       </tr>
-    );
+    ));
   }
 }
+WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow)(WeaponRow);
+WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);

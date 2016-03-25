@@ -62,8 +62,12 @@ class System extends Component {
 function mapStateToCalculatorBodyProps(state) {
   let basicinfo = state.basicinfo;
   let job = state.job;
-  let weapon = state.weapon;
-  let summon = state.summon;
+  let weapon = state.weapon.filter(function(val) {
+    return (val instanceof Object && val.selected);
+  });
+  let summon = state.summon.filter(function(val) {
+    return (val instanceof Object && val.selected);
+  });
   return {
     params: {
       rank: basicinfo.rank,  // ランク

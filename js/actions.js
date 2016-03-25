@@ -79,6 +79,7 @@ export function set_affinity(affinity) {
 
 // Zenith関係
 
+// Zenith攻撃力補正
 export function set_zenith_atk(param) {
   return function (dispatch) {
     let atk_val = Number(param);
@@ -90,6 +91,7 @@ export function set_zenith_atk(param) {
   };
 }
 
+// Zenith属性攻撃力補正
 export function set_zenith_attr(param) {
   return function (dispatch) {
     let attr_val = Number(param);
@@ -101,6 +103,8 @@ export function set_zenith_attr(param) {
   };
 }
 
+// Zenith得意武器補正
+// paramは2要素のArrayを渡す
 export function set_zenith_weapon(param) {
   return function (dispatch) {
     if (!(param instanceof Array)) {
