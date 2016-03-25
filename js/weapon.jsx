@@ -116,6 +116,7 @@ class WeaponTableBody extends Component {
     return (
       <tbody>
         <WeaponRow index={0} />
+        <WeaponRow index={1} />
       </tbody>
     );
   }
@@ -136,7 +137,8 @@ function collectSourceWeaponRow(connect, monitor) {
 }
 const WeaponRowTarget = {
   drop(props, monitor) {
-    console.log(props);
+    console.log(props.index);
+    return {test: "test"};
   }
 };
 function collectTargetWeaponRow(connect, monitor) {
