@@ -28,15 +28,55 @@ export function job_data(state = {}, action) {
   }
 }
 
+
+// 武器state array1つの初期値
+const weapon_default = {
+  atk: 0,
+  skill_level: 0,
+  skill_type: ["none", "none"],
+  cosmos: false,
+  selected: false,
+  type: "sword"
+};
 // 武器を保管するstateのreducer
-export function weapon(state = [], action) {
+export function weapon(state, action) {
+  if (state === undefined) {
+    let initial_val = [
+      {}, {}, {}, {}, {},
+      {}, {}, {}, {}, {}
+    ];
+    state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
+  }
   return state;
 }
 
+
+const summon_default = {
+  name: "",
+  selected: false,
+  atk: 0,
+  skill: [
+    {
+      type: "none",
+      percent: 0
+    },
+    {
+      type: "none",
+      percent: 0
+    }
+  ]
+};
 // 召喚を保管するstateのreducer
-export function summon(state = [], action) {
+export function summon(state, action) {
+  if (state === undefined) {
+    let initial_val = [
+      {}, {}, {}, {}, {}
+    ];
+    state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
+  }
   return state;
 }
+
 
 // 基本情報を保管するstateのreducer
 export function basicinfo(state, action) {

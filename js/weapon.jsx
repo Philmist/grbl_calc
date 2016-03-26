@@ -90,7 +90,7 @@ class WeaponTableHeader extends Component {
   render() {
     return (
       <tr>
-        <th>■</th>
+        <th>順</th>
         <th>鍵</th>
         <th>選</th>
         <th className="width150">名前</th>
@@ -108,6 +108,9 @@ class WeaponTableHeader extends Component {
 
 // 武器並び全体にプロパティを注入する関数
 function mapStateToWeaponTableBodyProps(state) {
+  return {
+    weapon: state.weapon
+  }
 }
 
 // 武器の並び全体を表わすクラス
@@ -115,12 +118,12 @@ class WeaponTableBody extends Component {
   render() {
     return (
       <tbody>
-        <WeaponRow index={0} />
-        <WeaponRow index={1} />
+        {this.props.weapon.map((val, index) => { return <WeaponRow key={"wr_"+String(index)} index={index} />; })}
       </tbody>
     );
   }
 };
+WeaponTableBody = connect(mapStateToWeaponTableBodyProps)(WeaponTableBody);
 
 
 const WeaponRowSource = {
@@ -147,6 +150,19 @@ function collectTargetWeaponRow(connect, monitor) {
     isOver: monitor.isOver()
   };
 }
+function mapStateToWeaponRowProps(state, props) {
+  // 対象のstateを取りだす
+  let target_state = state.weapon[props.index];
+  // デフォルト値を代入していく
+  let selected = (target_state.selected === undefined) ? false : target_state.selected;
+  let name = (target_state.name === undefined) ? "" : target_state.name;
+  let atk = (target_state.atk === undefined) ? 0 : target_state.atk;
+  let skill_level = (target_state.skill_level === undefined) ? 0 : target_state.skill_level;
+  let skill_type = (target_state.skill_type === undefined) ? ["none", "none"] : target_state.skill_type;
+  let cosmos = (target_state.cosmos === undefined) ? false : target_state.cosmos;
+  let type = (target_state.type === undefined) ? "sword" : target_state.type;
+  return { selected, name, atk, skill_level, skill_type, cosmos, type };
+}
 class WeaponRow extends Component {
   create_optfunc(key) {
     return (
@@ -159,39 +175,40 @@ class WeaponRow extends Component {
   e_skill_lv = SKILL_LV.map(this.create_optfunc);
 
   render() {
-    const { isDragging, connectDragSource, connectDragPreview, connectDropTarget } = this.props;
-    return connectDropTarget(connectDragPreview(
+    const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, index } = this.props;
+    const { selected, name, atk, skill_level, skill_type, cosmos, type } = this.props;
+    return connectDragPreview(connectDropTarget(
       <tr>
-        {connectDragSource(<td style={ { cursor: 'move' } }>■</td>)}
+        {connectDragSource(<td style={ { cursor: 'move' } }>{index+1}</td>)}
         <td>
           <input type="checkbox" className="weapon_lock" />
         </td>
         <td>
-          <input type="checkbox" className="weapon_select" />
+          <input type="checkbox" className="weapon_select" checked={selected} />
         </td>
         <td>
-          <input type="text" className="weapon_name width150" />
+          <input type="text" className="weapon_name width150" value={name} />
         </td>
         <td>
-          <input type="text" className="weapon_atk width50" />
+          <input type="text" className="weapon_atk width50" value={atk} />
         </td>
         <td>
-          <select className="weapon_kind">
+          <select className="weapon_kind" value={type} >
             {this.e_kind}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type1">
+          <select className="weapon_skill_type1" value={skill_type[0]} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type2">
+          <select className="weapon_skill_type2" value={skill_type[1]} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_lv">
+          <select className="weapon_skill_lv" value={skill_level} >
             {this.e_skill_lv}
           </select>
         </td>
@@ -205,5 +222,6 @@ class WeaponRow extends Component {
     ));
   }
 }
+WeaponRow = connect(mapStateToWeaponRowProps)(WeaponRow);
 WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow)(WeaponRow);
 WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);
