@@ -165,7 +165,7 @@ export default class Summon extends Component {
     return (
       <section>
         <header className="subtype">召喚獣</header>
-        <SummonTable parameter={this.props.parameter} onChangeParameter={this.props.onChangeParameter} />
+        <SummonTable parameter={this.props.parameter} />
       </section>
     );
   }
