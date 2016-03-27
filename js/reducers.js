@@ -36,7 +36,8 @@ const weapon_default = {
   skill_type: ["none", "none"],
   cosmos: false,
   selected: false,
-  type: "sword"
+  type: "sword",
+  name: ""
 };
 // 武器を保管するstateのreducer
 export function weapon(state, action) {
@@ -46,6 +47,16 @@ export function weapon(state, action) {
       {}, {}, {}, {}, {}
     ];
     state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
+  }
+  if (action.type == RC.weapon.REPLACE && action.index < state.length) {
+    state = Array.from(state);
+    state[action.index] = Object.assign({}, weapon_default, action.value);
+  } else if (action.type == RC.weapon.ENABLE && action.index < state.length) {
+    state = Array.from(state);
+    state[action.index] = Object.assign({}, state[action.index], { selected: true });
+  } else if (action.type == RC.weapon.DISABLE && action.index < state.length) {
+    state = Array.from(state);
+    state[action.index] = Object.assign({}, state[action.index], { selected: false });
   }
   return state;
 }
@@ -72,7 +83,17 @@ export function summon(state, action) {
     let initial_val = [
       {}, {}, {}, {}, {}
     ];
-    state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
+    state = initial_val.map((val) => { return Object.assign(val, summon_default); });
+  }
+  if (action.type == RC.summon.REPLACE && action.index instanceof Number && action.index < state.length) {
+    state[action.index] = Object.assign({}, summon_default, action.value);
+    state = Array.from(state);
+  } if (action.type == RC.summon.ENABLE && action.index instanceof Number && action.index < state.length) {
+    state[action.index] = Object.assign({}, state[action.index], { selected: true });
+    state = Array.from(state);
+  } if (action.type == RC.summon.DISABLE && action.index instanceof Number && action.index < state.length) {
+    state[action.index] = Object.assign({}, state[action.index], { selected: false });
+    state = Array.from(state);
   }
   return state;
 }

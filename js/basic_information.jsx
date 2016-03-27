@@ -12,6 +12,10 @@ import "../css/calc.css";
 
 // ジョブ1つを表わす項目
 class JobSelector extends Component {
+  handle_job_change(e) {
+    this.props.set_job_type(e.target.value);
+  }
+
   render() {
     var values = new Array();
     for (var i in this.props.job) {
@@ -20,7 +24,7 @@ class JobSelector extends Component {
       );
     }
     return (
-      <select id="job">
+      <select id="job" onChange={::this.handle_job_change} >
         {values}
       </select>
     );
@@ -37,7 +41,7 @@ class Job extends Component {
           <tr>
             <th>ジョブ</th>
             <td>
-              <JobSelector job={this.props.job} />
+              <JobSelector {...this.props} />
             </td>
           </tr>
         </tbody>
@@ -225,9 +229,9 @@ class BasicInformation extends Component {
         <header className="subtype">基本情報</header>
         <PlayerStats />
         <AtkBonus />
-        <Job job={this.props.job} />
+        <Job {...this.props} />
       </section>
     );
   }
 }
-export default connect((state) => ({ job: state.job }))(BasicInformation);
+export default connect(((state) => ({ job: state.job })), { set_job_type: actions.set_job_type })(BasicInformation);

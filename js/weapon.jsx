@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 
 import ItemTypes from "./const/item_types";
+import { replace_weapon_object, enable_weapon_object, disable_weapon_object } from "./actions";
 
 import "../css/calc.css";
 
@@ -163,6 +164,11 @@ function mapStateToWeaponRowProps(state, props) {
   let type = (target_state.type === undefined) ? "sword" : target_state.type;
   return { selected, name, atk, skill_level, skill_type, cosmos, type };
 }
+var mapActionCreatorsToWeaponRowProps = {
+  replace_weapon_object: replace_weapon_object,
+  enable_weapon_object: enable_weapon_object,
+  disable_weapon_object: disable_weapon_object
+};
 class WeaponRow extends Component {
   create_optfunc(key) {
     return (
@@ -174,6 +180,55 @@ class WeaponRow extends Component {
   e_skill_type = SKILL_TYPE.map(this.create_optfunc);
   e_skill_lv = SKILL_LV.map(this.create_optfunc);
 
+  get_weapon_obj_from_props() {
+    let { selected, name, atk, skill_level, skill_type, cosmos, type } = this.props;
+    return { selected, name, atk, skill_level, skill_type, cosmos, type };
+  }
+
+  change_name(e) {
+    let tmp_obj = this.get_weapon_obj_from_props();
+    tmp_obj.name = String(e.target.value);
+    this.props.replace_weapon_object(this.props.index, tmp_obj);
+  }
+
+  change_atk(e) {
+    let tmp_obj = this.get_weapon_obj_from_props();
+    tmp_obj.atk = Number(e.target.value);
+    this.props.replace_weapon_object(this.props.index, tmp_obj);
+  }
+
+  change_kind(e) {
+    let tmp_obj = this.get_weapon_obj_from_props();
+    tmp_obj.type = String(e.target.value);
+    this.props.replace_weapon_object(this.props.index, tmp_obj);
+  }
+
+  change_skill_type1(e) {
+    let tmp_obj = this.get_weapon_obj_from_props();
+    tmp_obj.skill_type = [String(e.target.value), tmp_obj.skill_type[1]];
+    this.props.replace_weapon_object(this.props.index, tmp_obj);
+  }
+
+  change_skill_type2(e) {
+    let tmp_obj = this.get_weapon_obj_from_props();
+    tmp_obj.skill_type = [tmp_obj.skill_type[0], String(e.target.value)];
+    this.props.replace_weapon_object(this.props.index, tmp_obj);
+  }
+
+  change_skill_lv(e) {
+    let tmp_obj = this.get_weapon_obj_from_props();
+    tmp_obj.skill_level = Number(e.target.value);
+    this.props.replace_weapon_object(this.props.index, tmp_obj);
+  }
+
+  change_select(e) {
+    if (e.target.checked) {
+      this.props.enable_weapon_object(this.props.index);
+    } else {
+      this.props.disable_weapon_object(this.props.index);
+    }
+  }
+
   render() {
     const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, index } = this.props;
     const { selected, name, atk, skill_level, skill_type, cosmos, type } = this.props;
@@ -184,31 +239,31 @@ class WeaponRow extends Component {
           <input type="checkbox" className="weapon_lock" />
         </td>
         <td>
-          <input type="checkbox" className="weapon_select" checked={selected} />
+          <input type="checkbox" className="weapon_select" checked={selected} onChange={::this.change_select} />
         </td>
         <td>
-          <input type="text" className="weapon_name width150" value={name} />
+          <input type="text" className="weapon_name width150" value={name} onChange={::this.change_name} />
         </td>
         <td>
-          <input type="text" className="weapon_atk width50" value={atk} />
+          <input type="text" className="weapon_atk width50" value={atk} onChange={::this.change_atk} />
         </td>
         <td>
-          <select className="weapon_kind" value={type} >
+          <select className="weapon_kind" value={type} onChange={::this.change_kind} >
             {this.e_kind}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type1" value={skill_type[0]} >
+          <select className="weapon_skill_type1" value={skill_type[0]} onChange={::this.change_skill_type1} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type2" value={skill_type[1]} >
+          <select className="weapon_skill_type2" value={skill_type[1]} onChange={::this.change_skill_type2} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_lv" value={skill_level} >
+          <select className="weapon_skill_lv" value={skill_level} onChange={::this.change_skill_lv} >
             {this.e_skill_lv}
           </select>
         </td>
@@ -222,6 +277,6 @@ class WeaponRow extends Component {
     ));
   }
 }
-WeaponRow = connect(mapStateToWeaponRowProps)(WeaponRow);
+WeaponRow = connect(mapStateToWeaponRowProps, mapActionCreatorsToWeaponRowProps)(WeaponRow);
 WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow)(WeaponRow);
 WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);

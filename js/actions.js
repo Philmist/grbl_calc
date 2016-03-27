@@ -76,6 +76,13 @@ export function set_affinity(affinity) {
   };
 }
 
+// ジョブを選択するアクション
+export function set_job_type(job_str) {
+  return function (dispatch) {
+    dispatch({ type: RC.basic.JOB, value: job_str });
+  };
+}
+
 
 // Zenith関係
 
@@ -123,5 +130,29 @@ export function set_zenith_weapon(param) {
         console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
       }
     }
+  };
+}
+
+
+// 武器関係
+
+// 武器のオブジェクトを配列のindexを指定して置換する
+export function replace_weapon_object(index, obj) {
+  return function (dispatch, getState) {
+    dispatch({ type: RC.weapon.REPLACE, index: Number(index), value: obj });
+  };
+}
+
+// 武器を選択状態にする
+export function enable_weapon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.ENABLE, index: Number(index) });
+  };
+}
+
+// 武器を非選択状態にする
+export function disable_weapon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.DISABLE, index: Number(index) });
   };
 }
