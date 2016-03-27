@@ -229,7 +229,7 @@ class BasicInformation extends Component {
         <header className="subtype">基本情報</header>
         <PlayerStats />
         <AtkBonus />
-        <Job {...this.props} />
+        <Job set_job_type={this.props.set_job_type} job={this.props.job} />
       </section>
     );
   }
