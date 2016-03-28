@@ -85,15 +85,15 @@ export function summon(state, action) {
     ];
     state = initial_val.map((val) => { return Object.assign(val, summon_default); });
   }
-  if (action.type == RC.summon.REPLACE && action.index instanceof Number && action.index < state.length) {
+  if (action.type == RC.summon.REPLACE && action.index < state.length) {
+    state = Array.from(state);
     state[action.index] = Object.assign({}, summon_default, action.value);
+  } if (action.type == RC.summon.ENABLE && action.index < state.length) {
     state = Array.from(state);
-  } if (action.type == RC.summon.ENABLE && action.index instanceof Number && action.index < state.length) {
     state[action.index] = Object.assign({}, state[action.index], { selected: true });
+  } if (action.type == RC.summon.DISABLE && action.index < state.length) {
     state = Array.from(state);
-  } if (action.type == RC.summon.DISABLE && action.index instanceof Number && action.index < state.length) {
     state[action.index] = Object.assign({}, state[action.index], { selected: false });
-    state = Array.from(state);
   }
   return state;
 }

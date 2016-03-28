@@ -156,3 +156,26 @@ export function disable_weapon_object(index) {
     dispatch({ type: RC.weapon.DISABLE, index: Number(index) });
   };
 }
+
+// 召喚関係
+
+// 召喚のオブジェクトを配列のindexを指定して置換する
+export function replace_summon_object(index, obj) {
+  return function (dispatch, getState) {
+    dispatch({ type: RC.summon.REPLACE, index: Number(index), value: obj });
+  };
+}
+
+// 召喚を選択状態にする
+export function enable_summon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.ENABLE, index: Number(index) });
+  };
+}
+
+// 召喚を非選択状態にする
+export function disable_summon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.DISABLE, index: Number(index) });
+  };
+}
