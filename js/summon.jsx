@@ -1,5 +1,12 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
+/*
+ * 召喚表を表示させるためのモジュール
+ *
+ * ロジック部分と表示部分は面倒なので分離されていない。
+ * わかりにくいのであとでなんとかしたい。
+ */
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
@@ -10,18 +17,8 @@ import ItemTypes from "./const/item_types";
 import "../css/calc.css";
 
 
-// optionのvalueと中身の対応
-// TODO: なんとかして分離したい
-const SUMMON_KIND = [
-  ["none", "無し"],
-  ["attribute", "属性"],
-  ["character", "キャラ"],
-  ["magna", "マグナ"],
-  ["unknown", "ｱﾝﾉｳﾝ"],
-  ["zeus", "ｾﾞｳｽ枠"]
-];
-
-
+// 召喚表部分
+// renderは1要素しか返してはいけないので若干わかりづらい
 class SummonTable extends Component {
   render() {
     return (
@@ -40,6 +37,7 @@ class SummonTable extends Component {
   }
 }
 
+// 召喚表のヘッダ
 class SummonTableHeader extends Component {
   render() {
     return (
@@ -58,11 +56,13 @@ class SummonTableHeader extends Component {
 }
 
 
+// 後述の召喚表本体のpropsに注入するstate
 function mapStateToSummonTableBodyProps(state) {
   return {
     summon: state.summon
   };
 }
+// 召喚表の本体(列全体)を表示させるクラス
 class SummonTableBody extends Component {
   render() {
     return (
@@ -72,14 +72,26 @@ class SummonTableBody extends Component {
     );
   }
 }
+// 実際にクラスへpropsを注入する(storeのstateと接続する)
 SummonTableBody = connect(mapStateToSummonTableBodyProps)(SummonTableBody);
 
 
+// ドラッグされる側の仕様定義
+// const tmp = { beginDrag: beginDrag(props){}, ... };
+// 最低でもbeginDragは定義されてなければいけない
 const SummonRowSource = {
-  beginDrag() {
-    return {};
+  // ドラッグ開始時に呼ばれる
+  beginDrag(props) {
+    return { index: props.index };
+  },
+  // ドラッグ終了時に呼ばれる
+  endDrag(props, monitor, component) {
   }
 };
+// ドラッグされる側が何をpropsに注入するかを返す関数
+// connectDragSource: どの要素がドラッグされるのかを指定する関数
+// connectDragPreview: どの要素がドラッグされる間表示されるのかを指定する関数
+// isDragging: ドラッグされている最中かどうかの値
 function collectSourceSummonRow(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
@@ -87,18 +99,25 @@ function collectSourceSummonRow(connect, monitor) {
     isDragging: monitor.isDragging()
   };
 }
+// ドロップされる側の仕様定義
+// どの関数もオプション
 const SummonRowTarget = {
+  // ドロップされた時に呼ばれる
   drop(props, monitor) {
     console.log(props.index);
-    return {test: "test"};
+    return { index: props.index };
   }
 };
+// ドロップされる側が何をpropsに注入するのかを返す関数
+// connectDropTarget: どの要素がドロップされる要素なのかを指定する関数
+// isOver: 要素の上に対象があるかどうかの値
 function collectTargetSummonRow(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver()
   };
 }
+// reduxのstoreから何をpropsに注入するかを返す関数
 function mapStateToSummonRowProps(state, props) {
   let target_state = state.summon[props.index];
   let atk = (target_state.atk !== undefined) ? Number(target_state.atk) : 0;
@@ -112,45 +131,65 @@ function mapStateToSummonRowProps(state, props) {
   let name = (target_state.name !== undefined) ? String(target_state.name) : "";
   return { atk, skill, selected, name };
 }
+// reduxのaction creatorをpropsに注入するためのオブジェクト
 const mapActionCreatorsToSummonRowProps = {
   replace_summon_object,
   enable_summon_object,
   disable_summon_object
 };
+// optionのvalueと中身の対応
+// TODO: なんとかして分離したい
+const SUMMON_KIND = [
+  ["none", "無し"],
+  ["attribute", "属性"],
+  ["character", "キャラ"],
+  ["magna", "マグナ"],
+  ["unknown", "ｱﾝﾉｳﾝ"],
+  ["zeus", "ｾﾞｳｽ枠"]
+];
+// 召喚の行1つを表示させるためのクラス
 class SummonRow extends Component {
+  // オプション要素を作るための関数
   create_optfunc(key) {
     return (
       <option value={key[0]} key={key[0]}>{key[1]}</option>
     );
   }
+  // 実際にオプションの配列を作る
   skind = SUMMON_KIND.map((i) => this.create_optfunc(i));
 
+  // propsからstoreに送るためのobjectを取りだす関数
+  // actionは送られたobjectで置きかえる実装なのでこれが必要
   get_summon_obj_from_props() {
     let { atk, skill, selected, name } = this.props;
     return { atk, skill, selected, name };
   }
 
+  // 選択/解除がされた時に呼びだされる関数
   on_change_select(e) {
-    if (e.target.checked) {
+    if (e.target.checked) {  // もし選択されたのなら
       this.props.enable_summon_object(this.props.index);
-    } else {
+    } else {  // もし解除されたのなら
       this.props.disable_summon_object(this.props.index);
     }
   }
 
+  // 名前が変更された時に呼ばれる関数
   on_change_name(e) {
     let obj = this.get_summon_obj_from_props();
     obj.name = String(e.target.value);
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  // 攻撃力が変更された時に呼ばれる関数
   on_change_atk(e) {
-    console.log(e.target.value);
     let obj = this.get_summon_obj_from_props();
     obj.atk = Number(e.target.value);
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  // 召喚(1つ目)の種別が変更された時に呼ばれる関数
+  // 召喚は配列で管理されているので泥臭いことをしている
   on_change_summon_kind1(e) {
     let obj = this.get_summon_obj_from_props();
     let skind1 = obj.skill[0];
@@ -160,6 +199,7 @@ class SummonRow extends Component {
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  // 召喚(1つ目)の%が変更された時に呼ばれる関数
   on_change_summon_percent1(e) {
     let obj = this.get_summon_obj_from_props();
     let skind1 = obj.skill[0];
@@ -169,6 +209,7 @@ class SummonRow extends Component {
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  // 召喚(2つ目)の種別が変更された時に呼ばれる関数
   on_change_summon_kind2(e) {
     let obj = this.get_summon_obj_from_props();
     let skind2 = obj.skill[1];
@@ -178,6 +219,7 @@ class SummonRow extends Component {
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  // 召喚(2つ目)の%が変更された時に呼ばれる関数
   on_change_summon_percent2(e) {
     let obj = this.get_summon_obj_from_props();
     let skind2 = obj.skill[1];
@@ -187,11 +229,16 @@ class SummonRow extends Component {
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  // レンダリングする要素を返す関数
+  // ::this.func は this.func.bind(this) と一緒
   render() {
+    // 必要なpropsをconst変数に展開する
     const {
       index, connectDragSource, connectDragPreview, isDragging, connectDropTarget, isOver,
       atk, skill, selected, name
     } = this.props;
+    // 描画する要素を返す
+    // connectDragPreviewとconnectDropTargetとconnectDragSourceの説明は上述
     return connectDragPreview(connectDropTarget(
       <tr className="summon_tr">
         {connectDragSource(<td style={ { cursor: 'move' } }>{index+1}</td>)}
@@ -221,7 +268,9 @@ class SummonRow extends Component {
     ));
   }
 }
+// Reduxのstoreをつなげる
 SummonRow = connect(mapStateToSummonRowProps, mapActionCreatorsToSummonRowProps)(SummonRow);
+// ドラッグ&ドロップのAPIをつなげる
 SummonRow = DragSource(ItemTypes.SUMMON, SummonRowSource, collectSourceSummonRow)(SummonRow);
 SummonRow = DropTarget(ItemTypes.SUMMON, SummonRowTarget, collectTargetSummonRow)(SummonRow);
 

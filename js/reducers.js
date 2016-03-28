@@ -12,12 +12,10 @@ import * as RC from "./const/reducer_type.js";
  */
 
 /*
- * action.selector : 処理するreducer(string)
  * action.type : reducerに実行させるaction
  */
 
 // jobのデータを保管するstateのreducer
-// action = { selector: "JOB", type: "ASSIGN", job: data }
 export function job_data(state = {}, action) {
   if (action.type === RC.job.ASSIGN) {  // 渡されたのでstateを更新する
     // 新しいオブジェクトに現在のstateとactionで渡されたjobを結合する
@@ -40,7 +38,10 @@ const weapon_default = {
   name: ""
 };
 // 武器を保管するstateのreducer
+// state: reducerに割りあてられたstateが渡される
+// action: dispatchされたobject
 export function weapon(state, action) {
+  // 初期state
   if (state === undefined) {
     let initial_val = [
       {}, {}, {}, {}, {},
@@ -48,6 +49,8 @@ export function weapon(state, action) {
     ];
     state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
   }
+  // actionによって動作を分岐する
+  // Array.from: 配列をコピーする関数
   if (action.type == RC.weapon.REPLACE && action.index < state.length) {
     state = Array.from(state);
     state[action.index] = Object.assign({}, weapon_default, action.value);
@@ -58,10 +61,12 @@ export function weapon(state, action) {
     state = Array.from(state);
     state[action.index] = Object.assign({}, state[action.index], { selected: false });
   }
+  // 最終的なstateを返す
   return state;
 }
 
 
+// 召喚のarray項目1つのデフォルト
 const summon_default = {
   name: "",
   selected: false,
@@ -78,13 +83,17 @@ const summon_default = {
   ]
 };
 // 召喚を保管するstateのreducer
+// state: reducerに割りあてられたstate
+// action: dispatchされたobject
 export function summon(state, action) {
+  // 初期stateの設定
   if (state === undefined) {
     let initial_val = [
       {}, {}, {}, {}, {}
     ];
     state = initial_val.map((val) => { return Object.assign(val, summon_default); });
   }
+  // actionによる分岐
   if (action.type == RC.summon.REPLACE && action.index < state.length) {
     state = Array.from(state);
     state[action.index] = Object.assign({}, summon_default, action.value);
@@ -95,11 +104,14 @@ export function summon(state, action) {
     state = Array.from(state);
     state[action.index] = Object.assign({}, state[action.index], { selected: false });
   }
+  // 最終的なstateを返す
   return state;
 }
 
 
 // 基本情報を保管するstateのreducer
+// state: reducerに割りあてられたstate
+// action: dispatchされたobject
 export function basicinfo(state, action) {
   // デフォルト値の設定
   var zenith = {
@@ -121,9 +133,9 @@ export function basicinfo(state, action) {
     atk_bonus: atk_bonus
   };
 
-  // stateがまだ何もないなら初期値を返す
+  // stateがまだ何もないなら初期値を設定
   if (state === undefined) {
-    return default_value;
+    state = default_value;
   }
 
   var retval = Object.assign({}, default_value, state);  // あらかじめ新しいObjectを作っておく
@@ -165,7 +177,7 @@ export function basicinfo(state, action) {
   return retval;
 }
 
-// 各種のstate(読みこみ中など)を管理するreducer
+// 各種の全体state(読みこみ中など)を管理するreducer
 export function component_state(state = {}, action) {
   // 返り値を入れる変数を作って…
   let retval = state;

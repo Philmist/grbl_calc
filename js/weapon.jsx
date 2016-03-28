@@ -1,6 +1,10 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-// 武器部分
+/*
+ * 武器部分を表示するためのモジュール
+ *
+ * ロジックと表示がわかれてないのでなんとかしたい
+ */
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -12,6 +16,135 @@ import { replace_weapon_object, enable_weapon_object, disable_weapon_object } fr
 import "../css/calc.css";
 
 
+// 武器部分全体の構成
+// 若干構成が面倒
+export default class Weapon extends Component {
+  render() {
+    return (
+      <section>
+        <header className="subtype">武器</header>
+        <form name="weapon">
+          <table className="grbr" id="weapon_table" ref="weapon_table">
+            <thead>
+              <WeaponTableHeader />
+            </thead>
+              <WeaponTableBody />
+            <tfoot>
+              <WeaponTableHeader />
+            </tfoot>
+          </table>
+        </form>
+      </section>
+    );
+  }
+};
+
+
+// 武器テーブルのヘッダ
+class WeaponTableHeader extends Component {
+  render() {
+    return (
+      <tr>
+        <th>順</th>
+        <th>鍵</th>
+        <th>選</th>
+        <th className="width150">名前</th>
+        <th className="width50">攻撃力</th>
+        <th>種別</th>
+        <th>スキル1</th>
+        <th>スキル2</th>
+        <th>LV</th>
+        <th>並替・挿入・削除</th>
+      </tr>
+    );
+  }
+};
+
+
+// 武器並び全体にプロパティを注入する関数
+// reduxのstoreからstateを取りだす
+function mapStateToWeaponTableBodyProps(state) {
+  return {
+    weapon: state.weapon
+  }
+}
+// 武器の並び全体を表わすクラス
+class WeaponTableBody extends Component {
+  render() {
+    // weaponは配列なのでmapを使って要素を生成する
+    return (
+      <tbody>
+        {this.props.weapon.map((val, index) => { return <WeaponRow key={"wr_"+String(index)} index={index} />; })}
+      </tbody>
+    );
+  }
+};
+// reduxとクラスを結びつける
+WeaponTableBody = connect(mapStateToWeaponTableBodyProps)(WeaponTableBody);
+
+
+// ドラッグされる側の仕様を記したobject
+// var tmp = { foobar }; -> var tmp = { foobar: foobar };
+// beginDragだけは必須
+const WeaponRowSource = {
+  beginDrag(props, monitor) {
+    return { index: props.index };
+  },
+  endDrag(props, monitor) {
+  }
+};
+// ドラッグされる側のpropsに注入されるobjectを返す関数
+// connectDragSource: ドラッグされる対象の要素を囲む関数
+// connectDragPreview: ドラッグされる要素の表示要素を囲む関数
+// isDragging: ドラッグされている最中かの値
+function collectSourceWeaponRow(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging()
+  };
+}
+// ドロップされる側の仕様を記したobject
+// 関数は全部オプション
+const WeaponRowTarget = {
+  // ドロップされた時に呼ばれる関数
+  drop(props, monitor) {
+    return { index: props.index };
+  },
+  // 要素の上に乗った(hover)時に呼ばれる関数
+  hover(props, monitor) {
+  }
+};
+// ドロップされる側が何をpropsに注入するかを記したobjectを返す関数
+// connectDropTarget: ドロップされる対象要素を囲う関数
+// isOver: ドロップ対象が上に乗っているかどうかの値
+function collectTargetWeaponRow(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
+  };
+}
+// reduxのstoreから必要なstateを取りだしてpropsに注入するための関数
+function mapStateToWeaponRowProps(state, props) {
+  // 対象のstateを取りだす
+  let target_state = state.weapon[props.index];
+  // デフォルト値を代入していく
+  let selected = (target_state.selected === undefined) ? false : target_state.selected;
+  let name = (target_state.name === undefined) ? "" : target_state.name;
+  let atk = (target_state.atk === undefined) ? 0 : target_state.atk;
+  let skill_level = (target_state.skill_level === undefined) ? 0 : target_state.skill_level;
+  let skill_type = (target_state.skill_type === undefined) ? ["none", "none"] : target_state.skill_type;
+  let cosmos = (target_state.cosmos === undefined) ? false : target_state.cosmos;
+  let type = (target_state.type === undefined) ? "sword" : target_state.type;
+  return { selected, name, atk, skill_level, skill_type, cosmos, type };
+}
+// reduxのaction creatorをpropsに注入するためのobject
+var mapActionCreatorsToWeaponRowProps = {
+  replace_weapon_object: replace_weapon_object,
+  enable_weapon_object: enable_weapon_object,
+  disable_weapon_object: disable_weapon_object
+};
+// 表示に使うための変数群
 // TODO: もっとマシな形でどうにかする
 const WEAPON_KIND = [
   ["sword", "剣"],
@@ -62,165 +195,73 @@ const SKILL_LV = [
   ["14", "14"],
   ["15", "15"]
 ];
-
-// 武器部分全体の構成
-export default class Weapon extends Component {
-  render() {
-    return (
-      <section>
-        <header className="subtype">武器</header>
-        <form name="weapon">
-          <table className="grbr" id="weapon_table" ref="weapon_table">
-            <thead>
-              <WeaponTableHeader />
-            </thead>
-              <WeaponTableBody />
-            <tfoot>
-              <WeaponTableHeader />
-            </tfoot>
-          </table>
-        </form>
-      </section>
-    );
-  }
-};
-
-
-// 武器テーブルのヘッダ
-class WeaponTableHeader extends Component {
-  render() {
-    return (
-      <tr>
-        <th>順</th>
-        <th>鍵</th>
-        <th>選</th>
-        <th className="width150">名前</th>
-        <th className="width50">攻撃力</th>
-        <th>種別</th>
-        <th>スキル1</th>
-        <th>スキル2</th>
-        <th>LV</th>
-        <th>並替・挿入・削除</th>
-      </tr>
-    );
-  }
-};
-
-
-// 武器並び全体にプロパティを注入する関数
-function mapStateToWeaponTableBodyProps(state) {
-  return {
-    weapon: state.weapon
-  }
-}
-
-// 武器の並び全体を表わすクラス
-class WeaponTableBody extends Component {
-  render() {
-    return (
-      <tbody>
-        {this.props.weapon.map((val, index) => { return <WeaponRow key={"wr_"+String(index)} index={index} />; })}
-      </tbody>
-    );
-  }
-};
-WeaponTableBody = connect(mapStateToWeaponTableBodyProps)(WeaponTableBody);
-
-
-const WeaponRowSource = {
-  beginDrag() {
-    return {};
-  }
-};
-function collectSourceWeaponRow(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
-    isDragging: monitor.isDragging()
-  };
-}
-const WeaponRowTarget = {
-  drop(props, monitor) {
-    console.log(props.index);
-    return {test: "test"};
-  }
-};
-function collectTargetWeaponRow(connect, monitor) {
-  return {
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
-  };
-}
-function mapStateToWeaponRowProps(state, props) {
-  // 対象のstateを取りだす
-  let target_state = state.weapon[props.index];
-  // デフォルト値を代入していく
-  let selected = (target_state.selected === undefined) ? false : target_state.selected;
-  let name = (target_state.name === undefined) ? "" : target_state.name;
-  let atk = (target_state.atk === undefined) ? 0 : target_state.atk;
-  let skill_level = (target_state.skill_level === undefined) ? 0 : target_state.skill_level;
-  let skill_type = (target_state.skill_type === undefined) ? ["none", "none"] : target_state.skill_type;
-  let cosmos = (target_state.cosmos === undefined) ? false : target_state.cosmos;
-  let type = (target_state.type === undefined) ? "sword" : target_state.type;
-  return { selected, name, atk, skill_level, skill_type, cosmos, type };
-}
-var mapActionCreatorsToWeaponRowProps = {
-  replace_weapon_object: replace_weapon_object,
-  enable_weapon_object: enable_weapon_object,
-  disable_weapon_object: disable_weapon_object
-};
+// 武器の1行を表わすコンポーネント
+// フォームはControlled Componentsにしているので割と面倒くさい
 class WeaponRow extends Component {
+  // 武器のoptionを生成するための関数
   create_optfunc(key) {
     return (
       <option value={key[0]} key={key[0]}>{key[1]}</option>
     );
   }
-
+  // 武器種別
   e_kind = WEAPON_KIND.map(this.create_optfunc);
+  // スキル種別
   e_skill_type = SKILL_TYPE.map(this.create_optfunc);
+  // スキルレベル
   e_skill_lv = SKILL_LV.map(this.create_optfunc);
 
+  // propsからstoreに保存するためのobjectを取りだすための関数
+  // action creatorの実装はobjectを入れかえるものなのでこれが必要
   get_weapon_obj_from_props() {
     let { selected, name, atk, skill_level, skill_type, cosmos, type } = this.props;
     return { selected, name, atk, skill_level, skill_type, cosmos, type };
   }
 
+  // 武器の名前が変更された時に呼ばれる関数
   change_name(e) {
     let tmp_obj = this.get_weapon_obj_from_props();
     tmp_obj.name = String(e.target.value);
     this.props.replace_weapon_object(this.props.index, tmp_obj);
   }
 
+  // 武器の攻撃力が変更された時に呼ばれる関数
   change_atk(e) {
     let tmp_obj = this.get_weapon_obj_from_props();
     tmp_obj.atk = Number(e.target.value);
     this.props.replace_weapon_object(this.props.index, tmp_obj);
   }
 
+  // 武器の種別が変更された時に呼ばれる関数
   change_kind(e) {
     let tmp_obj = this.get_weapon_obj_from_props();
     tmp_obj.type = String(e.target.value);
     this.props.replace_weapon_object(this.props.index, tmp_obj);
   }
 
+  // 武器のスキルタイプ(1つ目)が変更された時に呼ばれる関数
+  // 配列を変更するので泥臭いことをしている
   change_skill_type1(e) {
     let tmp_obj = this.get_weapon_obj_from_props();
     tmp_obj.skill_type = [String(e.target.value), tmp_obj.skill_type[1]];
     this.props.replace_weapon_object(this.props.index, tmp_obj);
   }
 
+  // 武器のスキルタイプ(2つ目)が変更された時に呼ばれる関数
   change_skill_type2(e) {
     let tmp_obj = this.get_weapon_obj_from_props();
     tmp_obj.skill_type = [tmp_obj.skill_type[0], String(e.target.value)];
     this.props.replace_weapon_object(this.props.index, tmp_obj);
   }
 
+  // 武器のスキルレベルが変更された時に呼ばれる関数
   change_skill_lv(e) {
     let tmp_obj = this.get_weapon_obj_from_props();
     tmp_obj.skill_level = Number(e.target.value);
     this.props.replace_weapon_object(this.props.index, tmp_obj);
   }
 
+  // 武器の選択状態が変更された時に呼ばれる関数
   change_select(e) {
     if (e.target.checked) {
       this.props.enable_weapon_object(this.props.index);
@@ -229,9 +270,14 @@ class WeaponRow extends Component {
     }
   }
 
+  // 実際にレンダリングされる要素を返す関数
+  // 名前は固定
   render() {
+    // 必要な要素をpropsから変数に取りだす
     const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, index } = this.props;
     const { selected, name, atk, skill_level, skill_type, cosmos, type } = this.props;
+    // レンダリングされる要素を返す
+    // その際、どれがドラッグ&ドロップの対象になるかを指定している
     return connectDragPreview(connectDropTarget(
       <tr>
         {connectDragSource(<td style={ { cursor: 'move' } }>{index+1}</td>)}
@@ -277,6 +323,8 @@ class WeaponRow extends Component {
     ));
   }
 }
+// reduxのstoreと結びつける
 WeaponRow = connect(mapStateToWeaponRowProps, mapActionCreatorsToWeaponRowProps)(WeaponRow);
+// ドラッグ&ドロップのモジュールと結びつける
 WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow)(WeaponRow);
 WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);

@@ -1,5 +1,9 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
+/*
+ * 計算機全体を表わすコンポーネントを格納したモジュール
+ */
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { DragDropContext } from "react-dnd";
@@ -17,7 +21,10 @@ import { fetch_job_data } from "./actions.js";
 
 import "../css/calc.css";
 
-// 結果表示欄
+
+// 結果表示欄を表わすコンポーネント
+// 内部では渡されたpropsから実際に計算している
+// このpropsで渡されたパラメータは正しい(形式に沿っている)ことが前提
 class Result extends Component {
   render() {
     var res = calculate_atkval(this.props.parameter, this.props.job);
@@ -47,6 +54,7 @@ class Result extends Component {
 
 
 // システム部分
+// TODO: ここらへんにセーブとロードの処理
 class System extends Component {
   render() {
     return (
@@ -59,6 +67,7 @@ class System extends Component {
 
 
 // 計算機の骨格propsに計算結果を注入する関数
+// propsはreduxのstore stateから読みこまれる
 function mapStateToCalculatorBodyProps(state) {
   let basicinfo = state.basicinfo;
   let job = state.job;
@@ -85,17 +94,18 @@ function mapStateToCalculatorBodyProps(state) {
     job: job
   }
 }
-
-// 計算機の骨格propsに注入されて状態を更新するための関数群
+// 計算機の骨格propsに注入されて状態を更新するための関数群のオブジェクト
 var mapActionCreatorsToCalculatorBodyProps = {
   fetch_job_data: fetch_job_data,
 };
-
-// 計算機の骨格
+// 計算機の骨格をレンダリングするためのコンポーネント
 class CalculatorBody extends Component {
+  // コンポーネントが「取りつけられる」時に実行される
   componentDidMount() {
+    // ジョブデータを読みこんでから全体をレンダリングする
     this.props.fetch_job_data();
   }
+  // 実際に要素をレンダリングするための関数
   render() {
     var { job, params } = this.props;  // var job = this.props.job; (略)
     return (
@@ -118,6 +128,9 @@ class CalculatorBody extends Component {
     );
   }
 }
+// reduxのstoreと結びつける
 CalculatorBody = connect(mapStateToCalculatorBodyProps, mapActionCreatorsToCalculatorBodyProps)(CalculatorBody);
+// ドラッグ&ドロップをこのコンポーネントとその中で使われているコンポーネントで使えるようにする
 CalculatorBody = DragDropContext(HTML5Backend)(CalculatorBody);
+// 外部に装飾されたクラスをエクスポート
 export default CalculatorBody;

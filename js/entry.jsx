@@ -1,5 +1,11 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
+/*
+ * エントリポイント
+ *
+ * このファイルから全ての要素が実行される
+ */
+
 // 必要なスタイルシートを読みこむ
 import "../css/calc.css";
 
@@ -16,9 +22,12 @@ import Calculator from "./calculator.jsx";
 import * as reducers from "./reducers.js";
 
 
+// reduxのためのロギングミドルウェア
+// これを使うことで開発コンソールにstateの変移が吐きだされる
 const loggerMiddleware = createLogger();
 
 // reducerを組みあわせて新しいreducerを作る
+// このオブジェクトがstateの骨格になるので**うかつに変更しない**
 const reducer = combineReducers(
   {
     job: reducers.job_data,
@@ -28,7 +37,7 @@ const reducer = combineReducers(
     component_state: reducers.component_state
   }
 );
-// 組みあわせたreducerを使って新しいstoreを作る
+// 組みあわせたreducerを使って新しいredux storeを作る
 const store = createStore(
   reducer,
   applyMiddleware(
@@ -39,6 +48,7 @@ const store = createStore(
 
 
 // アプリ全体の定義
+// Providerで囲うことでreact-reduxのconnectが使えるようになる
 class App extends Component {
   render() {
     return (
@@ -50,7 +60,7 @@ class App extends Component {
 }
 
 
-// 最終的な結果をDOMにして注入する
+// 最終的なレンダリング結果をDOMを探して注入する
 ReactDOM.render(
    <App />,
   document.getElementById('react_content')

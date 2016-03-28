@@ -1,5 +1,17 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
+/*
+ * Action creatorを集めた関数
+ * 便宜的に以下ではaction creatorをアクションと書くこともある
+ *
+ * action: dispatchしてreducerに送るオブジェクト
+ * action creator: 呼びだされてactionをdispatchする関数
+ *
+ * ここではredux-thunkが使われていることを前提にしている
+ * redux-thunkは関数を返す関数を使う
+ * そうすることによってdispatchを比較的楽に使いまわせる
+ */
+
 import * as RC from "./const/reducer_type";
 import get_job_data from "./get_job_data.js";
 

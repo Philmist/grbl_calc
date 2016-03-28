@@ -1,5 +1,8 @@
 // vim: sts=2 sw=2 ts=2 expandtab
-// 色々な基礎情報部分を入力させるコンポーネント群
+
+/*
+ * 基礎情報を入力させるコンポーネント
+ */
 
 // モジュールのインポート
 import React, { Component } from "react";
