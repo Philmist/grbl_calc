@@ -5,7 +5,8 @@
  * 便宜的に以下ではaction creatorをアクションと書くこともある
  *
  * action: dispatchしてreducerに送るオブジェクト
- * action creator: 呼びだされてactionをdispatchする関数
+ * 通常のaction creator: actionを生成して返す関数
+ * redux-thunkでのaction creator: 呼びだされてactionをdispatchする関数
  *
  * ここではredux-thunkが使われていることを前提にしている
  * redux-thunkは関数を返す関数を使う

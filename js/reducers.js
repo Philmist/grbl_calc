@@ -1,5 +1,10 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
+/*
+ * reducerを定義するモジュール
+ * reducerについては別途記述
+ */
+
 import * as RC from "./const/reducer_type.js";
 
 /*

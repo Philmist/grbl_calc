@@ -1,5 +1,11 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
+/*
+ * フレンド部分をレンダリングするコンポーネント
+ *
+ * TODO: なんとか実装する
+ */
+
 import React, { Component } from "react";
 
 import "../css/calc.css";

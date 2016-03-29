@@ -13,19 +13,25 @@ import * as actions from "./actions.js";
 import "../css/calc.css";
 
 
-// ジョブ1つを表わす項目
+// ジョブを選択する要素のコンポーネント
+// ジョブそれ自体と変更されたらどうなるかはpropsとしてもらう
 class JobSelector extends Component {
+  // ジョブが変更された時の動作
+  // propsとしてもらった関数に処理を引きわたす
   handle_job_change(e) {
     this.props.set_job_type(e.target.value);
   }
 
+  // 要素のレンダリング
   render() {
+    // ジョブ一覧をoption要素として展開する
     var values = new Array();
     for (var i in this.props.job) {
       values.push(
         <option value={i} key={i}>{this.props.job[i].name}</option>
       );
     }
+    // select要素を作って返す
     return (
       <select id="job" onChange={::this.handle_job_change} >
         {values}
@@ -35,7 +41,8 @@ class JobSelector extends Component {
 }
 
 
-// ジョブ選択コンポーネント
+// ジョブ選択部分のコンポーネント
+// {...this.props}は渡されたprops全部を渡す
 class Job extends Component {
   render() {
     return (
@@ -54,11 +61,16 @@ class Job extends Component {
 }
 
 
-// ランク
+// ランク選択部分のコンポーネント
+// ランクそれ自体と変更されたらどうなるかはpropsとしてもらう
 class Rank extends Component {
+  // ランクが変更された時の処理
+  // propsでもらった関数に処理を委託
   handleChange(event) {
     this.props.set_rank(event.target.value);
   }
+
+  // 最終的な要素を作って返す関数
   render() {
     return (
       <tr>
@@ -76,17 +88,24 @@ class Rank extends Component {
     );
   }
 }
+// コンポーネントにpropsを注入する
+// reduxのstoreからデータを取ってきてpropsに注入
+// アクションを集めたモジュールから関数を取ってきて注入
 Rank = connect(
   (state) => ({ rank: state.basicinfo.rank }),
     { set_rank: actions.set_rank }
 )(Rank);
 
 
-// 艇補正
+// 艇補正要素をレンダリングするコンポーネント
 class ShipBonus extends Component {
+  // 値が変更された時に呼びだされる
+  // propsで渡された関数に処理を委託
   handleChange(event) {
     this.props.set_ship_bonus(event.target.value);
   }
+
+  // 最終的な要素を作って返す
   render() {
     return (
       <tr>
@@ -105,16 +124,23 @@ class ShipBonus extends Component {
   }
 
 }
+// コンポーネントにpropsを注入する
+// redux storeからデータを取ってきて注入
+// アクションモジュールからアクションを持ってきて注入
 ShipBonus = connect(
   (state) => ({ ship_bonus: state.basicinfo.ship_bonus }), { set_ship_bonus: actions.set_ship_bonus }
 )(ShipBonus);
 
 
-// 属性補正
+// 属性補正をレンダリングするコンポーネント
 class AttributeBonus extends Component {
+  // 値が変更された時に呼ばれるコンポーネント
+  // propsで渡された関数に処理を委託
   handleChange(event) {
     this.props.set_affinity(event.target.value);
   }
+
+  // 最終的な要素を作って返す関数
   render() {
     return (
       <tr>
@@ -130,17 +156,22 @@ class AttributeBonus extends Component {
     );
   }
 }
+// propsに色々注入する関数(redux storeからとアクションモジュールから)
 AttributeBonus = connect(
   (state) => ({ affinity: state.basicinfo.affinity }),
     { set_affinity: actions.set_affinity }
 )(AttributeBonus);
 
 
-// HP%
+// HP%をレンダリングするコンポーネント
 class HPPercent extends Component {
+  // 値が変更された時に呼ばれる関数
+  // propsとして渡された関数に処理を委託
   handleChange(event) {
     this.props.set_hp_percent(event.target.value);
   }
+
+  // 最終的な要素を作って返す関数
   render() {
     return (
       <tr>
@@ -158,12 +189,16 @@ class HPPercent extends Component {
     );
   }
 }
+// コンポーネントにpropsを注入する
+// redux storeからデータを取って注入
+// アクションモジュールから関数を持ってきて注入
 HPPercent = connect(
   (state) => ({ hp_percent: state.basicinfo.hp_percent }), { set_hp_percent: actions.set_hp_percent }
 )(HPPercent);
 
 
-// プレイヤー情報
+// プレイヤー情報をレンダリングするコンポーネント
+// 色々なところから寄せあつめてレンダリング
 class PlayerStats extends Component {
   render() {
     return (
@@ -180,14 +215,19 @@ class PlayerStats extends Component {
 }
 
 
-// 攻撃力ボーナス
+// 攻撃力ボーナス部分をレンダリングするコンポーネント
 class AtkBonus extends Component {
+  // 攻撃力(%)が変更された時に呼ばれる関数
   percentChange(event) {
     this.props.set_atk_percent(event.target.value);
   }
+
+  // 攻撃力(値)が変更された時に呼ばれる関数
   valueChange(event) {
     this.props.set_atk_value(event.target.value);
   }
+
+  // 最終的な結果を作って返す関数
   render() {
     return (
       <table className="grbr" id="bonus_table">
@@ -211,20 +251,24 @@ class AtkBonus extends Component {
     );
   }
 }
+// コンポーネントのpropsに注入するオブジェクトを作って返す関数
 function mapStateToAtkBonusProps(state) {
   return {
     atk_bonus_percent: state.basicinfo.atk_bonus.percent,
     atk_bonus_value: state.basicinfo.atk_bonus.value
   };
 }
+// コンポーネントのpropsに注入する関数を集めたオブジェクト
 var mapActionCreatorsToAtkBonusProps = {
   set_atk_percent: actions.set_atk_percent,
   set_atk_value: actions.set_atk_value
 };
+// コンポーネントのpropsに実際に注入する
 AtkBonus = connect(mapStateToAtkBonusProps, mapActionCreatorsToAtkBonusProps)(AtkBonus);
 
 
-// 基礎情報入力欄
+// 基礎情報入力欄をレンダリングするコンポーネント
+// Jobコンポーネントはここからpropsを渡される
 class BasicInformation extends Component {
   render() {
     return (
@@ -237,4 +281,6 @@ class BasicInformation extends Component {
     );
   }
 }
+// コンポーネントにpropsを注入して外部にこのモジュールをexport
+// defaultがついているのでimportする時はこのモジュールがimportされる
 export default connect(((state) => ({ job: state.job })), { set_job_type: actions.set_job_type })(BasicInformation);
