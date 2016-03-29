@@ -170,6 +170,28 @@ export function disable_weapon_object(index) {
   };
 }
 
+// 武器をfromからtoへ移動する(index)
+export function move_weapon_object(from, to) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.MOVE, from: Number(from), to: Number(to) });
+  };
+}
+
+// 武器を削除する
+export function delete_weapon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.DELETE, index: Number(index) });
+  };
+}
+
+// 空の武器を挿入する
+export function insert_weapon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.APPEND, index: (Number(index)+1) });
+  };
+}
+
+
 // 召喚関係
 
 // 召喚のオブジェクトを配列のindexを指定して置換する
@@ -190,5 +212,26 @@ export function enable_summon_object(index) {
 export function disable_summon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.summon.DISABLE, index: Number(index) });
+  };
+}
+
+// 召喚をfromからtoへ移動する(index)
+export function move_summon_object(from, to) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.MOVE, from: Number(from), to: Number(to) });
+  };
+}
+
+// 召喚を削除する
+export function delete_summon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.DELETE, index: Number(index) });
+  };
+}
+
+// 空の召喚を挿入する
+export function insert_summon_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.APPEND, index: (Number(index)+1) });
   };
 }

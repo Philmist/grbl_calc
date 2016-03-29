@@ -42,6 +42,8 @@ const weapon_default = {
   type: "sword",
   name: ""
 };
+const WEAPON_MAX = 20;  // 武器配列の最大値
+const WEAPON_MIN = 10;  // 武器配列の最小値
 // 武器を保管するstateのreducer
 // state: reducerに割りあてられたstateが渡される
 // action: dispatchされたobject
@@ -65,6 +67,18 @@ export function weapon(state, action) {
   } else if (action.type == RC.weapon.DISABLE && action.index < state.length) {
     state = Array.from(state);
     state[action.index] = Object.assign({}, state[action.index], { selected: false });
+  } else if (action.type == RC.weapon.MOVE && action.from < state.length && action.to < state.length) {
+    let target = state[action.from];
+    state.splice(action.from, 1);
+    state.splice(action.to, 0, target);
+    state = Array.from(state);
+  } else if (action.type == RC.weapon.DELETE && state.length > WEAPON_MIN && action.index < state.length) {
+    state.splice(action.index, 1);
+    state = Array.from(state);
+  } else if (action.type == RC.weapon.APPEND && state.length < WEAPON_MAX && action.index < state.length) {
+    let insert_state = Object.assign({}, weapon_default);
+    state.splice(action.index, 0, insert_state);
+    state = Array.from(state);
   }
   // 最終的なstateを返す
   return state;
@@ -87,6 +101,8 @@ const summon_default = {
     }
   ]
 };
+const SUMMON_MAX = 10;  // 召喚配列の最大値
+const SUMMON_MIN = 5;  // 召喚配列の最小値
 // 召喚を保管するstateのreducer
 // state: reducerに割りあてられたstate
 // action: dispatchされたobject
@@ -108,6 +124,18 @@ export function summon(state, action) {
   } if (action.type == RC.summon.DISABLE && action.index < state.length) {
     state = Array.from(state);
     state[action.index] = Object.assign({}, state[action.index], { selected: false });
+  } else if (action.type == RC.summon.MOVE && action.from < state.length && action.to < state.length) {
+    let target = state[action.from];
+    state.splice(action.from, 1);
+    state.splice(action.to, 0, target);
+    state = Array.from(state);
+  } else if (action.type == RC.summon.DELETE && state.length > SUMMON_MIN && action.index < state.length) {
+    state.splice(action.index, 1);
+    state = Array.from(state);
+  } else if (action.type == RC.summon.APPEND && state.length < SUMMON_MAX && action.index < state.length) {
+    let insert_state = Object.assign({}, summon_default);
+    state.splice(action.index, 0, insert_state);
+    state = Array.from(state);
   }
   // 最終的なstateを返す
   return state;

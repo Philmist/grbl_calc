@@ -10,7 +10,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
-import { replace_summon_object, enable_summon_object, disable_summon_object } from "./actions";
+import {
+  replace_summon_object, enable_summon_object, disable_summon_object,
+  move_summon_object, insert_summon_object, delete_summon_object
+} from "./actions";
 
 import ItemTypes from "./const/item_types";
 
@@ -49,7 +52,7 @@ class SummonTableHeader extends Component {
         <th align="center">攻撃力</th>
         <th align="center" colSpan="2">加護1</th>
         <th align="center" colSpan="2">加護2</th>
-        <th align="center">並替・挿入・削除</th>
+        <th align="center">挿入・削除</th>
       </tr>
     );
   }
@@ -82,6 +85,7 @@ SummonTableBody = connect(mapStateToSummonTableBodyProps)(SummonTableBody);
 const SummonRowSource = {
   // ドラッグ開始時に呼ばれる
   beginDrag(props) {
+    // ドロップ先で何がドロップされたかを調べるのに使う
     return { index: props.index };
   },
   // ドラッグ終了時に呼ばれる
@@ -104,7 +108,12 @@ function collectSourceSummonRow(connect, monitor) {
 const SummonRowTarget = {
   // ドロップされた時に呼ばれる
   drop(props, monitor) {
-    console.log(props.index);
+    // ドラッグされたものとドロップされたものを調べる
+    const index_from = monitor.getItem().index;
+    const index_to = props.index;
+    // 実際にオブジェクトを移動する
+    props.move_summon_object(index_from, index_to);
+    // ここで返されたオブジェクトはソースでのmonitor.getDropResult()で使える
     return { index: props.index };
   }
 };
@@ -135,7 +144,10 @@ function mapStateToSummonRowProps(state, props) {
 const mapActionCreatorsToSummonRowProps = {
   replace_summon_object,
   enable_summon_object,
-  disable_summon_object
+  disable_summon_object,
+  move_summon_object,
+  insert_summon_object,
+  delete_summon_object
 };
 // optionのvalueと中身の対応
 // TODO: なんとかして分離したい
@@ -229,6 +241,14 @@ class SummonRow extends Component {
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  push_delete(e) {
+    this.props.delete_summon_object(this.props.index);
+  }
+
+  push_insert(e) {
+    this.props.insert_summon_object(this.props.index);
+  }
+
   // レンダリングする要素を返す関数
   // ::this.func は this.func.bind(this) と一緒
   render() {
@@ -237,11 +257,15 @@ class SummonRow extends Component {
       index, connectDragSource, connectDragPreview, isDragging, connectDropTarget, isOver,
       atk, skill, selected, name
     } = this.props;
+    // ドラッグハンドルに適用されるスタイルを作る
+    let style_hundle = { cursor: 'move' };
+    style_hundle.color = isOver ? "red" : "blue";
+    style_hundle.color = isDragging ? "green" : style_hundle.color;
     // 描画する要素を返す
     // connectDragPreviewとconnectDropTargetとconnectDragSourceの説明は上述
     return connectDragPreview(connectDropTarget(
       <tr className="summon_tr">
-        {connectDragSource(<td style={ { cursor: 'move' } }>{index+1}</td>)}
+        {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td><input type="checkbox" className="summon_lock" value="lock" /></td>
         <td><input type="checkbox" className="summon_select" value="select" checked={selected} onChange={::this.on_change_select} /></td>
         <td><input type="text" className="summon_name width150" value={name} onChange={::this.on_change_name} /></td>
@@ -259,20 +283,19 @@ class SummonRow extends Component {
         </td>
         <td><input type="text" className="summon_percent2 width25" value={skill[1].percent} onChange={::this.on_change_summon_percent2} />%</td>
         <td>
-          <input type="button" id="up" value="▲" />
-          <input type="button" id="down" value="▼" />
-          <input type="button" id="ins" value="+" />
-          <input type="button" id="del" value="-" />
+          <input type="button" id="ins" value="+" onClick={::this.push_insert} />
+          <input type="button" id="del" value="-" onClick={::this.push_delete} />
         </td>
       </tr>
     ));
   }
 }
-// Reduxのstoreをつなげる
-SummonRow = connect(mapStateToSummonRowProps, mapActionCreatorsToSummonRowProps)(SummonRow);
+// 順序が重要
 // ドラッグ&ドロップのAPIをつなげる
 SummonRow = DragSource(ItemTypes.SUMMON, SummonRowSource, collectSourceSummonRow)(SummonRow);
 SummonRow = DropTarget(ItemTypes.SUMMON, SummonRowTarget, collectTargetSummonRow)(SummonRow);
+// Reduxのstoreをつなげる
+SummonRow = connect(mapStateToSummonRowProps, mapActionCreatorsToSummonRowProps)(SummonRow);
 
 
 // 召喚獣部分

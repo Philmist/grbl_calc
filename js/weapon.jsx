@@ -11,7 +11,14 @@ import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 
 import ItemTypes from "./const/item_types";
-import { replace_weapon_object, enable_weapon_object, disable_weapon_object } from "./actions";
+import {
+  replace_weapon_object,
+  enable_weapon_object,
+  disable_weapon_object,
+  move_weapon_object,
+  insert_weapon_object,
+  delete_weapon_object
+} from "./actions";
 
 import "../css/calc.css";
 
@@ -54,7 +61,7 @@ class WeaponTableHeader extends Component {
         <th>スキル1</th>
         <th>スキル2</th>
         <th>LV</th>
-        <th>並替・挿入・削除</th>
+        <th>挿入・削除</th>
       </tr>
     );
   }
@@ -88,6 +95,8 @@ WeaponTableBody = connect(mapStateToWeaponTableBodyProps)(WeaponTableBody);
 // beginDragだけは必須
 const WeaponRowSource = {
   beginDrag(props, monitor) {
+    // ドロップ先にデータを渡す
+    // このオブジェクトがドロップ先のmonitor.getItem()で渡される
     return { index: props.index };
   },
   endDrag(props, monitor) {
@@ -109,7 +118,13 @@ function collectSourceWeaponRow(connect, monitor) {
 const WeaponRowTarget = {
   // ドロップされた時に呼ばれる関数
   drop(props, monitor) {
-    return { index: props.index };
+    // ドラッグされたアイテムが何かをしらべる
+    const index_from = monitor.getItem().index;
+    // ドロップされた先のアイテムが何かを調べる
+    const index_to = props.index;
+    // オブジェクトを動かす
+    props.move_weapon_object(index_from, index_to);
+    return { from: index_from, to: index_to };
   },
   // 要素の上に乗った(hover)時に呼ばれる関数
   hover(props, monitor) {
@@ -142,7 +157,10 @@ function mapStateToWeaponRowProps(state, props) {
 var mapActionCreatorsToWeaponRowProps = {
   replace_weapon_object: replace_weapon_object,
   enable_weapon_object: enable_weapon_object,
-  disable_weapon_object: disable_weapon_object
+  disable_weapon_object: disable_weapon_object,
+  move_weapon_object: move_weapon_object,
+  insert_weapon_object: insert_weapon_object,
+  delete_weapon_object: delete_weapon_object
 };
 // 表示に使うための変数群
 // TODO: もっとマシな形でどうにかする
@@ -270,17 +288,30 @@ class WeaponRow extends Component {
     }
   }
 
+  push_delete(e) {
+    this.props.delete_weapon_object(this.props.index);
+  }
+
+  push_insert(e) {
+    this.props.insert_weapon_object(this.props.index);
+  }
+
   // 実際にレンダリングされる要素を返す関数
   // 名前は固定
   render() {
     // 必要な要素をpropsから変数に取りだす
-    const { isDragging, connectDragSource, connectDragPreview, connectDropTarget, index } = this.props;
+    const { isDragging, isOver, connectDragSource, connectDragPreview, connectDropTarget, index } = this.props;
     const { selected, name, atk, skill_level, skill_type, cosmos, type } = this.props;
+    // つかむところに適用されるスタイルを作る
+    // TODO: もっとマシにスタイルを作る
+    let style_hundle = { cursor: 'move' };
+    style_hundle.color = isOver ? "red" : "blue";
+    style_hundle.color = isDragging ? "green" : style_hundle.color;
     // レンダリングされる要素を返す
     // その際、どれがドラッグ&ドロップの対象になるかを指定している
     return connectDragPreview(connectDropTarget(
       <tr>
-        {connectDragSource(<td style={ { cursor: 'move' } }>{index+1}</td>)}
+        {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td>
           <input type="checkbox" className="weapon_lock" />
         </td>
@@ -314,17 +345,16 @@ class WeaponRow extends Component {
           </select>
         </td>
         <td>
-          <input type="button" id="up" value="▲" />
-          <input type="button" id="down" value="▼" />
-          <input type="button" id="ins" value="+" />
-          <input type="button" id="del" value="-" />
+          <input type="button" id="ins" value="+" onClick={::this.push_insert} />
+          <input type="button" id="del" value="-" onClick={::this.push_delete} />
         </td>
       </tr>
     ));
   }
 }
-// reduxのstoreと結びつける
-WeaponRow = connect(mapStateToWeaponRowProps, mapActionCreatorsToWeaponRowProps)(WeaponRow);
-// ドラッグ&ドロップのモジュールと結びつける
+// 結びつけは順番が重要
+// 先にドラッグ&ドロップのモジュールと結びつける
 WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow)(WeaponRow);
 WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);
+// 次にreduxのstoreと結びつける
+WeaponRow = connect(mapStateToWeaponRowProps, mapActionCreatorsToWeaponRowProps)(WeaponRow);
