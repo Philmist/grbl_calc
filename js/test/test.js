@@ -1,8 +1,8 @@
 // vim: sts=2 sw=2 ts=2 expandtab
-// 以下のテストコードはmochaが読みこまれていて、
-// expectがglobalとしてあることを想定している
 
-// mocha+exceptのテストコードサンプル
+var expect = require('chai').expect;
+
+// mocha+chaiのテストコードサンプル
 describe('Array', function() {
   describe('#indexOf()', function () {
     it('should return -1 when the value is not present', function () {
@@ -12,8 +12,10 @@ describe('Array', function() {
   });
 });
 
+
+var get_job_data = require("../atk_calc.js").get_job_data;
+var calculate_atkval = require("../atk_calc.js").calculate_atkval;
 // calc.jsのテスト
-// もちろんこのコードが実行される以前にcalc.jsが読みこまれていることが前提
 describe('calc.js', function() {
   // このテストで使用する変数
   var param_for_test = {};
@@ -77,24 +79,13 @@ describe('calc.js', function() {
   // 実際のテスト
   describe("calculate_atkval()", function() {
     it('何らかの値を返す', function() {
-      expect(calculate_atkval(param_for_test, job_data)).to.be.ok();
+      expect(calculate_atkval(param_for_test, job_data)).to.be.ok;
     });
     it('デフォルトでは表示攻撃力は1000', function() {
-      expect(calculate_atkval(param_for_test, job_data).showed_atk).to.be(1000);
+      expect(calculate_atkval(param_for_test, job_data).showed_atk).to.equal(1000);
     });
     it('デフォルトでは計算攻撃力は1000', function() {
-      expect(calculate_atkval(param_for_test, job_data).total_atk).to.be(1000);
+      expect(calculate_atkval(param_for_test, job_data).total_atk).to.equal(1000);
     });
-  });
-});
-
-describe("manupulate_form.js", function() {
-  it("val2intは数でないものを渡された時0を返す", function() {
-    expect(val2int("NOT A NUMBER")).to.be(0);
-  });
-  it("val2intは数の文字列を渡されたら数を返す", function() {
-    expect(val2int("0")).to.be(0);
-    expect(val2int("110.5")).to.be(110.5);
-    expect(val2int("-5")).to.be(-5);
   });
 });
