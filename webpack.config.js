@@ -30,7 +30,7 @@ var loaders = [
 // webpack(1|2)は同時にいくつかのファイルをバンドルできます
 module.exports = [
   {
-    devtool: "eval",
+    devtool: "cheap-module-source-map",
     entry: {
       js: "./js/entry.jsx",
     },
@@ -48,6 +48,7 @@ module.exports = [
     }
   },
   {
+    devtool: "cheap-module-source-map",
     entry: "mocha!./js/test/test.js",
     output: {
       filename: "./dist/test_bundle.js"
@@ -60,9 +61,6 @@ module.exports = [
       modules: [
         "node_modules"
       ]
-    },
-    externals: {
-      jquery: "jQuery"
     }
   }
 ];

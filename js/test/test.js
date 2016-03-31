@@ -1,6 +1,8 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
+import get_job_data from "../get_job_data.js";
+import calculate_atkval from "../atk_calc.js";
 
 // mocha+chaiのテストコードサンプル
 describe('Array', function() {
@@ -13,8 +15,6 @@ describe('Array', function() {
 });
 
 
-var get_job_data = require("../atk_calc.js").get_job_data;
-var calculate_atkval = require("../atk_calc.js").calculate_atkval;
 // calc.jsのテスト
 describe('calc.js', function() {
   // このテストで使用する変数
