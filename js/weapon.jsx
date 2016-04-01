@@ -53,10 +53,10 @@ class WeaponTableHeader extends Component {
     return (
       <tr>
         <th>順</th>
-        <th>鍵</th>
         <th>選</th>
         <th className="width150">名前</th>
         <th className="width50">攻撃力</th>
+        <th>コ</th>
         <th>種別</th>
         <th>スキル1</th>
         <th>スキル2</th>
@@ -296,6 +296,9 @@ class WeaponRow extends Component {
     this.props.insert_weapon_object(this.props.index);
   }
 
+  change_cosmos(e) {
+  }
+
   // 実際にレンダリングされる要素を返す関数
   // 名前は固定
   render() {
@@ -313,9 +316,6 @@ class WeaponRow extends Component {
       <tr>
         {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td>
-          <input type="checkbox" className="weapon_lock" />
-        </td>
-        <td>
           <input type="checkbox" className="weapon_select" checked={selected} onChange={::this.change_select} />
         </td>
         <td>
@@ -323,6 +323,9 @@ class WeaponRow extends Component {
         </td>
         <td>
           <input type="text" className="weapon_atk width50" value={atk} onChange={::this.change_atk} />
+        </td>
+        <td>
+          <input type="checkbox" className="weapon_select" checked={selected} onChange={::this.change_cosmos} />
         </td>
         <td>
           <select className="weapon_kind" value={type} onChange={::this.change_kind} >
