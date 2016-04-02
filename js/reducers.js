@@ -79,6 +79,10 @@ export function weapon(state, action) {
     let insert_state = Object.assign({}, weapon_default);
     state.splice(action.index, 0, insert_state);
     state = Array.from(state);
+  } else if (action.type == RC.weapon.COSMOS && action.index < state.length) {
+    state = Array.from(state);
+    let cosmos = action.value ? action.value : false;
+    state[action.index] = Object.assign({}, state[action.index], { cosmos: cosmos });
   }
   // 最終的なstateを返す
   return state;

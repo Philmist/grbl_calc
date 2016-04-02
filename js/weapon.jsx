@@ -17,7 +17,8 @@ import {
   disable_weapon_object,
   move_weapon_object,
   insert_weapon_object,
-  delete_weapon_object
+  delete_weapon_object,
+  set_weapon_cosmos
 } from "./actions";
 
 import "../css/calc.css";
@@ -160,7 +161,8 @@ var mapActionCreatorsToWeaponRowProps = {
   disable_weapon_object: disable_weapon_object,
   move_weapon_object: move_weapon_object,
   insert_weapon_object: insert_weapon_object,
-  delete_weapon_object: delete_weapon_object
+  delete_weapon_object: delete_weapon_object,
+  set_weapon_cosmos: set_weapon_cosmos
 };
 // 表示に使うための変数群
 // TODO: もっとマシな形でどうにかする
@@ -297,6 +299,7 @@ class WeaponRow extends Component {
   }
 
   change_cosmos(e) {
+    this.props.set_weapon_cosmos(this.props.index, e.target.checked);
   }
 
   // 実際にレンダリングされる要素を返す関数
@@ -325,7 +328,7 @@ class WeaponRow extends Component {
           <input type="text" className="weapon_atk width50" value={atk} onChange={::this.change_atk} />
         </td>
         <td>
-          <input type="checkbox" className="weapon_select" checked={selected} onChange={::this.change_cosmos} />
+          <input type="checkbox" className="cosmos" checked={cosmos} onChange={::this.change_cosmos} />
         </td>
         <td>
           <select className="weapon_kind" value={type} onChange={::this.change_kind} >
