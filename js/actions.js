@@ -156,6 +156,13 @@ export function replace_weapon_object(index, obj) {
   };
 }
 
+// cosmosを(booleanで)セットする
+export function set_weapon_cosmos(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.COSMOS, index: Number(index), value: Boolean(value) });
+  };
+}
+
 // 武器を選択状態にする
 export function enable_weapon_object(index) {
   return function (dispatch) {

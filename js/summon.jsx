@@ -46,7 +46,6 @@ class SummonTableHeader extends Component {
     return (
       <tr>
         <th>順</th>
-        <th align="center">L</th>
         <th align="center">選</th>
         <th align="center">召喚名</th>
         <th align="center">攻撃力</th>
@@ -266,7 +265,6 @@ class SummonRow extends Component {
     return connectDragPreview(connectDropTarget(
       <tr className="summon_tr">
         {connectDragSource(<td style={ style_hundle }>■</td>)}
-        <td><input type="checkbox" className="summon_lock" value="lock" /></td>
         <td><input type="checkbox" className="summon_select" value="select" checked={selected} onChange={::this.on_change_select} /></td>
         <td><input type="text" className="summon_name width150" value={name} onChange={::this.on_change_name} /></td>
         <td><input type="text" className="summon_atk width50" value={atk} onChange={::this.on_change_atk} /></td>

@@ -9,6 +9,7 @@
     hp_percent: 現在HPの最大HPに対する%(Number),
     job: 別データで表わされたクラス(職業)を示した文字列(String),
     affinity: 'good' | 'bad' | (それ以外) の文字列で示される属性補正(String),
+    cosmos: コスモス武器か否か(Boolean)
     zenith: {
         atk: 星の数(0から3の整数)(Number),
         weapon: [得意武器1つ目の星の数(0-3の整数)(Number), ... ],
