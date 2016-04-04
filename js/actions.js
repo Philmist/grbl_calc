@@ -273,6 +273,50 @@ export function set_summon_lock(index, value) {
   };
 }
 
+// 召喚名を変更する
+export function set_summon_name(index, name) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.NAME, index: Number(index), value: String(name) });
+  };
+}
+
+// 召喚の攻撃力を設定する
+export function set_summon_atk_value(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.ATK, index: Number(index), value: Number(value) });
+  };
+}
+
+// 召喚のスキル%を変更する
+export function set_summon_skill_percent(index, target, percent) {
+  return function (dispatch, getState) {
+    let summon_obj = Array.from(getState().summon);
+    if (Number(index) < 0 || Number(index) > summon_obj.length) {
+      return;
+    } else if (Number(percent) < 0) {
+      return;
+    }
+    if (target === 0 || target === 1) {
+      let skill_obj = Object.assign({}, summon_obj[index].skill[target], { percent: Number(percent) });
+      dispatch({ type: RC.summon.SKILL, index: Number(index), target: target, value: skill_obj });
+    }
+  };
+}
+
+// 召喚のスキル種別を変更する
+export function set_summon_skill_type(index, target, skill_type) {
+  return function (dispatch, getState) {
+    let summon_obj = Array.from(getState().summon);
+    if (Number(index) < 0 || Number(index) > summon_obj.length) {
+      return;
+    }
+    if (target === 0 || target === 1) {
+      let skill_obj = Object.assign({}, summon_obj[index].skill[target], { type: String(skill_type) });
+      dispatch({ type: RC.summon.SKILL, index: Number(index), target: target, value: skill_obj });
+    }
+  };
+}
+
 // 召喚をfromからtoへ移動する(index)
 export function move_summon_object(from, to) {
   return function (dispatch) {

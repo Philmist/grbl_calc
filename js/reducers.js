@@ -142,31 +142,47 @@ export function summon(state, action) {
     state = initial_val.map((val) => { return Object.assign(val, summon_default); });
   }
   // actionによる分岐
-  if (action.type == RC.summon.REPLACE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, summon_default, action.value);
-  } if (action.type == RC.summon.ENABLE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, state[action.index], { selected: true });
-  } if (action.type == RC.summon.DISABLE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, state[action.index], { selected: false });
+  if (action.index < state.length && action.index >= 0) {
+    if (action.type == RC.summon.REPLACE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, summon_default, action.value);
+    } if (action.type == RC.summon.ENABLE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: true });
+    } if (action.type == RC.summon.DISABLE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: false });
+    } else if (action.type == RC.summon.DELETE && state.length > SUMMON_MIN) {
+      state.splice(action.index, 1);
+      state = Array.from(state);
+    } else if (action.type == RC.summon.APPEND && state.length < SUMMON_MAX) {
+      let insert_state = Object.assign({}, summon_default);
+      state.splice(action.index, 0, insert_state);
+      state = Array.from(state);
+    } else if (action.type == RC.summon.LOCK) {
+      state = Array.from(state);
+      let value = action.value ? action.value : false;
+      state[action.index] = Object.assign({}, state[action.index], { locked: value });
+    } else if (action.type == RC.summon.SKILL && (action.target === 0 || action.target === 1)) {
+      state = Array.from(state);
+      let skills = Array.from(state[action.index].skill);
+      skills[action.target] = Object.assign({}, skills[action.target], action.value);
+      state[action.index].skill = skills;
+    } else if (action.type == RC.summon.name) {
+      state = Array.from(state);
+      state[action.index].name = String(action.value);
+    } else if (action.type == RC.summon.ATK) {
+      let atk_value = Number(action.value);
+      if (atk_value >=0) {
+        state = Array.from(state);
+        state[action.index].atk = atk_value;
+      }
+    }
   } else if (action.type == RC.summon.MOVE && action.from < state.length && action.to < state.length) {
     let target = state[action.from];
     state.splice(action.from, 1);
     state.splice(action.to, 0, target);
     state = Array.from(state);
-  } else if (action.type == RC.summon.DELETE && state.length > SUMMON_MIN && action.index < state.length) {
-    state.splice(action.index, 1);
-    state = Array.from(state);
-  } else if (action.type == RC.summon.APPEND && state.length < SUMMON_MAX && action.index < state.length) {
-    let insert_state = Object.assign({}, summon_default);
-    state.splice(action.index, 0, insert_state);
-    state = Array.from(state);
-  } else if (action.type == RC.summon.LOCK && action.index < state.length) {
-    state = Array.from(state);
-    let value = action.value ? action.value : false;
-    state[action.index] = Object.assign({}, state[action.index], { locked: value });
   }
   // 最終的なstateを返す
   return state;
