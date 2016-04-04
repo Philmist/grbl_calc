@@ -238,7 +238,7 @@ export function delete_weapon_object(index) {
 // 空の武器を挿入する
 export function insert_weapon_object(index) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.APPEND, index: (Number(index)+1) });
+    dispatch({ type: RC.weapon.APPEND, index: (Number(index)) });
   };
 }
 
@@ -334,6 +334,6 @@ export function delete_summon_object(index) {
 // 空の召喚を挿入する
 export function insert_summon_object(index) {
   return function (dispatch) {
-    dispatch({ type: RC.summon.APPEND, index: (Number(index)+1) });
+    dispatch({ type: RC.summon.APPEND, index: (Number(index)) });
   };
 }

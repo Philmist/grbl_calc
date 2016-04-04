@@ -74,7 +74,7 @@ export function weapon(state, action) {
       state = Array.from(state);
     } else if (action.type == RC.weapon.APPEND && state.length < WEAPON_MAX) {  // 武器の追加
       let insert_state = Object.assign({}, weapon_default);
-      state.splice(action.index, 0, insert_state);
+      state.splice(action.index+1, 0, insert_state);
       state = Array.from(state);
     } else if (action.type == RC.weapon.COSMOS) {  // 武器コスモス属性の設定
       state = Array.from(state);
@@ -157,7 +157,7 @@ export function summon(state, action) {
       state = Array.from(state);
     } else if (action.type == RC.summon.APPEND && state.length < SUMMON_MAX) {
       let insert_state = Object.assign({}, summon_default);
-      state.splice(action.index, 0, insert_state);
+      state.splice(action.index+1, 0, insert_state);  // 指定した場所の後ろに追加したい
       state = Array.from(state);
     } else if (action.type == RC.summon.LOCK) {
       state = Array.from(state);
@@ -168,7 +168,7 @@ export function summon(state, action) {
       let skills = Array.from(state[action.index].skill);
       skills[action.target] = Object.assign({}, skills[action.target], action.value);
       state[action.index].skill = skills;
-    } else if (action.type == RC.summon.name) {
+    } else if (action.type == RC.summon.NAME) {
       state = Array.from(state);
       state[action.index].name = String(action.value);
     } else if (action.type == RC.summon.ATK) {

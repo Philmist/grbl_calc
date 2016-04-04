@@ -170,6 +170,7 @@ var mapActionCreatorsToWeaponRowProps = {
   move_weapon_object,
   insert_weapon_object,
   delete_weapon_object,
+  set_weapon_name,
   set_weapon_cosmos,
   set_weapon_lock,
   set_weapon_atk_value,
