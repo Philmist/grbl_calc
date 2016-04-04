@@ -163,6 +163,13 @@ export function set_weapon_cosmos(index, value) {
   };
 }
 
+// 鍵状態を変更する
+export function set_weapon_lock(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.LOCK, index: Number(index), value: Boolean(value) });
+  };
+}
+
 // 武器を選択状態にする
 export function enable_weapon_object(index) {
   return function (dispatch) {
@@ -219,6 +226,13 @@ export function enable_summon_object(index) {
 export function disable_summon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.summon.DISABLE, index: Number(index) });
+  };
+}
+
+// 鍵状態を変更する
+export function set_summon_lock(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.LOCK, index: Number(index), value: Boolean(value) });
   };
 }
 

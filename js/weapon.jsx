@@ -55,6 +55,7 @@ class WeaponTableHeader extends Component {
       <tr>
         <th>順</th>
         <th>選</th>
+        <th>鍵</th>
         <th className="width150">名前</th>
         <th className="width50">攻撃力</th>
         <th>コ</th>
@@ -338,6 +339,9 @@ class WeaponRow extends Component {
         {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td>
           <input type="checkbox" className="weapon_select" checked={selected} onChange={this.change_select} />
+        </td>
+        <td>
+          <input type="checkbox" className="weapon_lock" checked={false} />
         </td>
         <td>
           <input type="text" className="weapon_name width150" value={name} onChange={this.change_name} />

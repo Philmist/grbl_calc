@@ -25,7 +25,8 @@ export const weapon = {
   MOVE: "WEAPON_MOVE",
   ENABLE: "WEAPON_ENABLE",
   DISABLE: "WEAPON_DISABLE",
-  COSMOS: "WEAPON_SET_COSMOS"
+  COSMOS: "WEAPON_SET_COSMOS_STATUS",
+  LOCK: "WEAPON_SET_LOCK_STATUS"
 };
 
 export const summon = {
@@ -34,7 +35,8 @@ export const summon = {
   REPLACE: "SUMMON_REPLACE",
   MOVE: "SUMMON_MOVE",
   ENABLE: "SUMMON_ENABLE",
-  DISABLE: "SUMMON_DISABLE"
+  DISABLE: "SUMMON_DISABLE",
+  LOCK: "SUMMON_SET_LOCK_STATUS"
 };
 
 export const basic = {
