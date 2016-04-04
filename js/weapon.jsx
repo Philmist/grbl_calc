@@ -19,7 +19,12 @@ import {
   insert_weapon_object,
   delete_weapon_object,
   set_weapon_cosmos,
-  set_weapon_lock
+  set_weapon_lock,
+  set_weapon_name,
+  set_weapon_type,
+  set_weapon_atk_value,
+  set_weapon_skill_type,
+  set_weapon_skill_lv
 } from "./actions";
 
 import "../css/calc.css";
@@ -159,14 +164,18 @@ function mapStateToWeaponRowProps(state, props) {
 }
 // reduxのaction creatorをpropsに注入するためのobject
 var mapActionCreatorsToWeaponRowProps = {
-  replace_weapon_object: replace_weapon_object,
-  enable_weapon_object: enable_weapon_object,
-  disable_weapon_object: disable_weapon_object,
-  move_weapon_object: move_weapon_object,
-  insert_weapon_object: insert_weapon_object,
-  delete_weapon_object: delete_weapon_object,
-  set_weapon_cosmos: set_weapon_cosmos,
-  set_weapon_lock: set_weapon_lock
+  replace_weapon_object,
+  enable_weapon_object,
+  disable_weapon_object,
+  move_weapon_object,
+  insert_weapon_object,
+  delete_weapon_object,
+  set_weapon_cosmos,
+  set_weapon_lock,
+  set_weapon_atk_value,
+  set_weapon_type,
+  set_weapon_skill_type,
+  set_weapon_skill_lv
 };
 // 表示に使うための変数群
 // TODO: もっとマシな形でどうにかする
@@ -235,54 +244,35 @@ class WeaponRow extends Component {
   // スキルレベル
   e_skill_lv = SKILL_LV.map(this.create_optfunc);
 
-  // propsからstoreに保存するためのobjectを取りだすための関数
-  // action creatorの実装はobjectを入れかえるものなのでこれが必要
-  get_weapon_obj_from_props() {
-    let { selected, name, atk, skill_level, skill_type, cosmos, type, locked } = this.props;
-    return { selected, name, atk, skill_level, skill_type, cosmos, type, locked };
-  }
-
   // 武器の名前が変更された時に呼ばれる関数
   change_name(e) {
-    let tmp_obj = this.get_weapon_obj_from_props();
-    tmp_obj.name = String(e.target.value);
-    this.props.replace_weapon_object(this.props.index, tmp_obj);
+    this.props.set_weapon_name(this.props.index, e.target.value);
   }
 
   // 武器の攻撃力が変更された時に呼ばれる関数
   change_atk(e) {
-    let tmp_obj = this.get_weapon_obj_from_props();
-    tmp_obj.atk = Number(e.target.value);
-    this.props.replace_weapon_object(this.props.index, tmp_obj);
+    this.props.set_weapon_atk_value(this.props.index, e.target.value);
   }
 
   // 武器の種別が変更された時に呼ばれる関数
   change_kind(e) {
-    let tmp_obj = this.get_weapon_obj_from_props();
-    tmp_obj.type = String(e.target.value);
-    this.props.replace_weapon_object(this.props.index, tmp_obj);
+    this.props.set_weapon_type(this.props.index, e.target.value);
   }
 
   // 武器のスキルタイプ(1つ目)が変更された時に呼ばれる関数
   // 配列を変更するので泥臭いことをしている
   change_skill_type1(e) {
-    let tmp_obj = this.get_weapon_obj_from_props();
-    tmp_obj.skill_type = [String(e.target.value), tmp_obj.skill_type[1]];
-    this.props.replace_weapon_object(this.props.index, tmp_obj);
+    this.props.set_weapon_skill_type(this.props.index, 0, e.target.value);
   }
 
   // 武器のスキルタイプ(2つ目)が変更された時に呼ばれる関数
   change_skill_type2(e) {
-    let tmp_obj = this.get_weapon_obj_from_props();
-    tmp_obj.skill_type = [tmp_obj.skill_type[0], String(e.target.value)];
-    this.props.replace_weapon_object(this.props.index, tmp_obj);
+    this.props.set_weapon_skill_type(this.props.index, 1, e.target.value);
   }
 
   // 武器のスキルレベルが変更された時に呼ばれる関数
   change_skill_lv(e) {
-    let tmp_obj = this.get_weapon_obj_from_props();
-    tmp_obj.skill_level = Number(e.target.value);
-    this.props.replace_weapon_object(this.props.index, tmp_obj);
+    this.props.set_weapon_skill_lv(this.props.index, e.target.value);
   }
 
   // 武器の選択状態が変更された時に呼ばれる関数
@@ -309,6 +299,7 @@ class WeaponRow extends Component {
     this.props.set_weapon_cosmos(this.props.index, e.target.checked);
   }
 
+  // 鍵チェックボックスの変化
   change_locked(e) {
     this.props.set_weapon_lock(this.props.index, e.target.checked);
   }
