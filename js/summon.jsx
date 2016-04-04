@@ -12,7 +12,8 @@ import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 import {
   replace_summon_object, enable_summon_object, disable_summon_object,
-  move_summon_object, insert_summon_object, delete_summon_object
+  move_summon_object, insert_summon_object, delete_summon_object,
+  set_summon_lock
 } from "./actions";
 
 import ItemTypes from "./const/item_types";
@@ -137,8 +138,9 @@ function mapStateToSummonRowProps(state, props) {
     return Object.assign({}, skill_template, tmp);
   });
   let selected = (target_state.selected === undefined) ? false : target_state.selected;
+  let locked = (target_state.locked === undefined) ? false : target_state.locked;
   let name = (target_state.name !== undefined) ? String(target_state.name) : "";
-  return { atk, skill, selected, name };
+  return { atk, skill, selected, name, locked };
 }
 // reduxのaction creatorをpropsに注入するためのオブジェクト
 const mapActionCreatorsToSummonRowProps = {
@@ -147,7 +149,8 @@ const mapActionCreatorsToSummonRowProps = {
   disable_summon_object,
   move_summon_object,
   insert_summon_object,
-  delete_summon_object
+  delete_summon_object,
+  set_summon_lock
 };
 // optionのvalueと中身の対応
 // TODO: なんとかして分離したい
@@ -173,8 +176,8 @@ class SummonRow extends Component {
   // propsからstoreに送るためのobjectを取りだす関数
   // actionは送られたobjectで置きかえる実装なのでこれが必要
   get_summon_obj_from_props() {
-    let { atk, skill, selected, name } = this.props;
-    return { atk, skill, selected, name };
+    let { atk, skill, selected, name, locked } = this.props;
+    return { atk, skill, selected, name, locked };
   }
 
   // 選択/解除がされた時に呼びだされる関数
@@ -251,6 +254,10 @@ class SummonRow extends Component {
     this.props.insert_summon_object(this.props.index);
   }
 
+  on_change_locked(e) {
+    this.props.set_summon_lock(this.props.index, e.target.checked);
+  }
+
   // コンストラクタ
   constructor(props) {
     super(props);
@@ -271,7 +278,7 @@ class SummonRow extends Component {
     // 必要なpropsをconst変数に展開する
     const {
       index, connectDragSource, connectDragPreview, isDragging, connectDropTarget, isOver,
-      atk, skill, selected, name
+      atk, skill, selected, name, locked
     } = this.props;
     // ドラッグハンドルに適用されるスタイルを作る
     let style_hundle = { cursor: 'move' };
@@ -283,7 +290,7 @@ class SummonRow extends Component {
       <tr className="summon_tr">
         {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td><input type="checkbox" className="summon_select" value="select" checked={selected} onChange={this.on_change_select} /></td>
-        <td><input type="checkbox" className="summon_lock" value="lock" checked={false} /></td>
+        <td><input type="checkbox" className="summon_lock" value="lock" checked={locked} /></td>
         <td><input type="text" className="summon_name width150" value={name} onChange={this.on_change_name} /></td>
         <td><input type="text" className="summon_atk width50" value={atk} onChange={this.on_change_atk} /></td>
         <td>
