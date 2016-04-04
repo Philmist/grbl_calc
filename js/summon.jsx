@@ -240,12 +240,28 @@ class SummonRow extends Component {
     this.props.replace_summon_object(this.props.index, obj);
   }
 
+  // 削除("-")ボタンが押された時
   push_delete(e) {
     this.props.delete_summon_object(this.props.index);
   }
 
+  // 追加("+")ボタンが押された時
   push_insert(e) {
     this.props.insert_summon_object(this.props.index);
+  }
+
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.on_change_select = ::this.on_change_select;
+    this.on_change_name = ::this.on_change_name;
+    this.on_change_atk = ::this.on_change_atk;
+    this.on_change_summon_kind1 = ::this.on_change_summon_kind1;
+    this.on_change_summon_percent1 = ::this.on_change_summon_percent1;
+    this.on_change_summon_kind2 = ::this.on_change_summon_kind2;
+    this.on_change_summon_percent2 = ::this.on_change_summon_percent2;
+    this.push_insert = ::this.push_insert;
+    this.push_delete = ::this.push_delete;
   }
 
   // レンダリングする要素を返す関数
@@ -265,24 +281,24 @@ class SummonRow extends Component {
     return connectDragPreview(connectDropTarget(
       <tr className="summon_tr">
         {connectDragSource(<td style={ style_hundle }>■</td>)}
-        <td><input type="checkbox" className="summon_select" value="select" checked={selected} onChange={::this.on_change_select} /></td>
-        <td><input type="text" className="summon_name width150" value={name} onChange={::this.on_change_name} /></td>
-        <td><input type="text" className="summon_atk width50" value={atk} onChange={::this.on_change_atk} /></td>
+        <td><input type="checkbox" className="summon_select" value="select" checked={selected} onChange={this.on_change_select} /></td>
+        <td><input type="text" className="summon_name width150" value={name} onChange={this.on_change_name} /></td>
+        <td><input type="text" className="summon_atk width50" value={atk} onChange={this.on_change_atk} /></td>
         <td>
-          <select className="summon_kind1" value={skill[0].type} onChange={::this.on_change_summon_kind1} >
+          <select className="summon_kind1" value={skill[0].type} onChange={this.on_change_summon_kind1} >
             {this.skind}
           </select>
         </td>
-        <td><input type="text" className="summon_percent1 width25" value={skill[0].percent} onChange={::this.on_change_summon_percent1} />%</td>
+        <td><input type="text" className="summon_percent1 width25" value={skill[0].percent} onChange={this.on_change_summon_percent1} />%</td>
         <td>
-          <select className="summon_kind2" value={skill[1].type} onChange={::this.on_change_summon_kind2} >
+          <select className="summon_kind2" value={skill[1].type} onChange={this.on_change_summon_kind2} >
             {this.skind}
           </select>
         </td>
-        <td><input type="text" className="summon_percent2 width25" value={skill[1].percent} onChange={::this.on_change_summon_percent2} />%</td>
+        <td><input type="text" className="summon_percent2 width25" value={skill[1].percent} onChange={this.on_change_summon_percent2} />%</td>
         <td>
-          <input type="button" id="ins" value="+" onClick={::this.push_insert} />
-          <input type="button" id="del" value="-" onClick={::this.push_delete} />
+          <input type="button" id="ins" value="+" onClick={this.push_insert} />
+          <input type="button" id="del" value="-" onClick={this.push_delete} />
         </td>
       </tr>
     ));
