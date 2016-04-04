@@ -39,6 +39,7 @@ const weapon_default = {
   skill_type: ["none", "none"],
   cosmos: false,
   selected: false,
+  locked: false,
   type: "sword",
   name: ""
 };
@@ -83,6 +84,10 @@ export function weapon(state, action) {
     state = Array.from(state);
     let cosmos = action.value ? action.value : false;
     state[action.index] = Object.assign({}, state[action.index], { cosmos: cosmos });
+  } else if (action.type == RC.weapon.LOCK && action.index < state.length) {
+    state = Array.from(state);
+    let value = action.value ? action.value : false;
+    state[action.index] = Object.assign({}, state[action.index], { locked: value });
   }
   // 最終的なstateを返す
   return state;
@@ -93,6 +98,7 @@ export function weapon(state, action) {
 const summon_default = {
   name: "",
   selected: false,
+  locked: false,
   atk: 0,
   skill: [
     {
@@ -140,6 +146,10 @@ export function summon(state, action) {
     let insert_state = Object.assign({}, summon_default);
     state.splice(action.index, 0, insert_state);
     state = Array.from(state);
+  } else if (action.type == RC.summon.LOCK && action.index < state.length) {
+    state = Array.from(state);
+    let value = action.value ? action.value : false;
+    state[action.index] = Object.assign({}, state[action.index], { locked: value });
   }
   // 最終的なstateを返す
   return state;
