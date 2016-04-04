@@ -54,6 +54,12 @@ class ZenithAttack extends Component {
     this.props.set_zenith_atk(event.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 実際に要素を作成して返す
   render() {
     var elem = renderZenithSelector();
@@ -61,7 +67,7 @@ class ZenithAttack extends Component {
       <tr>
         <th>攻撃力</th>
         <td>
-          <select onChange={::this.handleChange} id="zenith_atk" value={this.props.atk_value}>
+          <select onChange={this.handleChange} id="zenith_atk" value={this.props.atk_value}>
             {elem}
           </select>
         </td>
@@ -88,6 +94,11 @@ class ZenithWeapon1 extends Component {
     this.props.set_zenith_weapon([event.target.value, this.props.zenith_weapon[1]]);
   }
 
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 実際の要素を作成して返す
   render() {
     var elem = renderZenithSelector();
@@ -95,7 +106,7 @@ class ZenithWeapon1 extends Component {
       <tr>
         <th>得意武器1</th>
         <td>
-          <select onChange={::this.handleChange} id="zenith_weapon1" value={this.props.zenith_weapon[0]}>
+          <select onChange={this.handleChange} id="zenith_weapon1" value={this.props.zenith_weapon[0]}>
             {elem}
           </select>
         </td>
@@ -120,6 +131,12 @@ class ZenithWeapon2 extends Component {
     this.props.set_zenith_weapon([this.props.zenith_weapon[0], event.target.value]);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 実際の要素を作って返す関数
   render() {
     var elem = renderZenithSelector();
@@ -127,7 +144,7 @@ class ZenithWeapon2 extends Component {
       <tr>
         <th>得意武器2</th>
         <td>
-          <select onChange={::this.handleChange} id="zenith_weapon2" value={this.props.zenith_weapon[1]}>
+          <select onChange={this.handleChange} id="zenith_weapon2" value={this.props.zenith_weapon[1]}>
             {elem}
           </select>
         </td>
@@ -150,6 +167,12 @@ class ZenithAttribute extends Component {
     this.props.set_zenith_attr(event.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 実際に要素を作って返す
   render() {
     var elem = renderZenithSelector();
@@ -157,7 +180,7 @@ class ZenithAttribute extends Component {
       <tr>
         <th>属性攻撃力</th>
         <td>
-          <select onChange={::this.handleChange} id="zenith_attribute" value={this.props.attr_value}>
+          <select onChange={this.handleChange} id="zenith_attribute" value={this.props.attr_value}>
             {elem}
           </select>
         </td>

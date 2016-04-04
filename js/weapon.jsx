@@ -17,7 +17,8 @@ import {
   disable_weapon_object,
   move_weapon_object,
   insert_weapon_object,
-  delete_weapon_object
+  delete_weapon_object,
+  set_weapon_cosmos
 } from "./actions";
 
 import "../css/calc.css";
@@ -53,10 +54,10 @@ class WeaponTableHeader extends Component {
     return (
       <tr>
         <th>順</th>
-        <th>鍵</th>
         <th>選</th>
         <th className="width150">名前</th>
         <th className="width50">攻撃力</th>
+        <th>コ</th>
         <th>種別</th>
         <th>スキル1</th>
         <th>スキル2</th>
@@ -160,7 +161,8 @@ var mapActionCreatorsToWeaponRowProps = {
   disable_weapon_object: disable_weapon_object,
   move_weapon_object: move_weapon_object,
   insert_weapon_object: insert_weapon_object,
-  delete_weapon_object: delete_weapon_object
+  delete_weapon_object: delete_weapon_object,
+  set_weapon_cosmos: set_weapon_cosmos
 };
 // 表示に使うための変数群
 // TODO: もっとマシな形でどうにかする
@@ -288,12 +290,34 @@ class WeaponRow extends Component {
     }
   }
 
+  // -ボタンが押された時の動作
   push_delete(e) {
     this.props.delete_weapon_object(this.props.index);
   }
 
+  // +ボタンが押された時の動作
   push_insert(e) {
     this.props.insert_weapon_object(this.props.index);
+  }
+
+  // コスモスの変化
+  change_cosmos(e) {
+    this.props.set_weapon_cosmos(this.props.index, e.target.checked);
+  }
+
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.change_select = ::this.change_select;
+    this.change_name = ::this.change_name;
+    this.change_atk = ::this.change_atk;
+    this.change_cosmos = ::this.change_cosmos;
+    this.change_kind = ::this.change_kind;
+    this.change_skill_type1 = ::this.change_skill_type1;
+    this.change_skill_type2 = ::this.change_skill_type2;
+    this.change_skill_lv = ::this.change_skill_lv;
+    this.push_insert = ::this.push_insert;
+    this.push_delete = ::this.push_delete;
   }
 
   // 実際にレンダリングされる要素を返す関数
@@ -313,40 +337,40 @@ class WeaponRow extends Component {
       <tr>
         {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td>
-          <input type="checkbox" className="weapon_lock" />
+          <input type="checkbox" className="weapon_select" checked={selected} onChange={this.change_select} />
         </td>
         <td>
-          <input type="checkbox" className="weapon_select" checked={selected} onChange={::this.change_select} />
+          <input type="text" className="weapon_name width150" value={name} onChange={this.change_name} />
         </td>
         <td>
-          <input type="text" className="weapon_name width150" value={name} onChange={::this.change_name} />
+          <input type="text" className="weapon_atk width50" value={atk} onChange={this.change_atk} />
         </td>
         <td>
-          <input type="text" className="weapon_atk width50" value={atk} onChange={::this.change_atk} />
+          <input type="checkbox" className="cosmos" checked={cosmos} onChange={this.change_cosmos} />
         </td>
         <td>
-          <select className="weapon_kind" value={type} onChange={::this.change_kind} >
+          <select className="weapon_kind" value={type} onChange={this.change_kind} >
             {this.e_kind}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type1" value={skill_type[0]} onChange={::this.change_skill_type1} >
+          <select className="weapon_skill_type1" value={skill_type[0]} onChange={this.change_skill_type1} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type2" value={skill_type[1]} onChange={::this.change_skill_type2} >
+          <select className="weapon_skill_type2" value={skill_type[1]} onChange={this.change_skill_type2} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_lv" value={skill_level} onChange={::this.change_skill_lv} >
+          <select className="weapon_skill_lv" value={skill_level} onChange={this.change_skill_lv} >
             {this.e_skill_lv}
           </select>
         </td>
         <td>
-          <input type="button" id="ins" value="+" onClick={::this.push_insert} />
-          <input type="button" id="del" value="-" onClick={::this.push_delete} />
+          <input type="button" id="ins" value="+" onClick={this.push_insert} />
+          <input type="button" id="del" value="-" onClick={this.push_delete} />
         </td>
       </tr>
     ));

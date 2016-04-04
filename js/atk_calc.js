@@ -9,6 +9,7 @@
     hp_percent: 現在HPの最大HPに対する%(Number),
     job: 別データで表わされたクラス(職業)を示した文字列(String),
     affinity: 'good' | 'bad' | (それ以外) の文字列で示される属性補正(String),
+    cosmos: コスモス武器か否か(Boolean)
     zenith: {
         atk: 星の数(0から3の整数)(Number),
         weapon: [得意武器1つ目の星の数(0-3の整数)(Number), ... ],
@@ -287,9 +288,9 @@ export default function calculate_atkval (param_obj, job_data) {
 
   // 総合計算
   var total_atk = showed_atk;
-  total_atk *= (100 + (total_skill.baha.percent + total_skill.koujin.percent * divine_percent.zeus / 100)) / 100;
+  total_atk *= (100 + (divine_percent.character + total_skill.baha.percent + (total_skill.koujin.percent * divine_percent.zeus / 100) )) / 100;
   total_atk *= (100 + total_skill.normal.backwater * divine_percent.zeus / 100) / 100;
-  total_atk *= (100 + total_skill.magna.percent * divine_percent.zeus / 100) / 100;
+  total_atk *= (100 + total_skill.magna.percent * divine_percent.magna / 100) / 100;
   total_atk *= (100 + total_skill.magna.backwater * divine_percent.magna / 100) / 100;
   total_atk *= (100 + (total_skill.collabo.percent + total_skill.unknown.percent * divine_percent.unknown / 100)) / 100;
   total_atk *= (divine_percent.attribute + attribute_bonus) / 100;
