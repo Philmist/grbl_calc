@@ -149,10 +149,47 @@ export function set_zenith_weapon(param) {
 
 // 武器関係
 
-// 武器のオブジェクトを配列のindexを指定して置換する
+// 武器のオブジェクトを配列のindexを指定して置換する(危険)
 export function replace_weapon_object(index, obj) {
-  return function (dispatch, getState) {
+  return function (dispatch) {
     dispatch({ type: RC.weapon.REPLACE, index: Number(index), value: obj });
+  };
+}
+
+// 武器の名前を指定する
+export function set_weapon_name(index, name) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.NAME, index: Number(index), value: name });
+  };
+}
+
+// 武器の種別を指定する
+// TODO: エラー処理
+export function set_weapon_type(index, weapon_type) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.JOB, index: Number(index), value: String(weapon_type) });
+  };
+}
+
+// 武器の攻撃力を指定する
+export function set_weapon_atk_value(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.ATK, index: Number(index), value: Number(value) });
+  }
+}
+
+// 武器のスキルを指定する
+// target: 0|1
+export function set_weapon_skill_type(index, target, skill) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.SKILL, target: Number(target), value: String(skill) });
+  };
+}
+
+// 武器のスキルレベルを指定する
+export function set_weapon_skill_lv(index, lv) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.LV, value: Number(lv) });
   };
 }
 
@@ -208,7 +245,7 @@ export function insert_weapon_object(index) {
 
 // 召喚関係
 
-// 召喚のオブジェクトを配列のindexを指定して置換する
+// 召喚のオブジェクトを配列のindexを指定して置換する(危険)
 export function replace_summon_object(index, obj) {
   return function (dispatch, getState) {
     dispatch({ type: RC.summon.REPLACE, index: Number(index), value: obj });
@@ -233,6 +270,50 @@ export function disable_summon_object(index) {
 export function set_summon_lock(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.summon.LOCK, index: Number(index), value: Boolean(value) });
+  };
+}
+
+// 召喚名を変更する
+export function set_summon_name(index, name) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.NAME, index: Number(index), value: String(name) });
+  };
+}
+
+// 召喚の攻撃力を設定する
+export function set_summon_atk_value(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.ATK, index: Number(index), value: Number(value) });
+  };
+}
+
+// 召喚のスキル%を変更する
+export function set_summon_skill_percent(index, target, percent) {
+  return function (dispatch, getState) {
+    let summon_obj = Array.from(getState().summon);
+    if (Number(index) < 0 || Number(index) > summon_obj.length) {
+      return;
+    } else if (Number(percent) < 0) {
+      return;
+    }
+    if (target === 0 || target === 1) {
+      let skill_obj = Object.assign({}, summon_obj[index].skill[target], { percent: Number(percent) });
+      dispatch({ type: RC.summon.SKILL, index: Number(index), target: target, value: skill_obj });
+    }
+  };
+}
+
+// 召喚のスキル種別を変更する
+export function set_summon_skill_type(index, target, skill_type) {
+  return function (dispatch, getState) {
+    let summon_obj = Array.from(getState().summon);
+    if (Number(index) < 0 || Number(index) > summon_obj.length) {
+      return;
+    }
+    if (target === 0 || target === 1) {
+      let skill_obj = Object.assign({}, summon_obj[index].skill[target], { type: String(skill_type) });
+      dispatch({ type: RC.summon.SKILL, index: Number(index), target: target, value: skill_obj });
+    }
   };
 }
 

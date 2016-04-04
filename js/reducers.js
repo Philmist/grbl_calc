@@ -59,35 +59,52 @@ export function weapon(state, action) {
   }
   // actionによって動作を分岐する
   // Array.from: 配列をコピーする関数
-  if (action.type == RC.weapon.REPLACE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, weapon_default, action.value);
-  } else if (action.type == RC.weapon.ENABLE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, state[action.index], { selected: true });
-  } else if (action.type == RC.weapon.DISABLE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, state[action.index], { selected: false });
-  } else if (action.type == RC.weapon.MOVE && action.from < state.length && action.to < state.length) {
+  if (action.index >= 0 && action.index < state.length) {
+    if (action.type == RC.weapon.REPLACE) {  // オブジェクト自体を置きかえ(危険)
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, weapon_default, action.value);
+    } else if (action.type == RC.weapon.ENABLE) {  // 武器を有効化
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: true });
+    } else if (action.type == RC.weapon.DISABLE) {  // 武器を無効化
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: false });
+    } else if (action.type == RC.weapon.DELETE && state.length > WEAPON_MIN) {  // 武器の削除
+      state.splice(action.index, 1);
+      state = Array.from(state);
+    } else if (action.type == RC.weapon.APPEND && state.length < WEAPON_MAX) {  // 武器の追加
+      let insert_state = Object.assign({}, weapon_default);
+      state.splice(action.index, 0, insert_state);
+      state = Array.from(state);
+    } else if (action.type == RC.weapon.COSMOS) {  // 武器コスモス属性の設定
+      state = Array.from(state);
+      let cosmos = action.value ? action.value : false;
+      state[action.index] = Object.assign({}, state[action.index], { cosmos: cosmos });
+    } else if (action.type == RC.weapon.LOCK) {  // 武器のロック設定
+      state = Array.from(state);
+      let value = action.value ? action.value : false;
+      state[action.index] = Object.assign({}, state[action.index], { locked: value });
+    } else if (action.type == RC.weapon.NAME) {  // 武器の名前設定
+      state = Array.from(state);
+      state[action.index].name = String(action.value);
+    } else if (action.type == RC.weapon.TYPE) {  // 武器のタイプ指定
+      state = Array.from(state);
+      state[action.index].type = String(action.value);
+    } else if (action.type == RC.weapon.ATK && Number(action.value) >= 0) {  // 武器の攻撃力設定
+      state = Array.from(state);
+      state[action.index].atk = Number(action.value);
+    } else if (action.type == RC.weapon.SKILL && (action.target === 0 || action.target === 1)) {  // 武器のスキル指定
+      state = Array.from(state);
+      state[action.index].skill_type[action.target] = String(action.value);
+    } else if (action.type == RC.weapon.LV && action.value >= 0) {  // 武器のスキルレベル指定
+      state = Array.from(state);
+      state[action.index].skill_level = Number(action.value);
+    }
+  } else if (action.type == RC.weapon.MOVE && action.from < state.length && action.to < state.length) {  // 武器の順番変更
     let target = state[action.from];
     state.splice(action.from, 1);
     state.splice(action.to, 0, target);
     state = Array.from(state);
-  } else if (action.type == RC.weapon.DELETE && state.length > WEAPON_MIN && action.index < state.length) {
-    state.splice(action.index, 1);
-    state = Array.from(state);
-  } else if (action.type == RC.weapon.APPEND && state.length < WEAPON_MAX && action.index < state.length) {
-    let insert_state = Object.assign({}, weapon_default);
-    state.splice(action.index, 0, insert_state);
-    state = Array.from(state);
-  } else if (action.type == RC.weapon.COSMOS && action.index < state.length) {
-    state = Array.from(state);
-    let cosmos = action.value ? action.value : false;
-    state[action.index] = Object.assign({}, state[action.index], { cosmos: cosmos });
-  } else if (action.type == RC.weapon.LOCK && action.index < state.length) {
-    state = Array.from(state);
-    let value = action.value ? action.value : false;
-    state[action.index] = Object.assign({}, state[action.index], { locked: value });
   }
   // 最終的なstateを返す
   return state;
@@ -125,31 +142,47 @@ export function summon(state, action) {
     state = initial_val.map((val) => { return Object.assign(val, summon_default); });
   }
   // actionによる分岐
-  if (action.type == RC.summon.REPLACE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, summon_default, action.value);
-  } if (action.type == RC.summon.ENABLE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, state[action.index], { selected: true });
-  } if (action.type == RC.summon.DISABLE && action.index < state.length) {
-    state = Array.from(state);
-    state[action.index] = Object.assign({}, state[action.index], { selected: false });
+  if (action.index < state.length && action.index >= 0) {
+    if (action.type == RC.summon.REPLACE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, summon_default, action.value);
+    } if (action.type == RC.summon.ENABLE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: true });
+    } if (action.type == RC.summon.DISABLE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: false });
+    } else if (action.type == RC.summon.DELETE && state.length > SUMMON_MIN) {
+      state.splice(action.index, 1);
+      state = Array.from(state);
+    } else if (action.type == RC.summon.APPEND && state.length < SUMMON_MAX) {
+      let insert_state = Object.assign({}, summon_default);
+      state.splice(action.index, 0, insert_state);
+      state = Array.from(state);
+    } else if (action.type == RC.summon.LOCK) {
+      state = Array.from(state);
+      let value = action.value ? action.value : false;
+      state[action.index] = Object.assign({}, state[action.index], { locked: value });
+    } else if (action.type == RC.summon.SKILL && (action.target === 0 || action.target === 1)) {
+      state = Array.from(state);
+      let skills = Array.from(state[action.index].skill);
+      skills[action.target] = Object.assign({}, skills[action.target], action.value);
+      state[action.index].skill = skills;
+    } else if (action.type == RC.summon.name) {
+      state = Array.from(state);
+      state[action.index].name = String(action.value);
+    } else if (action.type == RC.summon.ATK) {
+      let atk_value = Number(action.value);
+      if (atk_value >=0) {
+        state = Array.from(state);
+        state[action.index].atk = atk_value;
+      }
+    }
   } else if (action.type == RC.summon.MOVE && action.from < state.length && action.to < state.length) {
     let target = state[action.from];
     state.splice(action.from, 1);
     state.splice(action.to, 0, target);
     state = Array.from(state);
-  } else if (action.type == RC.summon.DELETE && state.length > SUMMON_MIN && action.index < state.length) {
-    state.splice(action.index, 1);
-    state = Array.from(state);
-  } else if (action.type == RC.summon.APPEND && state.length < SUMMON_MAX && action.index < state.length) {
-    let insert_state = Object.assign({}, summon_default);
-    state.splice(action.index, 0, insert_state);
-    state = Array.from(state);
-  } else if (action.type == RC.summon.LOCK && action.index < state.length) {
-    state = Array.from(state);
-    let value = action.value ? action.value : false;
-    state[action.index] = Object.assign({}, state[action.index], { locked: value });
   }
   // 最終的なstateを返す
   return state;
@@ -161,16 +194,16 @@ export function summon(state, action) {
 // action: dispatchされたobject
 export function basicinfo(state, action) {
   // デフォルト値の設定
-  var zenith = {
+  const zenith = {
     atk: 0,
     weapon: [0, 0],
     attribute: 0
   };
-  var atk_bonus = {
+  const atk_bonus = {
     percent: 0,
     value: 0
   };
-  var default_value = {
+  const default_value = {
     rank: 1,
     ship_bonus: 0,
     hp_percent: 100,

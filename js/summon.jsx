@@ -13,7 +13,7 @@ import { DragSource, DropTarget } from "react-dnd";
 import {
   replace_summon_object, enable_summon_object, disable_summon_object,
   move_summon_object, insert_summon_object, delete_summon_object,
-  set_summon_lock
+  set_summon_lock, set_summon_name, set_summon_atk_value, set_summon_skill_percent, set_summon_skill_type
 } from "./actions";
 
 import ItemTypes from "./const/item_types";
@@ -150,7 +150,11 @@ const mapActionCreatorsToSummonRowProps = {
   move_summon_object,
   insert_summon_object,
   delete_summon_object,
-  set_summon_lock
+  set_summon_lock,
+  set_summon_name,
+  set_summon_atk_value,
+  set_summon_skill_percent,
+  set_summon_skill_type
 };
 // optionのvalueと中身の対応
 // TODO: なんとかして分離したい
@@ -173,13 +177,6 @@ class SummonRow extends Component {
   // 実際にオプションの配列を作る
   skind = SUMMON_KIND.map((i) => this.create_optfunc(i));
 
-  // propsからstoreに送るためのobjectを取りだす関数
-  // actionは送られたobjectで置きかえる実装なのでこれが必要
-  get_summon_obj_from_props() {
-    let { atk, skill, selected, name, locked } = this.props;
-    return { atk, skill, selected, name, locked };
-  }
-
   // 選択/解除がされた時に呼びだされる関数
   on_change_select(e) {
     if (e.target.checked) {  // もし選択されたのなら
@@ -191,57 +188,33 @@ class SummonRow extends Component {
 
   // 名前が変更された時に呼ばれる関数
   on_change_name(e) {
-    let obj = this.get_summon_obj_from_props();
-    obj.name = String(e.target.value);
-    this.props.replace_summon_object(this.props.index, obj);
+    this.props.set_summon_name(this.props.index, e.target.value);
   }
 
   // 攻撃力が変更された時に呼ばれる関数
   on_change_atk(e) {
-    let obj = this.get_summon_obj_from_props();
-    obj.atk = Number(e.target.value);
-    this.props.replace_summon_object(this.props.index, obj);
+    this.props.set_summon_atk_value(this.props.index, e.target.value);
   }
 
   // 召喚(1つ目)の種別が変更された時に呼ばれる関数
   // 召喚は配列で管理されているので泥臭いことをしている
   on_change_summon_kind1(e) {
-    let obj = this.get_summon_obj_from_props();
-    let skind1 = obj.skill[0];
-    skind1.type = String(e.target.value);
-    let skinds = [skind1, obj.skill[1]];
-    obj.skill = skinds;
-    this.props.replace_summon_object(this.props.index, obj);
+    this.props.set_summon_skill_type(this.props.index, 0, e.target.value);
   }
 
   // 召喚(1つ目)の%が変更された時に呼ばれる関数
   on_change_summon_percent1(e) {
-    let obj = this.get_summon_obj_from_props();
-    let skind1 = obj.skill[0];
-    skind1.percent = Number(e.target.value);
-    let skinds = [skind1, obj.skill[1]];
-    obj.skill = skinds;
-    this.props.replace_summon_object(this.props.index, obj);
+    this.props.set_summon_skill_percent(this.props.index, 0, e.target.value);
   }
 
   // 召喚(2つ目)の種別が変更された時に呼ばれる関数
   on_change_summon_kind2(e) {
-    let obj = this.get_summon_obj_from_props();
-    let skind2 = obj.skill[1];
-    skind2.type = String(e.target.value);
-    let skinds = [obj.skill[0], skind2];
-    obj.skill = skinds;
-    this.props.replace_summon_object(this.props.index, obj);
+    this.props.set_summon_skill_type(this.props.index, 1, e.target.value);
   }
 
   // 召喚(2つ目)の%が変更された時に呼ばれる関数
   on_change_summon_percent2(e) {
-    let obj = this.get_summon_obj_from_props();
-    let skind2 = obj.skill[1];
-    skind2.percent = Number(e.target.value);
-    let skinds = [obj.skill[0], skind2];
-    obj.skill = skinds;
-    this.props.replace_summon_object(this.props.index, obj);
+    this.props.set_summon_skill_percent(this.props.index, 1, e.target.value);
   }
 
   // 削除("-")ボタンが押された時
