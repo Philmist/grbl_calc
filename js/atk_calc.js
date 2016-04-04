@@ -72,7 +72,7 @@ export default function calculate_atkval (param_obj, job_data) {
   // 召喚加護の計算
   var divine_percent = {
     attribute: 100,
-    character: 100,
+    character: 0,
     magna: 100,
     unknown: 100,
     zeus: 100
