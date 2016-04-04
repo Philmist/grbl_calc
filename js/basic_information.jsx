@@ -22,6 +22,12 @@ class JobSelector extends Component {
     this.props.set_job_type(e.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handle_job_change = ::this.handle_job_change;
+  }
+
   // 要素のレンダリング
   render() {
     // ジョブ一覧をoption要素として展開する
@@ -33,7 +39,7 @@ class JobSelector extends Component {
     }
     // select要素を作って返す
     return (
-      <select id="job" onChange={::this.handle_job_change} >
+      <select id="job" onChange={this.handle_job_change} >
         {values}
       </select>
     );
@@ -70,6 +76,12 @@ class Rank extends Component {
     this.props.set_rank(event.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 最終的な要素を作って返す関数
   render() {
     return (
@@ -79,7 +91,7 @@ class Rank extends Component {
           <input
             className="width50"
             type="text"
-            onChange={::this.handleChange}  // thisをbindしている
+            onChange={this.handleChange}
             id="rank"
             value={this.props.rank}
           />
@@ -105,6 +117,12 @@ class ShipBonus extends Component {
     this.props.set_ship_bonus(event.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 最終的な要素を作って返す
   render() {
     return (
@@ -114,7 +132,7 @@ class ShipBonus extends Component {
           <input
             className="width50"
             type="text"
-            onChange={::this.handleChange}
+            onChange={this.handleChange}
             id="ship_bonus"
             value={this.props.ship_bonus}
           />
@@ -140,13 +158,19 @@ class AttributeBonus extends Component {
     this.props.set_affinity(event.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 最終的な要素を作って返す関数
   render() {
     return (
       <tr>
         <th>属性補正</th>
         <td>
-          <select onChange={::this.handleChange} id="attribute_type" value={this.props.affinity}>
+          <select onChange={this.handleChange} id="attribute_type" value={this.props.affinity}>
             <option value="normal">無し</option>
             <option value="good">有利</option>
             <option value="bad">不利</option>
@@ -171,6 +195,12 @@ class HPPercent extends Component {
     this.props.set_hp_percent(event.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.handleChange = ::this.handleChange;
+  }
+
   // 最終的な要素を作って返す関数
   render() {
     return (
@@ -179,7 +209,7 @@ class HPPercent extends Component {
         <td>
           <input
             className="width50" type="text"
-            onChange={::this.handleChange}
+            onChange={this.handleChange}
             id="hp_percent"
             value={this.props.hp_percent}
           />
@@ -227,6 +257,13 @@ class AtkBonus extends Component {
     this.props.set_atk_value(event.target.value);
   }
 
+  // コンストラクタ
+  constructor(props) {
+    super(props);
+    this.percentChange = ::this.percentChange;
+    this.valueChange = ::this.valueChange;
+  }
+
   // 最終的な結果を作って返す関数
   render() {
     return (
@@ -235,14 +272,14 @@ class AtkBonus extends Component {
           <tr>
             <th rowSpan="2">発動中の<br />攻撃力ボーナス</th>
             <td>
-              <input className="width25" type="text" onChange={::this.percentChange}
+              <input className="width25" type="text" onChange={this.percentChange}
                 id="atk_bonus_percent" value={this.props.atk_bonus_percent} />
               %
             </td>
           </tr>
           <tr>
             <td>
-              <input className="width50" type="text" onChange={::this.valueChange}
+              <input className="width50" type="text" onChange={this.valueChange}
                 id="atk_bonus_value" value={this.props.atk_bonus_value} />
             </td>
           </tr>
