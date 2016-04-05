@@ -60,10 +60,7 @@ export function weapon(state, action) {
   // actionによって動作を分岐する
   // Array.from: 配列をコピーする関数
   if (action.index >= 0 && action.index < state.length) {
-    if (action.type == RC.weapon.REPLACE) {  // オブジェクト自体を置きかえ(危険)
-      state = Array.from(state);
-      state[action.index] = Object.assign({}, weapon_default, action.value);
-    } else if (action.type == RC.weapon.ENABLE) {  // 武器を有効化
+    if (action.type == RC.weapon.ENABLE) {  // 武器を有効化
       state = Array.from(state);
       state[action.index] = Object.assign({}, state[action.index], { selected: true });
     } else if (action.type == RC.weapon.DISABLE) {  // 武器を無効化
@@ -105,6 +102,8 @@ export function weapon(state, action) {
     state.splice(action.from, 1);
     state.splice(action.to, 0, target);
     state = Array.from(state);
+  } else if (action.type == RC.weapon.DANGER_REPLACE) {
+    state = Array.from(action.value);
   }
   // 最終的なstateを返す
   return state;
@@ -143,10 +142,7 @@ export function summon(state, action) {
   }
   // actionによる分岐
   if (action.index < state.length && action.index >= 0) {
-    if (action.type == RC.summon.REPLACE) {
-      state = Array.from(state);
-      state[action.index] = Object.assign({}, summon_default, action.value);
-    } if (action.type == RC.summon.ENABLE) {
+    if (action.type == RC.summon.ENABLE) {
       state = Array.from(state);
       state[action.index] = Object.assign({}, state[action.index], { selected: true });
     } if (action.type == RC.summon.DISABLE) {
@@ -183,6 +179,8 @@ export function summon(state, action) {
     state.splice(action.from, 1);
     state.splice(action.to, 0, target);
     state = Array.from(state);
+  } else if (action.type == RC.summon.DANGER_REPLACE) {
+    state = Array.from(action.value);
   }
   // 最終的なstateを返す
   return state;
@@ -250,12 +248,16 @@ export function basicinfo(state, action) {
     }
   } else if (action.type == RC.basic.JOB) {
     retval = Object.assign(retval, { job: String(action.value) });
+  } else if (action.type == RC.basic.DANGER_REPLACE) {  // stateを*全て*入れかえる(危険)
+    retval = Object.assign(retval, action.value);
   } else {  // 俺には関係無かったぜ！
     return state;
   }
 
   return retval;
 }
+
+/* 雑多なreducer */
 
 // 各種の全体state(読みこみ中など)を管理するreducer
 export function component_state(state = {}, action) {
@@ -270,4 +272,20 @@ export function component_state(state = {}, action) {
     }
   });
   return retval;
+}
+
+// 入力ロック状態を管理するreducer
+export function inputlock_counter(state = 0, action) {
+  if (action.type == RC.inputlock.INCREMENT) {
+    return Number(state+1);
+  } else if (action.type == RC.inputlock.DECREMENT) {
+    let retval = Number(state-1);
+    if (retval < 0) {
+      console.warn("Input Lock Counter is MINUS (Set to 0).");
+      retval = Number(0);
+    }
+    return retval;
+  } else {
+    return state;
+  }
 }

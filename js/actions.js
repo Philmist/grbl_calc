@@ -17,6 +17,8 @@ import * as RC from "./const/reducer_type";
 import get_job_data from "./get_job_data.js";
 
 
+/* ジョブデータ読みこみ関連 */
+
 // ジョブを読みこみ中にするdispatch用のobjectを返す
 function set_state_job_fetching() {
   return { type: RC.state.FETCHING, selector: RC.data_type.JOB };
@@ -36,14 +38,82 @@ function set_job_data(data) {
 export function fetch_job_data(url) {
   return function (dispatch) {
     dispatch(set_state_job_fetching());
+    dispatch(inputlock_increment());
     get_job_data(url).then((job) => {
       dispatch(set_job_data(job));
       dispatch(set_state_job_loaded());
+      dispatch(inputlock_decrement());
       return Promise.resolve(job);
     });
   };
 }
 
+
+/* ロックカウンター関連 */
+
+// インプットロックカウンターを+1するオブジェクトを発行する
+function inputlock_increment() {
+  return { type: RC.inputlock.INCREMENT };
+}
+
+// インプットロックカウンターを-1するオブジェクトを発行する
+function inputlock_decrement() {
+  return { type: RC.inputlock.DECREMENT };
+}
+
+// ロックする
+export function input_lock() {
+  return function (dispatch) {
+    dispatch(inputlock_increment());
+  };
+}
+
+// ロックを解除する方向に回す
+export function input_unlock() {
+  return function (dispatch) {
+    dispatch(inputlock_decrement());
+  };
+}
+
+
+/* セーブロード関連 */
+
+export function set_state_loading() {
+  return function (dispatch) {
+    dispatch(input_lock());
+    dispatch({ type: RC.state.LOADING, selector: RC.data_type.SAVELOAD });
+  };
+}
+
+export function set_state_loaded() {
+  return function (dispatch) {
+    dispatch(input_unlock());
+    dispatch({ type: RC.state.LOADED, selector: RC.data_type.SAVELOAD });
+  };
+}
+
+export function set_state_saving() {
+  return function (dispatch) {
+    dispatch(input_lock());
+    dispatch({ type: RC.state.SAVING, selector: RC.data_type.SAVELOAD });
+  };
+}
+
+export function set_state_saved() {
+  return function (dispatch) {
+    dispatch(input_unlock());
+    dispatch({ type: RC.state.SAVED, selector: RC.data_type.SAVELOAD });
+  };
+}
+
+/* 基礎データ関連 */
+
+// 基礎データを全て入れかえる
+export function dangerously_replace_basicinfo_object(obj) {
+  return function (dispatch) {
+    dispatch({ type: RC.basic.DANGER_REPLACE, value: obj });
+  };
+}
 
 // action_typeのアクションをdispatchする関数を返す関数を返す関数
 // 関数の中では数値の値をvalueとしてdispatchする
@@ -147,12 +217,12 @@ export function set_zenith_weapon(param) {
 }
 
 
-// 武器関係
+/* 武器関係 */
 
-// 武器のオブジェクトを配列のindexを指定して置換する(危険)
-export function replace_weapon_object(index, obj) {
+// 武器のオブジェクト全体を置換する(危険)
+export function dangerously_replace_weapon_object(obj) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.REPLACE, index: Number(index), value: obj });
+    dispatch({ type: RC.weapon.DANGER_REPLACE, value: obj });
   };
 }
 
@@ -243,12 +313,12 @@ export function insert_weapon_object(index) {
 }
 
 
-// 召喚関係
+/* 召喚関係 */
 
-// 召喚のオブジェクトを配列のindexを指定して置換する(危険)
-export function replace_summon_object(index, obj) {
+// 召喚のオブジェクト全体を置換する(危険)
+export function dangerously_replace_summon_object(obj) {
   return function (dispatch, getState) {
-    dispatch({ type: RC.summon.REPLACE, index: Number(index), value: obj });
+    dispatch({ type: RC.summon.DANGER_REPLACE, value: obj });
   };
 }
 

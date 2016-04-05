@@ -14,6 +14,7 @@ import Zenith from "./zenith.jsx";
 import Weapon from "./weapon.jsx";
 import Summon from "./summon.jsx";
 import Friend from "./friend.jsx";
+import System from "./system.jsx";
 
 import * as REDCONST from "./const/reducer_type.js";
 import calculate_atkval from "./atk_calc.js";
@@ -47,19 +48,6 @@ class Result extends Component {
             </tr>
           </tbody>
         </table>
-      </section>
-    );
-  }
-};
-
-
-// システム部分
-// TODO: ここらへんにセーブとロードの処理
-class System extends Component {
-  render() {
-    return (
-      <section>
-        <header className="subtype">システム</header>
       </section>
     );
   }

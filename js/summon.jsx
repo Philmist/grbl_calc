@@ -29,17 +29,18 @@ class SummonTable extends Component {
       <form>
         <table className="grbr" id="summon_table">
           <thead>
-            <SummonTableHeader />
+            <SummonTableHeader inputlock={this.props.inputlock} />
           </thead>
-            <SummonTableBody />
+            <SummonTableBody inputlock={this.props.inputlock} />
           <tfoot>
-            <SummonTableHeader />
+            <SummonTableHeader inputlock={this.props.inputlock} />
           </tfoot>
         </table>
       </form>
     );
   }
 }
+SummonTable = connect((state) => { return { inputlock: state.inputlock ? true : false }; })(SummonTable);
 
 // 召喚表のヘッダ
 class SummonTableHeader extends Component {
@@ -71,7 +72,7 @@ class SummonTableBody extends Component {
   render() {
     return (
       <tbody>
-        {this.props.summon.map((val,index) => { return <SummonRow key={"sr"+String(index)} index={index} />; })}
+        {this.props.summon.map((val,index) => { return <SummonRow key={"sr"+String(index)} index={index} {...this.props} />; })}
       </tbody>
     );
   }
@@ -243,6 +244,7 @@ class SummonRow extends Component {
     this.on_change_summon_percent2 = ::this.on_change_summon_percent2;
     this.push_insert = ::this.push_insert;
     this.push_delete = ::this.push_delete;
+    this.on_change_locked = ::this.on_change_locked;
   }
 
   // レンダリングする要素を返す関数
@@ -251,7 +253,7 @@ class SummonRow extends Component {
     // 必要なpropsをconst変数に展開する
     const {
       index, connectDragSource, connectDragPreview, isDragging, connectDropTarget, isOver,
-      atk, skill, selected, name, locked
+      atk, skill, selected, name, locked, inputlock
     } = this.props;
     // ドラッグハンドルに適用されるスタイルを作る
     let style_hundle = { cursor: 'move' };
@@ -262,25 +264,39 @@ class SummonRow extends Component {
     return connectDragPreview(connectDropTarget(
       <tr className="summon_tr">
         {connectDragSource(<td style={ style_hundle }>■</td>)}
-        <td><input type="checkbox" className="summon_select" value="select" checked={selected} onChange={this.on_change_select} /></td>
-        <td><input type="checkbox" className="summon_lock" value="lock" checked={locked} /></td>
-        <td><input type="text" className="summon_name width150" value={name} onChange={this.on_change_name} /></td>
-        <td><input type="text" className="summon_atk width50" value={atk} onChange={this.on_change_atk} /></td>
         <td>
-          <select className="summon_kind1" value={skill[0].type} onChange={this.on_change_summon_kind1} >
+          <input type="checkbox" className="summon_select" checked={selected} onChange={this.on_change_select} disabled={inputlock} />
+        </td>
+        <td><input type="checkbox" className="summon_lock" checked={locked} onChange={this.on_change_locked} disabled={inputlock} /></td>
+        <td><input type="text" className="summon_name width150" value={name} onChange={this.on_change_name} disabled={inputlock} /></td>
+        <td><input type="text" className="summon_atk width50" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
+        <td>
+          <select className="summon_kind1" value={skill[0].type} onChange={this.on_change_summon_kind1} disabled={inputlock} >
             {this.skind}
           </select>
         </td>
-        <td><input type="text" className="summon_percent1 width25" value={skill[0].percent} onChange={this.on_change_summon_percent1} />%</td>
+        <td><input
+            type="text"
+            className="summon_percent1 width25"
+            value={skill[0].percent}
+            onChange={this.on_change_summon_percent1}
+            disabled={inputlock}
+          />%</td>
         <td>
-          <select className="summon_kind2" value={skill[1].type} onChange={this.on_change_summon_kind2} >
+          <select className="summon_kind2" value={skill[1].type} onChange={this.on_change_summon_kind2} disabled={inputlock}>
             {this.skind}
           </select>
         </td>
-        <td><input type="text" className="summon_percent2 width25" value={skill[1].percent} onChange={this.on_change_summon_percent2} />%</td>
+        <td><input
+            type="text"
+            className="summon_percent2 width25"
+            value={skill[1].percent}
+            onChange={this.on_change_summon_percent2}
+            disabled={inputlock}
+          />%</td>
         <td>
-          <input type="button" id="ins" value="+" onClick={this.push_insert} />
-          <input type="button" id="del" value="-" onClick={this.push_delete} />
+          <input type="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
+          <input type="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
         </td>
       </tr>
     ));

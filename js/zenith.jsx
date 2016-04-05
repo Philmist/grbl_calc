@@ -13,23 +13,24 @@ import "../css/calc.css";
 
 
 // Zenith入力欄全体のコンポーネント
-export default class Zenith extends Component {
+class Zenith extends Component {
   render() {
     return (
       <div>
         <header className="subtype">Zenith Perk</header>
         <table className="grbr" id="zenith_table">
           <tbody>
-            <ZenithAttack />
-            <ZenithWeapon1 />
-            <ZenithWeapon2 />
-            <ZenithAttribute />
+            <ZenithAttack inputlock={this.props.inputlock} />
+            <ZenithWeapon1 inputlock={this.props.inputlock} />
+            <ZenithWeapon2 inputlock={this.props.inputlock} />
+            <ZenithAttribute inputlock={this.props.inputlock} />
           </tbody>
         </table>
       </div>
     );
   }
 };
+export default connect((state) => { return {inputlock: state.inputlock ? true : false}; })(Zenith);
 
 
 // ゼニスの★と数値の対応付け配列
@@ -67,7 +68,7 @@ class ZenithAttack extends Component {
       <tr>
         <th>攻撃力</th>
         <td>
-          <select onChange={this.handleChange} id="zenith_atk" value={this.props.atk_value}>
+          <select onChange={this.handleChange} id="zenith_atk" value={this.props.atk_value} disabled={this.props.inputlock} >
             {elem}
           </select>
         </td>
@@ -106,7 +107,7 @@ class ZenithWeapon1 extends Component {
       <tr>
         <th>得意武器1</th>
         <td>
-          <select onChange={this.handleChange} id="zenith_weapon1" value={this.props.zenith_weapon[0]}>
+          <select onChange={this.handleChange} id="zenith_weapon1" value={this.props.zenith_weapon[0]} disabled={this.props.inputlock} >
             {elem}
           </select>
         </td>
@@ -144,7 +145,7 @@ class ZenithWeapon2 extends Component {
       <tr>
         <th>得意武器2</th>
         <td>
-          <select onChange={this.handleChange} id="zenith_weapon2" value={this.props.zenith_weapon[1]}>
+          <select onChange={this.handleChange} id="zenith_weapon2" value={this.props.zenith_weapon[1]} disabled={this.props.inputlock} >
             {elem}
           </select>
         </td>
@@ -180,7 +181,7 @@ class ZenithAttribute extends Component {
       <tr>
         <th>属性攻撃力</th>
         <td>
-          <select onChange={this.handleChange} id="zenith_attribute" value={this.props.attr_value}>
+          <select onChange={this.handleChange} id="zenith_attribute" value={this.props.attr_value} disabled={this.props.inputlock} >
             {elem}
           </select>
         </td>
