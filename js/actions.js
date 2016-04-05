@@ -51,20 +51,65 @@ export function fetch_job_data(url) {
 
 /* ロックカウンター関連 */
 
-// インプットロックカウンターを+1
-export function inputlock_increment() {
+// インプットロックカウンターを+1するオブジェクトを発行する
+function inputlock_increment() {
   return { type: RC.inputlock.INCREMENT };
 }
 
-// インプットロックカウンターを-1
-export function inputlock_decrement() {
+// インプットロックカウンターを-1するオブジェクトを発行する
+function inputlock_decrement() {
   return { type: RC.inputlock.DECREMENT };
+}
+
+// ロックする
+export function input_lock() {
+  return function (dispatch) {
+    dispatch(inputlock_increment());
+  };
+}
+
+// ロックを解除する方向に回す
+export function input_unlock() {
+  return function (dispatch) {
+    dispatch(inputlock_decrement());
+  };
+}
+
+
+/* セーブロード関連 */
+
+export function set_state_loading() {
+  return function (dispatch) {
+    dispatch(input_lock());
+    dispatch({ type: RC.state.LOADING, selector: RC.data_type.SAVELOAD });
+  };
+}
+
+export function set_state_loaded() {
+  return function (dispatch) {
+    dispatch(input_unlock());
+    dispatch({ type: RC.state.LOADED, selector: RC.data_type.SAVELOAD });
+  };
+}
+
+export function set_state_saving() {
+  return function (dispatch) {
+    dispatch(input_lock());
+    dispatch({ type: RC.state.SAVING, selector: RC.data_type.SAVELOAD });
+  };
+}
+
+export function set_state_saved() {
+  return function (dispatch) {
+    dispatch(input_unlock());
+    dispatch({ type: RC.state.SAVED, selector: RC.data_type.SAVELOAD });
+  };
 }
 
 /* 基礎データ関連 */
 
 // 基礎データを全て入れかえる
-function dangerously_replace_basicinfo_object(obj) {
+export function dangerously_replace_basicinfo_object(obj) {
   return function (dispatch) {
     dispatch({ type: RC.basic.DANGER_REPLACE, value: obj });
   };

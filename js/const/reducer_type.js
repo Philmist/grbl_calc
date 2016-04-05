@@ -5,6 +5,8 @@ export const state = {
   FETCHING: "DATA_FETCHING",
   LOADING: "DATA_LOADING",
   LOADED: "DATA_LOADED",
+  SAVING: "DATA_SAVING",
+  SAVED: "DATA_SAVED",
   COMPUTING: "DATA_COMPUTING",
   ERROR: "DATA_ERROR"
 };
@@ -15,7 +17,8 @@ export const inputlock = {
 };
 
 export const data_type = {
-  JOB: "TYPE_JOB"
+  JOB: "TYPE_JOB",
+  SAVELOAD: "TYPE_SAVELOAD"
 };
 
 export const job = {
