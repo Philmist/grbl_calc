@@ -9,6 +9,11 @@ export const state = {
   ERROR: "DATA_ERROR"
 };
 
+export const inputlock = {
+  INCREMENT: "INPUTLOCK_INCREMENT",
+  DECREMENT: "INPUTLOCK_DECREMENT"
+};
+
 export const data_type = {
   JOB: "TYPE_JOB"
 };
@@ -21,7 +26,7 @@ export const job = {
 export const weapon = {
   APPEND: "WEAPON_APPEND",
   DELETE: "WEAPON_DELETE",
-  REPLACE: "WEAPON_REPLACE",
+  DANGER_REPLACE: "WEAPON_REPLACE",
   MOVE: "WEAPON_MOVE",
   ENABLE: "WEAPON_ENABLE",
   DISABLE: "WEAPON_DISABLE",
@@ -37,7 +42,7 @@ export const weapon = {
 export const summon = {
   APPEND: "SUMMON_APPEND",
   DELETE: "SUMMON_DELETE",
-  REPLACE: "SUMMON_REPLACE",
+  DANGER_REPLACE: "SUMMON_REPLACE",
   MOVE: "SUMMON_MOVE",
   ENABLE: "SUMMON_ENABLE",
   DISABLE: "SUMMON_DISABLE",
@@ -57,5 +62,6 @@ export const basic = {
   SHIP_BONUS: "BASIC_SET_SHIP_BONUS",
   HP_PERCENT: "BASIC_SET_HP_PERCENT",
   AFFINITY: "BASIC_SET_AFFINITY",
-  JOB: "BASIC_SET_JOB"
+  JOB: "BASIC_SET_JOB",
+  DANGER_REPLACE: "BASIC_REPLACE"
 };

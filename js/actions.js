@@ -17,6 +17,8 @@ import * as RC from "./const/reducer_type";
 import get_job_data from "./get_job_data.js";
 
 
+/* ジョブデータ読みこみ関連 */
+
 // ジョブを読みこみ中にするdispatch用のobjectを返す
 function set_state_job_fetching() {
   return { type: RC.state.FETCHING, selector: RC.data_type.JOB };
@@ -44,6 +46,15 @@ export function fetch_job_data(url) {
   };
 }
 
+
+/* 基礎データ関連 */
+
+// 基礎データを全て入れかえる
+function dangerously_replace_basicinfo_object(obj) {
+  return function (dispatch) {
+    dispatch({ type: RC.basic.DANGER_REPLACE, value: obj });
+  };
+}
 
 // action_typeのアクションをdispatchする関数を返す関数を返す関数
 // 関数の中では数値の値をvalueとしてdispatchする
@@ -147,12 +158,12 @@ export function set_zenith_weapon(param) {
 }
 
 
-// 武器関係
+/* 武器関係 */
 
-// 武器のオブジェクトを配列のindexを指定して置換する(危険)
-export function replace_weapon_object(index, obj) {
+// 武器のオブジェクト全体を置換する(危険)
+export function dangerously_replace_weapon_object(, obj) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.REPLACE, index: Number(index), value: obj });
+    dispatch({ type: RC.weapon.DANGER_REPLACE, value: obj });
   };
 }
 
@@ -243,12 +254,12 @@ export function insert_weapon_object(index) {
 }
 
 
-// 召喚関係
+/* 召喚関係 */
 
-// 召喚のオブジェクトを配列のindexを指定して置換する(危険)
-export function replace_summon_object(index, obj) {
+// 召喚のオブジェクト全体を置換する(危険)
+export function dangerously_replace_summon_object(obj) {
   return function (dispatch, getState) {
-    dispatch({ type: RC.summon.REPLACE, index: Number(index), value: obj });
+    dispatch({ type: RC.summon.DANGER_REPLACE, value: obj });
   };
 }
 
