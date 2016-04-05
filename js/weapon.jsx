@@ -32,7 +32,7 @@ import "../css/calc.css";
 
 // 武器部分全体の構成
 // 若干構成が面倒
-export default class Weapon extends Component {
+class Weapon extends Component {
   render() {
     return (
       <section>
@@ -40,11 +40,11 @@ export default class Weapon extends Component {
         <form name="weapon">
           <table className="grbr" id="weapon_table" ref="weapon_table">
             <thead>
-              <WeaponTableHeader />
+              <WeaponTableHeader inputlock={this.props.inputlock} />
             </thead>
-              <WeaponTableBody />
+              <WeaponTableBody inputlock={this.props.inputlock} />
             <tfoot>
-              <WeaponTableHeader />
+              <WeaponTableHeader inputlock={this.props.inputlock} />
             </tfoot>
           </table>
         </form>
@@ -52,6 +52,7 @@ export default class Weapon extends Component {
     );
   }
 };
+export default connect((state) => { return { inputlock: state.inputlock ? true : false }; })(Weapon);
 
 
 // 武器テーブルのヘッダ
@@ -89,7 +90,7 @@ class WeaponTableBody extends Component {
     // weaponは配列なのでmapを使って要素を生成する
     return (
       <tbody>
-        {this.props.weapon.map((val, index) => { return <WeaponRow key={"wr_"+String(index)} index={index} />; })}
+        {this.props.weapon.map((val, index) => { return <WeaponRow key={"wr_"+String(index)} index={index} {...this.props} />; })}
       </tbody>
     );
   }
@@ -325,7 +326,7 @@ class WeaponRow extends Component {
   // 名前は固定
   render() {
     // 必要な要素をpropsから変数に取りだす
-    const { isDragging, isOver, connectDragSource, connectDragPreview, connectDropTarget, index } = this.props;
+    const { isDragging, isOver, connectDragSource, connectDragPreview, connectDropTarget, index, inputlock } = this.props;
     const { selected, name, atk, skill_level, skill_type, cosmos, type, locked } = this.props;
     // つかむところに適用されるスタイルを作る
     // TODO: もっとマシにスタイルを作る
@@ -338,43 +339,43 @@ class WeaponRow extends Component {
       <tr>
         {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td>
-          <input type="checkbox" className="weapon_select" checked={selected} onChange={this.change_select} />
+          <input type="checkbox" className="weapon_select" checked={selected} onChange={this.change_select} disabled={inputlock} />
         </td>
         <td>
-          <input type="checkbox" className="weapon_lock" checked={locked} onChange={this.change_locked} />
+          <input type="checkbox" className="weapon_lock" checked={locked} onChange={this.change_locked} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" className="weapon_name width150" value={name} onChange={this.change_name} />
+          <input type="text" className="weapon_name width150" value={name} onChange={this.change_name} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" className="weapon_atk width50" value={atk} onChange={this.change_atk} />
+          <input type="text" className="weapon_atk width50" value={atk} onChange={this.change_atk} disabled={inputlock} />
         </td>
         <td>
-          <input type="checkbox" className="cosmos" checked={cosmos} onChange={this.change_cosmos} />
+          <input type="checkbox" className="cosmos" checked={cosmos} onChange={this.change_cosmos} disabled={inputlock} />
         </td>
         <td>
-          <select className="weapon_kind" value={type} onChange={this.change_kind} >
+          <select className="weapon_kind" value={type} onChange={this.change_kind} disabled={inputlock} >
             {this.e_kind}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type1" value={skill_type[0]} onChange={this.change_skill_type1} >
+          <select className="weapon_skill_type1" value={skill_type[0]} onChange={this.change_skill_type1} disabled={inputlock} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type2" value={skill_type[1]} onChange={this.change_skill_type2} >
+          <select className="weapon_skill_type2" value={skill_type[1]} onChange={this.change_skill_type2} disabled={inputlock} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_lv" value={skill_level} onChange={this.change_skill_lv} >
+          <select className="weapon_skill_lv" value={skill_level} onChange={this.change_skill_lv} disabled={inputlock} >
             {this.e_skill_lv}
           </select>
         </td>
         <td>
-          <input type="button" id="ins" value="+" onClick={this.push_insert} />
-          <input type="button" id="del" value="-" onClick={this.push_delete} />
+          <input type="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
+          <input type="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
         </td>
       </tr>
     ));

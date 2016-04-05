@@ -94,6 +94,7 @@ class Rank extends Component {
             onChange={this.handleChange}
             id="rank"
             value={this.props.rank}
+            disabled={this.props.inputlock}
           />
         </td>
       </tr>
@@ -104,7 +105,7 @@ class Rank extends Component {
 // reduxのstoreからデータを取ってきてpropsに注入
 // アクションを集めたモジュールから関数を取ってきて注入
 Rank = connect(
-  (state) => ({ rank: state.basicinfo.rank }),
+  (state) => ({ rank: state.basicinfo.rank, inputlock: state.inputlock ? true : false }),
     { set_rank: actions.set_rank }
 )(Rank);
 
@@ -135,6 +136,7 @@ class ShipBonus extends Component {
             onChange={this.handleChange}
             id="ship_bonus"
             value={this.props.ship_bonus}
+            disabled={this.props.inputlock}
           />
         </td>
       </tr>
@@ -146,7 +148,8 @@ class ShipBonus extends Component {
 // redux storeからデータを取ってきて注入
 // アクションモジュールからアクションを持ってきて注入
 ShipBonus = connect(
-  (state) => ({ ship_bonus: state.basicinfo.ship_bonus }), { set_ship_bonus: actions.set_ship_bonus }
+  (state) => ({ ship_bonus: state.basicinfo.ship_bonus, inputlock: state.inputlock ? true : false }),
+    { set_ship_bonus: actions.set_ship_bonus }
 )(ShipBonus);
 
 
@@ -170,7 +173,7 @@ class AttributeBonus extends Component {
       <tr>
         <th>属性補正</th>
         <td>
-          <select onChange={this.handleChange} id="attribute_type" value={this.props.affinity}>
+          <select onChange={this.handleChange} id="attribute_type" value={this.props.affinity} disabled={this.props.inputlock}>
             <option value="normal">無し</option>
             <option value="good">有利</option>
             <option value="bad">不利</option>
@@ -182,7 +185,7 @@ class AttributeBonus extends Component {
 }
 // propsに色々注入する関数(redux storeからとアクションモジュールから)
 AttributeBonus = connect(
-  (state) => ({ affinity: state.basicinfo.affinity }),
+  (state) => ({ affinity: state.basicinfo.affinity, inputlock: state.inputlock ? true : false }),
     { set_affinity: actions.set_affinity }
 )(AttributeBonus);
 
@@ -212,6 +215,7 @@ class HPPercent extends Component {
             onChange={this.handleChange}
             id="hp_percent"
             value={this.props.hp_percent}
+            disabled={this.props.inputlock}
           />
           %
         </td>
@@ -223,7 +227,8 @@ class HPPercent extends Component {
 // redux storeからデータを取って注入
 // アクションモジュールから関数を持ってきて注入
 HPPercent = connect(
-  (state) => ({ hp_percent: state.basicinfo.hp_percent }), { set_hp_percent: actions.set_hp_percent }
+  (state) => ({hp_percent: state.basicinfo.hp_percent, inputlock: state.inputlock ? true : false }),
+    { set_hp_percent: actions.set_hp_percent }
 )(HPPercent);
 
 
@@ -273,14 +278,14 @@ class AtkBonus extends Component {
             <th rowSpan="2">発動中の<br />攻撃力ボーナス</th>
             <td>
               <input className="width25" type="text" onChange={this.percentChange}
-                id="atk_bonus_percent" value={this.props.atk_bonus_percent} />
+                id="atk_bonus_percent" value={this.props.atk_bonus_percent} disabled={this.props.inputlock} />
               %
             </td>
           </tr>
           <tr>
             <td>
               <input className="width50" type="text" onChange={this.valueChange}
-                id="atk_bonus_value" value={this.props.atk_bonus_value} />
+                id="atk_bonus_value" value={this.props.atk_bonus_value} disabled={this.props.inputlock} />
             </td>
           </tr>
         </tbody>
@@ -292,7 +297,8 @@ class AtkBonus extends Component {
 function mapStateToAtkBonusProps(state) {
   return {
     atk_bonus_percent: state.basicinfo.atk_bonus.percent,
-    atk_bonus_value: state.basicinfo.atk_bonus.value
+    atk_bonus_value: state.basicinfo.atk_bonus.value,
+    inputlock: state.inputlock ? true : false
   };
 }
 // コンポーネントのpropsに注入する関数を集めたオブジェクト

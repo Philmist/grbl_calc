@@ -38,14 +38,28 @@ function set_job_data(data) {
 export function fetch_job_data(url) {
   return function (dispatch) {
     dispatch(set_state_job_fetching());
+    dispatch(inputlock_increment());
     get_job_data(url).then((job) => {
       dispatch(set_job_data(job));
       dispatch(set_state_job_loaded());
+      dispatch(inputlock_decrement());
       return Promise.resolve(job);
     });
   };
 }
 
+
+/* ロックカウンター関連 */
+
+// インプットロックカウンターを+1
+export function inputlock_increment() {
+  return { type: RC.inputlock.INCREMENT };
+}
+
+// インプットロックカウンターを-1
+export function inputlock_decrement() {
+  return { type: RC.inputlock.DECREMENT };
+}
 
 /* 基礎データ関連 */
 
@@ -161,7 +175,7 @@ export function set_zenith_weapon(param) {
 /* 武器関係 */
 
 // 武器のオブジェクト全体を置換する(危険)
-export function dangerously_replace_weapon_object(, obj) {
+export function dangerously_replace_weapon_object(obj) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.DANGER_REPLACE, value: obj });
   };
