@@ -407,3 +407,99 @@ export function insert_summon_object(index) {
     dispatch({ type: RC.summon.APPEND, index: (Number(index)) });
   };
 }
+
+
+/* フレンド召喚関係 */
+
+// 召喚のオブジェクト全体を置換する(危険)
+export function dangerously_replace_friend_object(obj) {
+  return function (dispatch, getState) {
+    dispatch({ type: RC.friend.DANGER_REPLACE, value: obj });
+  };
+}
+
+// 召喚を選択状態にする
+export function enable_friend_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.ENABLE, index: Number(index) });
+  };
+}
+
+// 召喚を非選択状態にする
+export function disable_friend_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.DISABLE, index: Number(index) });
+  };
+}
+
+// 鍵状態を変更する
+export function set_friend_lock(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.LOCK, index: Number(index), value: Boolean(value) });
+  };
+}
+
+// 召喚名を変更する
+export function set_friend_name(index, name) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.NAME, index: Number(index), value: String(name) });
+  };
+}
+
+// 召喚の攻撃力を設定する
+export function set_friend_atk_value(index, value) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.ATK, index: Number(index), value: Number(value) });
+  };
+}
+
+// 召喚のスキル%を変更する
+export function set_friend_skill_percent(index, target, percent) {
+  return function (dispatch, getState) {
+    let summon_obj = Array.from(getState().summon);
+    if (Number(index) < 0 || Number(index) > summon_obj.length) {
+      return;
+    } else if (Number(percent) < 0) {
+      return;
+    }
+    if (target === 0 || target === 1) {
+      let skill_obj = Object.assign({}, summon_obj[index].skill[target], { percent: Number(percent) });
+      dispatch({ type: RC.friend.SKILL, index: Number(index), target: target, value: skill_obj });
+    }
+  };
+}
+
+// 召喚のスキル種別を変更する
+export function set_friend_skill_type(index, target, skill_type) {
+  return function (dispatch, getState) {
+    let summon_obj = Array.from(getState().summon);
+    if (Number(index) < 0 || Number(index) > summon_obj.length) {
+      return;
+    }
+    if (target === 0 || target === 1) {
+      let skill_obj = Object.assign({}, summon_obj[index].skill[target], { type: String(skill_type) });
+      dispatch({ type: RC.friend.SKILL, index: Number(index), target: target, value: skill_obj });
+    }
+  };
+}
+
+// 召喚をfromからtoへ移動する(index)
+export function move_friend_object(from, to) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.MOVE, from: Number(from), to: Number(to) });
+  };
+}
+
+// 召喚を削除する
+export function delete_friend_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.DELETE, index: Number(index) });
+  };
+}
+
+// 空の召喚を挿入する
+export function insert_friend_object(index) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.APPEND, index: (Number(index)) });
+  };
+}

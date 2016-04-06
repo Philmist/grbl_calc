@@ -3,5 +3,6 @@
 // アイテム種別を表わす定数定義
 export default {
   WEAPON: "type_weapon",
-  SUMMON: "type_summon"
+  SUMMON: "type_summon",
+  FRIEND: "type_friend"
 }

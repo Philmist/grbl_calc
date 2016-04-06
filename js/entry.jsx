@@ -35,7 +35,8 @@ const reducer = combineReducers(
     summon: reducers.summon,
     basicinfo: reducers.basicinfo,
     component_state: reducers.component_state,
-    inputlock: reducers.inputlock_counter
+    inputlock: reducers.inputlock_counter,
+    friend: reducers.friend
   }
 );
 // 組みあわせたreducerを使って新しいredux storeを作る

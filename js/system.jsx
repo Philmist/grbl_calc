@@ -10,6 +10,7 @@ import {
   dangerously_replace_basicinfo_object,
   dangerously_replace_weapon_object,
   dangerously_replace_summon_object,
+  dangerously_replace_friend_object,
   set_state_loading,
   set_state_loaded,
   set_state_saving,
@@ -111,6 +112,7 @@ class SaveLoad extends Component {
       weapon: this.props.weapon,
       summon: this.props.summon,
       basicinfo: this.props.basicinfo,
+      friend: this.props.friend,
       name: this.state.current_slot_name
     };
     // JSON化する
@@ -141,6 +143,7 @@ class SaveLoad extends Component {
     this.props.set_weapon_object(loaded_obj.weapon);
     this.props.set_summon_object(loaded_obj.summon);
     this.props.set_basicinfo_object(loaded_obj.basicinfo);
+    this.props.set_friend_object(loaded_obj.friend);
     // 状態を元に
     this.props.set_state_loaded();
   }
@@ -201,6 +204,7 @@ const mapStateToSaveLoadProps = (state) => {
   return {
     weapon: state.weapon,
     summon: state.summon,
+    friend: state.friend,
     basicinfo: state.basicinfo
   };
 };
@@ -208,6 +212,7 @@ const mapActionCreatorsToSaveLoadProps = {
   set_weapon_object: dangerously_replace_weapon_object,
   set_summon_object: dangerously_replace_summon_object,
   set_basicinfo_object: dangerously_replace_basicinfo_object,
+  set_friend_object: dangerously_replace_friend_object,
   set_state_loading,
   set_state_loaded,
   set_state_saving,

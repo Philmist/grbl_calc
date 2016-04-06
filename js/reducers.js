@@ -187,6 +187,70 @@ export function summon(state, action) {
 }
 
 
+/* フレンド召喚 */
+
+// 定数の一部を召喚と共有している
+
+const FRIEND_MAX = 5;  // 召喚配列の最大値
+const FRIEND_MIN = 2;  // 召喚配列の最小値
+// フレンド召喚を保管するstateのreducer
+// state: reducerに割りあてられたstate
+// action: dispatchされたobject
+export function friend(state, action) {
+  // 初期stateの設定
+  if (state === undefined) {
+    let initial_val = [
+      {}, {}
+    ];
+    state = initial_val.map((val) => { return Object.assign(val, summon_default); });  // 定数を通常召喚と共有している
+  }
+  // actionによる分岐
+  if (action.index < state.length && action.index >= 0) {
+    if (action.type == RC.friend.ENABLE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: true });
+    } if (action.type == RC.friend.DISABLE) {
+      state = Array.from(state);
+      state[action.index] = Object.assign({}, state[action.index], { selected: false });
+    } else if (action.type == RC.friend.DELETE && state.length > FRIEND_MIN) {
+      state.splice(action.index, 1);
+      state = Array.from(state);
+    } else if (action.type == RC.friend.APPEND && state.length < FRIEND_MAX) {
+      let insert_state = Object.assign({}, summon_default);
+      state.splice(action.index+1, 0, insert_state);  // 指定した場所の後ろに追加したい
+      state = Array.from(state);
+    } else if (action.type == RC.friend.LOCK) {
+      state = Array.from(state);
+      let value = action.value ? action.value : false;
+      state[action.index] = Object.assign({}, state[action.index], { locked: value });
+    } else if (action.type == RC.friend.SKILL && (action.target === 0 || action.target === 1)) {
+      state = Array.from(state);
+      let skills = Array.from(state[action.index].skill);
+      skills[action.target] = Object.assign({}, skills[action.target], action.value);
+      state[action.index].skill = skills;
+    } else if (action.type == RC.friend.NAME) {
+      state = Array.from(state);
+      state[action.index].name = String(action.value);
+    } else if (action.type == RC.friend.ATK) {
+      let atk_value = Number(action.value);
+      if (atk_value >=0) {
+        state = Array.from(state);
+        state[action.index].atk = atk_value;
+      }
+    }
+  } else if (action.type == RC.friend.MOVE && action.from < state.length && action.to < state.length) {
+    let target = state[action.from];
+    state.splice(action.from, 1);
+    state.splice(action.to, 0, target);
+    state = Array.from(state);
+  } else if (action.type == RC.friend.DANGER_REPLACE) {
+    state = Array.from(action.value);
+  }
+  // 最終的なstateを返す
+  return state;
+}
+
+
 // 基本情報を保管するstateのreducer
 // state: reducerに割りあてられたstate
 // action: dispatchされたobject

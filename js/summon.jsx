@@ -157,26 +157,28 @@ const mapActionCreatorsToSummonRowProps = {
   set_summon_skill_percent,
   set_summon_skill_type
 };
-// optionのvalueと中身の対応
-// TODO: なんとかして分離したい
-const SUMMON_KIND = [
-  ["none", "無し"],
-  ["attribute", "属性"],
-  ["character", "キャラ"],
-  ["magna", "マグナ"],
-  ["unknown", "ｱﾝﾉｳﾝ"],
-  ["zeus", "ｾﾞｳｽ枠"]
-];
 // 召喚の行1つを表示させるためのクラス
-class SummonRow extends Component {
+export class SummonRow_ extends Component {
   // オプション要素を作るための関数
   create_optfunc(key) {
     return (
       <option value={key[0]} key={key[0]}>{key[1]}</option>
     );
   }
+
+  // optionのvalueと中身の対応
+  // TODO: なんとかして分離したい
+  SUMMON_KIND = [
+    ["none", "無し"],
+    ["attribute", "属性"],
+    ["character", "キャラ"],
+    ["magna", "マグナ"],
+    ["unknown", "ｱﾝﾉｳﾝ"],
+    ["zeus", "ｾﾞｳｽ枠"]
+  ];
+
   // 実際にオプションの配列を作る
-  skind = SUMMON_KIND.map((i) => this.create_optfunc(i));
+  skind = this.SUMMON_KIND.map((i) => this.create_optfunc(i));
 
   // 選択/解除がされた時に呼びだされる関数
   on_change_select(e) {
@@ -304,7 +306,7 @@ class SummonRow extends Component {
 }
 // 順序が重要
 // ドラッグ&ドロップのAPIをつなげる
-SummonRow = DragSource(ItemTypes.SUMMON, SummonRowSource, collectSourceSummonRow)(SummonRow);
+let SummonRow = DragSource(ItemTypes.SUMMON, SummonRowSource, collectSourceSummonRow)(SummonRow_);
 SummonRow = DropTarget(ItemTypes.SUMMON, SummonRowTarget, collectTargetSummonRow)(SummonRow);
 // Reduxのstoreをつなげる
 SummonRow = connect(mapStateToSummonRowProps, mapActionCreatorsToSummonRowProps)(SummonRow);
