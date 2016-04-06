@@ -89,16 +89,21 @@ export default function calculate_atkval (param_obj, job_data) {
   };
   // メイン召喚石
   if (param_obj.summon[0]) {
-    param_obj.summon[0].skill.forEach(function(divine) {
-      if (divine.type) { divine_percent[divine.type] += divine.percent; }
-    });
+    let main_summon = param_obj.summon[0];
+    if (main_summon.skill) {
+      main_summon.skill.forEach(function(divine) {
+        if (divine.type) { divine_percent[divine.type] += divine.percent; }
+      });
+    }
   }
   // フレンド召喚石
   if (param_obj.friend) {
     let friend = param_obj.friend;
-    friend.skill.forEach(function(divine) {
-      if (divine.type) { divine_percent[divine.type] += divine.percent; }
-    });
+    if (friend.skill) {
+      friend.skill.forEach(function(divine) {
+        if (divine.type) { divine_percent[divine.type] += divine.percent; }
+      });
+    }
   }
 
   // 武器攻撃力の計算

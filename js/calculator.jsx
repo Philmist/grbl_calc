@@ -65,6 +65,9 @@ function mapStateToCalculatorBodyProps(state) {
   let summon = state.summon.filter(function(val) {
     return (val instanceof Object && val.selected);
   });
+  let friend = state.friend.filter(function(val) {
+    return (val instanceof Object && val.selected);
+  });
   return {
     params: {
       rank: basicinfo.rank,  // ランク
@@ -76,8 +79,7 @@ function mapStateToCalculatorBodyProps(state) {
       weapon: weapon,  // 武器
       summon: summon,
       atk_bonus: basicinfo.atk_bonus,
-      friend: {
-      }
+      friend: friend
     },
     job: job
   }

@@ -48,7 +48,8 @@ class TableHeader extends Component {
 function mapStateToTableBodyProps(state) {
   return {
     friend: state.friend,
-    inputlock: state.inputlock ? true : false
+    inputlock: state.inputlock ? true : false,
+    checked_length: (state.friend.filter( i => i.selected )).length
   };
 }
 // 召喚表の本体(列全体)を表示させるクラス
@@ -143,6 +144,7 @@ const mapActionCreatorsToRowProps = {
   set_skill_percent: set_friend_skill_percent,
   set_skill_type: set_friend_skill_type
 };
+const FRIEND_CHECKED_MAX = 1;
 // フレンド召喚の行1つを表示させるためのクラス
 // 通常召喚のクラスを再利用する
 class Row_ extends SummonRow_ {
@@ -162,6 +164,17 @@ class Row_ extends SummonRow_ {
     this.push_insert = ::this.push_insert;
     this.push_delete = ::this.push_delete;
     this.on_change_locked = ::this.on_change_locked;
+  }
+
+  // 選択/解除がされた時に呼びだされる関数
+  on_change_select(e) {
+    if (e.target.checked) {  // もし選択されたのなら
+      if (this.props.checked_length < FRIEND_CHECKED_MAX) {
+        this.props.enable_object(this.props.index);
+      }
+    } else {  // もし解除されたのなら
+      this.props.disable_object(this.props.index);
+    }
   }
 
   // レンダリングする要素を返す関数
@@ -195,7 +208,7 @@ class Row_ extends SummonRow_ {
             type="text"
             className="friend_percent1 width25"
             value={skill[0].percent}
-            onChange={this.on_change_friend_percent1}
+            onChange={this.on_change_percent1}
             disabled={inputlock}
           />%</td>
         <td>
@@ -207,7 +220,7 @@ class Row_ extends SummonRow_ {
             type="text"
             className="friend_percent2 width25"
             value={skill[1].percent}
-            onChange={this.on_change_friend_percent2}
+            onChange={this.on_change_percent2}
             disabled={inputlock}
           />%</td>
         <td>

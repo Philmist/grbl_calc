@@ -64,7 +64,8 @@ class SummonTableHeader extends Component {
 // 後述の召喚表本体のpropsに注入するstate
 function mapStateToSummonTableBodyProps(state) {
   return {
-    summon: state.summon
+    summon: state.summon,
+    checked_length: (state.summon.filter( i => i.selected )).length
   };
 }
 // 召喚表の本体(列全体)を表示させるクラス
@@ -157,6 +158,7 @@ const mapActionCreatorsToSummonRowProps = {
   set_skill_percent: set_summon_skill_percent,
   set_skill_type: set_summon_skill_type
 };
+const SUMMON_CHECKED_MAX = 5;
 // 召喚の行1つを表示させるためのクラス
 export class SummonRow_ extends Component {
   // オプション要素を作るための関数
@@ -183,7 +185,9 @@ export class SummonRow_ extends Component {
   // 選択/解除がされた時に呼びだされる関数
   on_change_select(e) {
     if (e.target.checked) {  // もし選択されたのなら
-      this.props.enable_object(this.props.index);
+      if (this.props.checked_length < SUMMON_CHECKED_MAX) {
+        this.props.enable_object(this.props.index);
+      }
     } else {  // もし解除されたのなら
       this.props.disable_object(this.props.index);
     }
@@ -201,22 +205,22 @@ export class SummonRow_ extends Component {
 
   // 召喚(1つ目)の種別が変更された時に呼ばれる関数
   // 召喚は配列で管理されているので泥臭いことをしている
-  on_change_summon_kind1(e) {
+  on_change_kind1(e) {
     this.props.set_skill_type(this.props.index, 0, e.target.value);
   }
 
   // 召喚(1つ目)の%が変更された時に呼ばれる関数
-  on_change_summon_percent1(e) {
+  on_change_percent1(e) {
     this.props.set_skill_percent(this.props.index, 0, e.target.value);
   }
 
   // 召喚(2つ目)の種別が変更された時に呼ばれる関数
-  on_change_summon_kind2(e) {
+  on_change_kind2(e) {
     this.props.set_skill_type(this.props.index, 1, e.target.value);
   }
 
   // 召喚(2つ目)の%が変更された時に呼ばれる関数
-  on_change_summon_percent2(e) {
+  on_change_percent2(e) {
     this.props.set_skill_percent(this.props.index, 1, e.target.value);
   }
 
@@ -240,10 +244,10 @@ export class SummonRow_ extends Component {
     this.on_change_select = ::this.on_change_select;
     this.on_change_name = ::this.on_change_name;
     this.on_change_atk = ::this.on_change_atk;
-    this.on_change_kind1 = ::this.on_change_summon_kind1;
-    this.on_change_percent1 = ::this.on_change_summon_percent1;
-    this.on_change_kind2 = ::this.on_change_summon_kind2;
-    this.on_change_percent2 = ::this.on_change_summon_percent2;
+    this.on_change_kind1 = ::this.on_change_kind1;
+    this.on_change_percent1 = ::this.on_change_percent1;
+    this.on_change_kind2 = ::this.on_change_kind2;
+    this.on_change_percent2 = ::this.on_change_percent2;
     this.push_insert = ::this.push_insert;
     this.push_delete = ::this.push_delete;
     this.on_change_locked = ::this.on_change_locked;
@@ -281,7 +285,7 @@ export class SummonRow_ extends Component {
             type="text"
             className="summon_percent1 width25"
             value={skill[0].percent}
-            onChange={this.on_change_summon_percent1}
+            onChange={this.on_change_percent1}
             disabled={inputlock}
           />%</td>
         <td>
@@ -293,7 +297,7 @@ export class SummonRow_ extends Component {
             type="text"
             className="summon_percent2 width25"
             value={skill[1].percent}
-            onChange={this.on_change_summon_percent2}
+            onChange={this.on_change_percent2}
             disabled={inputlock}
           />%</td>
         <td>
