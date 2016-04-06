@@ -99,7 +99,7 @@ const RowTarget = {
     const index_to = props.index;
     // 実際にオブジェクトを移動する
     // 注入がこうなっているので*注意*
-    props.move_summon_object(index_from, index_to);  // move_summon_objectで間違っていない
+    props.move_object(index_from, index_to);  // move_objectで間違っていない
     // ここで返されたオブジェクトはソースでのmonitor.getDropResult()で使える
     return { index: props.index };
   }
@@ -131,21 +131,21 @@ function mapStateToRowProps(state, props) {
 // reduxのaction creatorをpropsに注入するためのオブジェクト
 // コンポーネントを使いまわしているので注入元を変える
 const mapActionCreatorsToRowProps = {
-  replace_summon_object: replace_friend_object,
-  enable_summon_object: enable_friend_object,
-  disable_summon_object: disable_friend_object,
-  move_summon_object: move_friend_object,
-  insert_summon_object: insert_friend_object,
-  delete_summon_object: delete_friend_object,
-  set_summon_lock: set_friend_lock,
-  set_summon_name: set_friend_name,
-  set_summon_atk_value: set_friend_atk_value,
-  set_summon_skill_percent: set_friend_skill_percent,
-  set_summon_skill_type: set_friend_skill_type
+  replace_object: replace_friend_object,
+  enable_object: enable_friend_object,
+  disable_object: disable_friend_object,
+  move_object: move_friend_object,
+  insert_object: insert_friend_object,
+  delete_object: delete_friend_object,
+  set_lock: set_friend_lock,
+  set_name: set_friend_name,
+  set_atk_value: set_friend_atk_value,
+  set_skill_percent: set_friend_skill_percent,
+  set_skill_type: set_friend_skill_type
 };
 // フレンド召喚の行1つを表示させるためのクラス
 // 通常召喚のクラスを再利用する
-class Row extends SummonRow_ {
+class Row_ extends SummonRow_ {
   // コンストラクタ
   // 代入する関数が変わっていることに注意
   constructor(props) {
@@ -154,10 +154,10 @@ class Row extends SummonRow_ {
     this.on_change_name = ::this.on_change_name;
     this.on_change_atk = ::this.on_change_atk;
     /* ここから */
-    this.on_change_friend_kind1 = ::this.on_change_summon_kind1;
-    this.on_change_friend_percent1 = ::this.on_change_summon_percent1;
-    this.on_change_friend_kind2 = ::this.on_change_summon_kind2;
-    this.on_change_friend_percent2 = ::this.on_change_summon_percent2;
+    this.on_change_kind1 = ::this.on_change_kind1;
+    this.on_change_percent1 = ::this.on_change_percent1;
+    this.on_change_kind2 = ::this.on_change_kind2;
+    this.on_change_percent2 = ::this.on_change_percent2;
     /* ここまで */
     this.push_insert = ::this.push_insert;
     this.push_delete = ::this.push_delete;
@@ -187,7 +187,7 @@ class Row extends SummonRow_ {
         <td><input type="text" className="friend_name width150" value={name} onChange={this.on_change_name} disabled={inputlock} /></td>
         <td><input type="text" className="friend_atk width50" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
         <td>
-          <select className="friend_kind1" value={skill[0].type} onChange={this.on_change_friend_kind1} disabled={inputlock} >
+          <select className="friend_kind1" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
             {this.skind}
           </select>
         </td>
@@ -199,7 +199,7 @@ class Row extends SummonRow_ {
             disabled={inputlock}
           />%</td>
         <td>
-          <select className="friend_kind2" value={skill[1].type} onChange={this.on_change_friend_kind2} disabled={inputlock}>
+          <select className="friend_kind2" value={skill[1].type} onChange={this.on_change_kind2} disabled={inputlock}>
             {this.skind}
           </select>
         </td>
@@ -220,6 +220,7 @@ class Row extends SummonRow_ {
 }
 // 順序が重要
 // ドラッグ&ドロップのAPIをつなげる
+let Row = Row_;
 Row = DragSource(ItemTypes.FRIEND, RowSource, collectSourceRow)(Row);
 Row = DropTarget(ItemTypes.FRIEND, RowTarget, collectTargetRow)(Row);
 // Reduxのstoreをつなげる

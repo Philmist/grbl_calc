@@ -145,17 +145,17 @@ function mapStateToSummonRowProps(state, props) {
 }
 // reduxのaction creatorをpropsに注入するためのオブジェクト
 const mapActionCreatorsToSummonRowProps = {
-  replace_summon_object,
-  enable_summon_object,
-  disable_summon_object,
-  move_summon_object,
-  insert_summon_object,
-  delete_summon_object,
-  set_summon_lock,
-  set_summon_name,
-  set_summon_atk_value,
-  set_summon_skill_percent,
-  set_summon_skill_type
+  replace_object: replace_summon_object,
+  enable_object: enable_summon_object,
+  disable_object: disable_summon_object,
+  move_object: move_summon_object,
+  insert_object: insert_summon_object,
+  delete_object: delete_summon_object,
+  set_lock: set_summon_lock,
+  set_name: set_summon_name,
+  set_atk_value: set_summon_atk_value,
+  set_skill_percent: set_summon_skill_percent,
+  set_skill_type: set_summon_skill_type
 };
 // 召喚の行1つを表示させるためのクラス
 export class SummonRow_ extends Component {
@@ -183,55 +183,55 @@ export class SummonRow_ extends Component {
   // 選択/解除がされた時に呼びだされる関数
   on_change_select(e) {
     if (e.target.checked) {  // もし選択されたのなら
-      this.props.enable_summon_object(this.props.index);
+      this.props.enable_object(this.props.index);
     } else {  // もし解除されたのなら
-      this.props.disable_summon_object(this.props.index);
+      this.props.disable_object(this.props.index);
     }
   }
 
   // 名前が変更された時に呼ばれる関数
   on_change_name(e) {
-    this.props.set_summon_name(this.props.index, e.target.value);
+    this.props.set_name(this.props.index, e.target.value);
   }
 
   // 攻撃力が変更された時に呼ばれる関数
   on_change_atk(e) {
-    this.props.set_summon_atk_value(this.props.index, e.target.value);
+    this.props.set_atk_value(this.props.index, e.target.value);
   }
 
   // 召喚(1つ目)の種別が変更された時に呼ばれる関数
   // 召喚は配列で管理されているので泥臭いことをしている
   on_change_summon_kind1(e) {
-    this.props.set_summon_skill_type(this.props.index, 0, e.target.value);
+    this.props.set_skill_type(this.props.index, 0, e.target.value);
   }
 
   // 召喚(1つ目)の%が変更された時に呼ばれる関数
   on_change_summon_percent1(e) {
-    this.props.set_summon_skill_percent(this.props.index, 0, e.target.value);
+    this.props.set_skill_percent(this.props.index, 0, e.target.value);
   }
 
   // 召喚(2つ目)の種別が変更された時に呼ばれる関数
   on_change_summon_kind2(e) {
-    this.props.set_summon_skill_type(this.props.index, 1, e.target.value);
+    this.props.set_skill_type(this.props.index, 1, e.target.value);
   }
 
   // 召喚(2つ目)の%が変更された時に呼ばれる関数
   on_change_summon_percent2(e) {
-    this.props.set_summon_skill_percent(this.props.index, 1, e.target.value);
+    this.props.set_skill_percent(this.props.index, 1, e.target.value);
   }
 
   // 削除("-")ボタンが押された時
   push_delete(e) {
-    this.props.delete_summon_object(this.props.index);
+    this.props.delete_object(this.props.index);
   }
 
   // 追加("+")ボタンが押された時
   push_insert(e) {
-    this.props.insert_summon_object(this.props.index);
+    this.props.insert_object(this.props.index);
   }
 
   on_change_locked(e) {
-    this.props.set_summon_lock(this.props.index, e.target.checked);
+    this.props.set_lock(this.props.index, e.target.checked);
   }
 
   // コンストラクタ
@@ -240,10 +240,10 @@ export class SummonRow_ extends Component {
     this.on_change_select = ::this.on_change_select;
     this.on_change_name = ::this.on_change_name;
     this.on_change_atk = ::this.on_change_atk;
-    this.on_change_summon_kind1 = ::this.on_change_summon_kind1;
-    this.on_change_summon_percent1 = ::this.on_change_summon_percent1;
-    this.on_change_summon_kind2 = ::this.on_change_summon_kind2;
-    this.on_change_summon_percent2 = ::this.on_change_summon_percent2;
+    this.on_change_kind1 = ::this.on_change_summon_kind1;
+    this.on_change_percent1 = ::this.on_change_summon_percent1;
+    this.on_change_kind2 = ::this.on_change_summon_kind2;
+    this.on_change_percent2 = ::this.on_change_summon_percent2;
     this.push_insert = ::this.push_insert;
     this.push_delete = ::this.push_delete;
     this.on_change_locked = ::this.on_change_locked;
@@ -273,7 +273,7 @@ export class SummonRow_ extends Component {
         <td><input type="text" className="summon_name width150" value={name} onChange={this.on_change_name} disabled={inputlock} /></td>
         <td><input type="text" className="summon_atk width50" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
         <td>
-          <select className="summon_kind1" value={skill[0].type} onChange={this.on_change_summon_kind1} disabled={inputlock} >
+          <select className="summon_kind1" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
             {this.skind}
           </select>
         </td>
@@ -285,7 +285,7 @@ export class SummonRow_ extends Component {
             disabled={inputlock}
           />%</td>
         <td>
-          <select className="summon_kind2" value={skill[1].type} onChange={this.on_change_summon_kind2} disabled={inputlock}>
+          <select className="summon_kind2" value={skill[1].type} onChange={this.on_change_kind2} disabled={inputlock}>
             {this.skind}
           </select>
         </td>
@@ -306,7 +306,8 @@ export class SummonRow_ extends Component {
 }
 // 順序が重要
 // ドラッグ&ドロップのAPIをつなげる
-let SummonRow = DragSource(ItemTypes.SUMMON, SummonRowSource, collectSourceSummonRow)(SummonRow_);
+let SummonRow = SummonRow_;
+SummonRow = DragSource(ItemTypes.SUMMON, SummonRowSource, collectSourceSummonRow)(SummonRow);
 SummonRow = DropTarget(ItemTypes.SUMMON, SummonRowTarget, collectTargetSummonRow)(SummonRow);
 // Reduxのstoreをつなげる
 SummonRow = connect(mapStateToSummonRowProps, mapActionCreatorsToSummonRowProps)(SummonRow);
