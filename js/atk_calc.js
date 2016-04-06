@@ -24,7 +24,7 @@
           cosmos: コスモス武器か否か(boolean)
         }, ...
       ],
-    summon: [ // 召喚1つを配列の(ry
+    summon: [ // 召喚1つを配列の(ry 最初のものがメイン召喚石として計算される
         {
           atk: 召喚の攻撃力(Number),
           skill: [ // 加護1つを配列の要素1つで表わす
@@ -38,6 +38,15 @@
     atk_bonus: {
       percent: 攻撃力ボーナスのパーセンテージ(%, Number),
       value: 攻撃力ボーナスの値(Number)
+    },
+    friend: {  // フレンド召喚 だいたい通常召喚と一緒だが要素1個だけなのでオブジェクト
+      atk: 召喚の攻撃力(Number),
+      skill: [ // 加護1つを配列の要素1つで表わす
+        {
+          type: 加護種別を表わす文字列(String),
+          percent: 加護のパーセンテージ(Number)
+        }, ...
+      ]
     }
   }
   job_data: 以下のような内容を持つオブジェクト
@@ -75,17 +84,26 @@ export default function calculate_atkval (param_obj, job_data) {
     character: 0,
     magna: 100,
     unknown: 100,
-    zeus: 100
+    zeus: 100,
+    none: 0
   };
-  param_obj.summon.forEach(function(summon) {
-    summon.skill.forEach(function(divine) {
+  // メイン召喚石
+  if (param_obj.summon[0]) {
+    param_obj.summon[0].skill.forEach(function(divine) {
       if (divine.type) { divine_percent[divine.type] += divine.percent; }
     });
-  });
+  }
+  // フレンド召喚石
+  if (param_obj.friend) {
+    let friend = param_obj.friend;
+    friend.skill.forEach(function(divine) {
+      if (divine.type) { divine_percent[divine.type] += divine.percent; }
+    });
+  }
 
   // 武器攻撃力の計算
   showed_atk += function () {  // 表示攻撃力に処理で得られた総合武器攻撃力を加算する
-    var total_atk = 0;
+    let total_atk = 0;
     const zenith_bonus = [0, 1, 3, 5, 0, 0, 10];  // 各zenithの星に対応する追加ボーナス%
     param_obj.weapon.forEach(function(weapon) {
       let atk = weapon.atk;  // 基礎攻撃力
@@ -114,7 +132,7 @@ export default function calculate_atkval (param_obj, job_data) {
 
   // 召喚攻撃力
   showed_atk += function () {
-    var total = 0;
+    let total = 0;
     param_obj.summon.forEach(function(summon) {
       total += summon.atk;
     });
