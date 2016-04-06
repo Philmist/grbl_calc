@@ -68,6 +68,7 @@ function mapStateToCalculatorBodyProps(state) {
   let friend = state.friend.filter(function(val) {
     return (val instanceof Object && val.selected);
   });
+  friend = friend[0] ? friend[0] : null;
   return {
     params: {
       rank: basicinfo.rank,  // ランク
