@@ -38,11 +38,11 @@ function set_job_data(data) {
 export function fetch_job_data(url) {
   return function (dispatch) {
     dispatch(set_state_job_fetching());
-    dispatch(inputlock_increment());
+    dispatch(input_lock());
     get_job_data(url).then((job) => {
       dispatch(set_job_data(job));
       dispatch(set_state_job_loaded());
-      dispatch(inputlock_decrement());
+      dispatch(input_unlock());
       return Promise.resolve(job);
     });
   };
@@ -52,29 +52,14 @@ export function fetch_job_data(url) {
 /* ロックカウンター関連 */
 
 // インプットロックカウンターを+1するオブジェクトを発行する
-function inputlock_increment() {
+export function input_lock() {
   return { type: RC.inputlock.INCREMENT };
 }
 
 // インプットロックカウンターを-1するオブジェクトを発行する
-function inputlock_decrement() {
+export function input_unlock() {
   return { type: RC.inputlock.DECREMENT };
 }
-
-// ロックする
-export function input_lock() {
-  return function (dispatch) {
-    dispatch(inputlock_increment());
-  };
-}
-
-// ロックを解除する方向に回す
-export function input_unlock() {
-  return function (dispatch) {
-    dispatch(inputlock_decrement());
-  };
-}
-
 
 /* セーブロード関連 */
 
