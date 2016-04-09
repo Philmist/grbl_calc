@@ -222,7 +222,7 @@ export function set_weapon_name(index, name) {
 // TODO: エラー処理
 export function set_weapon_type(index, weapon_type) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.JOB, index: Number(index), value: String(weapon_type) });
+    dispatch({ type: RC.weapon.TYPE, index: Number(index), value: String(weapon_type) });
   };
 }
 
