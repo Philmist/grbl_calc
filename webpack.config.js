@@ -8,8 +8,8 @@ var loaders = [
     // を使うための設定
     test: /\.css$/,
     loader: [
-      "style",
-      { loader: "css", query: {name: '[name].[ext]'} }
+      { loader: "style-loader", query: {sourceMap: true} },
+      { loader: "css-loader", query: { modules: true, importLoaders: 1, localIdentName: "[name]__[local]___[hash:base64:5]" } }
     ]
   },
   {
