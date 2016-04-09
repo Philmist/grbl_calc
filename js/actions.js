@@ -237,14 +237,14 @@ export function set_weapon_atk_value(index, value) {
 // target: 0|1
 export function set_weapon_skill_type(index, target, skill) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.SKILL, target: Number(target), value: String(skill) });
+    dispatch({ type: RC.weapon.SKILL, index: Number(index), target: Number(target), value: String(skill) });
   };
 }
 
 // 武器のスキルレベルを指定する
 export function set_weapon_skill_lv(index, lv) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.LV, value: Number(lv) });
+    dispatch({ type: RC.weapon.LV, index: Number(index), value: Number(lv) });
   };
 }
 

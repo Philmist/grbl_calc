@@ -49,64 +49,58 @@ const WEAPON_MIN = 10;  // 武器配列の最小値
 // state: reducerに割りあてられたstateが渡される
 // action: dispatchされたobject
 export function weapon(state, action) {
+  let ret_state = undefined;
   // 初期state
   if (state === undefined) {
     let initial_val = [
       {}, {}, {}, {}, {},
       {}, {}, {}, {}, {}
     ];
-    state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
+    ret_state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
   }
   // actionによって動作を分岐する
   // Array.from: 配列をコピーする関数
   if (action.index >= 0 && action.index < state.length) {
+    ret_state = Array.from(state);
+    console.log(ret_state);
     if (action.type == RC.weapon.ENABLE) {  // 武器を有効化
-      state = Array.from(state);
-      state[action.index] = Object.assign({}, state[action.index], { selected: true });
+      ret_state[action.index] = Object.assign({}, state[action.index], { selected: true });
     } else if (action.type == RC.weapon.DISABLE) {  // 武器を無効化
-      state = Array.from(state);
-      state[action.index] = Object.assign({}, state[action.index], { selected: false });
+      ret_state[action.index] = Object.assign({}, state[action.index], { selected: false });
     } else if (action.type == RC.weapon.DELETE && state.length > WEAPON_MIN) {  // 武器の削除
-      state.splice(action.index, 1);
-      state = Array.from(state);
+      ret_state.splice(action.index, 1);
     } else if (action.type == RC.weapon.APPEND && state.length < WEAPON_MAX) {  // 武器の追加
       let insert_state = Object.assign({}, weapon_default);
-      state.splice(action.index+1, 0, insert_state);
-      state = Array.from(state);
+      ret_state.splice(action.index+1, 0, insert_state);
     } else if (action.type == RC.weapon.COSMOS) {  // 武器コスモス属性の設定
-      state = Array.from(state);
       let cosmos = action.value ? action.value : false;
-      state[action.index] = Object.assign({}, state[action.index], { cosmos: cosmos });
+      ret_state[action.index] = Object.assign({}, ret_state[action.index], { cosmos: cosmos });
     } else if (action.type == RC.weapon.LOCK) {  // 武器のロック設定
-      state = Array.from(state);
       let value = action.value ? action.value : false;
-      state[action.index] = Object.assign({}, state[action.index], { locked: value });
+      ret_state[action.index] = Object.assign({}, ret_state[action.index], { locked: value });
     } else if (action.type == RC.weapon.NAME) {  // 武器の名前設定
-      state = Array.from(state);
-      state[action.index].name = String(action.value);
+      ret_state[action.index].name = String(action.value);
     } else if (action.type == RC.weapon.TYPE) {  // 武器のタイプ指定
-      state = Array.from(state);
-      state[action.index].type = String(action.value);
+      ret_state[action.index].type = String(action.value);
     } else if (action.type == RC.weapon.ATK && Number(action.value) >= 0) {  // 武器の攻撃力設定
-      state = Array.from(state);
-      state[action.index].atk = Number(action.value);
-    } else if (action.type == RC.weapon.SKILL && (action.target === 0 || action.target === 1)) {  // 武器のスキル指定
-      state = Array.from(state);
-      state[action.index].skill_type[action.target] = String(action.value);
+      ret_state[action.index].atk = Number(action.value);
+    } else if (action.type == RC.weapon.SKILL && (action.target == 0 || action.target == 1)) {  // 武器のスキル指定
+      let skills = Array.from(ret_state[action.index].skill_type);
+      skills[action.target] = String(action.value);
+      ret_state[action.index].skill_type = skills;
     } else if (action.type == RC.weapon.LV && action.value >= 0) {  // 武器のスキルレベル指定
-      state = Array.from(state);
-      state[action.index].skill_level = Number(action.value);
+      ret_state[action.index].skill_level = Number(action.value);
     }
   } else if (action.type == RC.weapon.MOVE && action.from < state.length && action.to < state.length) {  // 武器の順番変更
-    let target = state[action.from];
-    state.splice(action.from, 1);
-    state.splice(action.to, 0, target);
-    state = Array.from(state);
+    ret_state = Array.from(state);
+    let target = ret_state[action.from];
+    ret_state.splice(action.from, 1);
+    ret_state.splice(action.to, 0, target);
   } else if (action.type == RC.weapon.DANGER_REPLACE) {
-    state = Array.from(action.value);
+    ret_state = Array.from(action.value);
   }
   // 最終的なstateを返す
-  return state;
+  return (ret_state === undefined) ? state : ret_state;
 }
 
 
