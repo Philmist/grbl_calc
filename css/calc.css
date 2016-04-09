@@ -1,4 +1,4 @@
-/* vim: sts=4 sw=4 ts=4 expandtab */
+/* vim:set sts=4 sw=4 ts=4 expandtab: */
 
 body, form {
     margin:0;
@@ -10,8 +10,8 @@ body, form {
     background:transparent;
 }
 
-select, input, textarea { 
-    vertical-align:middle; 
+select, input, textarea {
+    vertical-align:middle;
     font-family:"‚l‚r ‚oƒSƒVƒbƒN", arial, helvetica, clean, sans-serif; 
 }
 
@@ -100,10 +100,13 @@ select {
     font-size: 92%;
 }
 
+.grbr tr {
+    background: #E5F2F8;
+}
+
 .grbr td {
     border-bottom: solid 1px #B2B2B2;
     border-right: solid 1px #B2B2B2;
-    background: #E5F2F8;
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;

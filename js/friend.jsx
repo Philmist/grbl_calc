@@ -55,9 +55,15 @@ function mapStateToTableBodyProps(state) {
 // 召喚表の本体(列全体)を表示させるクラス
 class TableBody extends Component {
   render() {
+    // 最初にselectedな召喚のindex
+    let selected_index = -1;
     return (
       <tbody>
-        {this.props.friend.map((val,index) => { return <Row key={"sr"+String(index)} index={index} {...this.props} />; })}
+        {this.props.friend.map((val,index) => {
+          let first_selected = ((selected_index === -1 && val.selected) ? true : false);
+          if (first_selected) { selected_index = index; }
+          return <Row key={"sr"+String(index)} index={index} checked_length={this.props.checked_length} first_selected={first_selected} />;
+        })}
       </tbody>
     );
   }
@@ -183,15 +189,17 @@ class Row_ extends SummonRow_ {
     // 必要なpropsをconst変数に展開する
     const {
       index, connectDragSource, connectDragPreview, isDragging, connectDropTarget, isOver,
-      atk, skill, selected, name, locked, inputlock
+      atk, skill, selected, name, locked, inputlock, first_selected
     } = this.props;
     // ドラッグハンドルに適用されるスタイルを作る
     let style_hundle = { cursor: 'move' };
     style_hundle.color = isOver ? "red" : "blue";
     style_hundle.color = isDragging ? "green" : style_hundle.color;
+    // 最初に選択されている武器なら背景を赤にする
+    let first_selected_style = first_selected ? { backgroundColor: "#FFAAAA" } : {};
     // 描画する要素を返す
     return connectDragPreview(connectDropTarget(
-      <tr className="friend_tr">
+      <tr className="friend_tr" style={first_selected_style}>
         {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td>
           <input type="checkbox" className="friend_select" checked={selected} onChange={this.on_change_select} disabled={inputlock} />

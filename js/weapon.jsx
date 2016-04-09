@@ -80,17 +80,24 @@ class WeaponTableHeader extends Component {
 // 武器並び全体にプロパティを注入する関数
 // reduxのstoreからstateを取りだす
 function mapStateToWeaponTableBodyProps(state) {
+  // どれが最初のenabledな武器かをチェックする
   return {
-    weapon: state.weapon
+    weapon: state.weapon  // indexを使うために必要
   }
 }
 // 武器の並び全体を表わすクラス
 class WeaponTableBody extends Component {
   render() {
+    // 最初にselectedな武器のindex
+    let selected_index = -1;
     // weaponは配列なのでmapを使って要素を生成する
     return (
       <tbody>
-        {this.props.weapon.map((val, index) => { return <WeaponRow key={"wr_"+String(index)} index={index} {...this.props} />; })}
+        {this.props.weapon.map((val, index) => {
+          let first_selected = ((selected_index === -1 && val.selected) ? true : false);
+          if (first_selected) { selected_index = index; }
+          return <WeaponRow key={"wr_"+String(index)} index={index} inputlock={this.props.inputlock} first_selected={first_selected} />;
+        })}
       </tbody>
     );
   }
@@ -327,16 +334,18 @@ class WeaponRow extends Component {
   render() {
     // 必要な要素をpropsから変数に取りだす
     const { isDragging, isOver, connectDragSource, connectDragPreview, connectDropTarget, index, inputlock } = this.props;
-    const { selected, name, atk, skill_level, skill_type, cosmos, type, locked } = this.props;
+    const { selected, name, atk, skill_level, skill_type, cosmos, type, locked, first_selected } = this.props;
     // つかむところに適用されるスタイルを作る
     // TODO: もっとマシにスタイルを作る
     let style_hundle = { cursor: 'move' };
     style_hundle.color = isOver ? "red" : "blue";
     style_hundle.color = isDragging ? "green" : style_hundle.color;
+    // 最初に選択されている武器なら背景を赤にする
+    let first_selected_style = first_selected ? { backgroundColor: "#FFAAAA" } : {};
     // レンダリングされる要素を返す
     // その際、どれがドラッグ&ドロップの対象になるかを指定している
     return connectDragPreview(connectDropTarget(
-      <tr>
+      <tr style={first_selected_style} >
         {connectDragSource(<td style={ style_hundle }>■</td>)}
         <td>
           <input type="checkbox" className="weapon_select" checked={selected} onChange={this.change_select} disabled={inputlock} />
