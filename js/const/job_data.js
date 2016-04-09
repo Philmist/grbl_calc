@@ -1,4 +1,4 @@
-{
+let job_data = {
   "fighter": {
     "specialty" : ["sword", "axe"],
     "atk_bonus" : 1500,
@@ -14,4 +14,6 @@
     "atk_bonus" : 0,
     "name" : "プリースト"
   }
-}
+};
+
+export default job_data;
