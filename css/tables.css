@@ -1,0 +1,54 @@
+/* vim:set sts=4 sw=4 ts=4 expandtab: */
+
+/*
+ * テーブルのスタイル定義
+ * CSS Modules用
+ */
+
+.base {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-size: 100%;
+}
+
+.cell_base {
+    composes: base;
+    padding: 3px 1px;
+}
+
+.header {
+    composes: cell_base;
+    border-bottom: solid 1px #B2B2B2;
+    border-right: solid 1px #B2B2B2;
+    background: #4D8CC9;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 92%;
+    text-align: center;
+}
+
+.row {
+    background-color: #E5F2F8;
+    text-align: center;
+}
+
+.data {
+    composes: cell_base;
+    border-bottom: solid 1px #B2B2B2;
+    border-right: solid 1px #B2B2B2;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    min-width: 20px;
+}
+
+.selected {
+    composes: row;
+    background-color: #FFAAAA;
+}
+
+.unselected {
+    composes: row;
+}

@@ -7,6 +7,7 @@
  */
 
 import React, { Component } from "react";
+import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 
@@ -27,7 +28,7 @@ import {
   set_weapon_skill_lv
 } from "./actions";
 
-import "../css/calc.css";
+import styles from "weapon.css";
 
 
 // 武器部分全体の構成
@@ -36,9 +37,9 @@ class Weapon extends Component {
   render() {
     return (
       <section>
-        <header className="subtype">武器</header>
+        <header styleName="title">武器</header>
         <form name="weapon">
-          <table className="grbr" id="weapon_table" ref="weapon_table">
+          <table styleName="base" id="weapon_table">
             <thead>
               <WeaponTableHeader inputlock={this.props.inputlock} />
             </thead>
@@ -52,6 +53,8 @@ class Weapon extends Component {
     );
   }
 };
+// 色々繋げる
+Weapon = CSSModules(Weapon, styles);
 export default connect((state) => { return { inputlock: state.inputlock ? true : false }; })(Weapon);
 
 
@@ -59,12 +62,12 @@ export default connect((state) => { return { inputlock: state.inputlock ? true :
 class WeaponTableHeader extends Component {
   render() {
     return (
-      <tr>
+      <tr styleName="header">
         <th>順</th>
         <th>選</th>
         <th>鍵</th>
-        <th className="width150">名前</th>
-        <th className="width50">攻撃力</th>
+        <th>名前</th>
+        <th>攻撃力</th>
         <th>コ</th>
         <th>種別</th>
         <th>スキル1</th>
@@ -75,27 +78,36 @@ class WeaponTableHeader extends Component {
     );
   }
 };
+WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 
 
 // 武器並び全体にプロパティを注入する関数
 // reduxのstoreからstateを取りだす
 function mapStateToWeaponTableBodyProps(state) {
+  // どれが最初のenabledな武器かをチェックする
   return {
-    weapon: state.weapon
+    weapon: state.weapon  // indexを使うために必要
   }
 }
 // 武器の並び全体を表わすクラス
 class WeaponTableBody extends Component {
   render() {
+    // 最初にselectedな武器のindex
+    let selected_index = -1;
     // weaponは配列なのでmapを使って要素を生成する
     return (
       <tbody>
-        {this.props.weapon.map((val, index) => { return <WeaponRow key={"wr_"+String(index)} index={index} {...this.props} />; })}
+        {this.props.weapon.map((val, index) => {
+          let first_selected = ((selected_index === -1 && val.selected) ? true : false);
+          if (first_selected) { selected_index = index; }
+          return <WeaponRow key={"wr_"+String(index)} index={index} inputlock={this.props.inputlock} first_selected={first_selected} />;
+        })}
       </tbody>
     );
   }
 };
 // reduxとクラスを結びつける
+WeaponTableBody = CSSModules(WeaponTableBody, styles);
 WeaponTableBody = connect(mapStateToWeaponTableBodyProps)(WeaponTableBody);
 
 
@@ -327,61 +339,64 @@ class WeaponRow extends Component {
   render() {
     // 必要な要素をpropsから変数に取りだす
     const { isDragging, isOver, connectDragSource, connectDragPreview, connectDropTarget, index, inputlock } = this.props;
-    const { selected, name, atk, skill_level, skill_type, cosmos, type, locked } = this.props;
+    const { selected, name, atk, skill_level, skill_type, cosmos, type, locked, first_selected } = this.props;
     // つかむところに適用されるスタイルを作る
-    // TODO: もっとマシにスタイルを作る
-    let style_hundle = { cursor: 'move' };
-    style_hundle.color = isOver ? "red" : "blue";
-    style_hundle.color = isDragging ? "green" : style_hundle.color;
+    let style_hundle = "hundle";
+    style_hundle = isOver ? "hundle_on_over" : style_hundle;
+    style_hundle = isDragging ? "hundle_dragging" : style_hundle;
+    // 最初に選択されている武器なら背景を赤にする
+    let row_style = first_selected ? "selected" : "unselected";
     // レンダリングされる要素を返す
     // その際、どれがドラッグ&ドロップの対象になるかを指定している
     return connectDragPreview(connectDropTarget(
-      <tr>
-        {connectDragSource(<td style={ style_hundle }>■</td>)}
+      <tr styleName={ row_style } >
+        {connectDragSource(<td styleName={ style_hundle }>■</td>)}
         <td>
-          <input type="checkbox" className="weapon_select" checked={selected} onChange={this.change_select} disabled={inputlock} />
+          <input type="checkbox" styleName="select" checked={selected} onChange={this.change_select} disabled={inputlock} />
         </td>
         <td>
-          <input type="checkbox" className="weapon_lock" checked={locked} onChange={this.change_locked} disabled={inputlock} />
+          <input type="checkbox" styleName="lock" checked={locked} onChange={this.change_locked} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" className="weapon_name width150" value={name} onChange={this.change_name} disabled={inputlock} />
+          <input type="text" styleName="name" value={name} onChange={this.change_name} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" className="weapon_atk width50" value={atk} onChange={this.change_atk} disabled={inputlock} />
+          <input type="text" styleName="atk" value={atk} onChange={this.change_atk} disabled={inputlock} />
         </td>
         <td>
-          <input type="checkbox" className="cosmos" checked={cosmos} onChange={this.change_cosmos} disabled={inputlock} />
+          <input type="checkbox" styleName="cosmos" checked={cosmos} onChange={this.change_cosmos} disabled={inputlock} />
         </td>
         <td>
-          <select className="weapon_kind" value={type} onChange={this.change_kind} disabled={inputlock} >
+          <select styleName="kind" value={type} onChange={this.change_kind} disabled={inputlock} >
             {this.e_kind}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type1" value={skill_type[0]} onChange={this.change_skill_type1} disabled={inputlock} >
+          <select styleName="type" value={skill_type[0]} onChange={this.change_skill_type1} disabled={inputlock} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_type2" value={skill_type[1]} onChange={this.change_skill_type2} disabled={inputlock} >
+          <select styleName="type" value={skill_type[1]} onChange={this.change_skill_type2} disabled={inputlock} >
             {this.e_skill_type}
           </select>
         </td>
         <td>
-          <select className="weapon_skill_lv" value={skill_level} onChange={this.change_skill_lv} disabled={inputlock} >
+          <select styleName="lv" value={skill_level} onChange={this.change_skill_lv} disabled={inputlock} >
             {this.e_skill_lv}
           </select>
         </td>
         <td>
-          <input type="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
-          <input type="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
+          <input type="button" styleName="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
+          <input type="button" styleName="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
         </td>
       </tr>
     ));
   }
 }
 // 結びつけは順番が重要
+// CSS Modulesと結びつける
+WeaponRow = CSSModules(WeaponRow, styles);
 // 先にドラッグ&ドロップのモジュールと結びつける
 WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow)(WeaponRow);
 WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);

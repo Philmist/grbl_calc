@@ -1,0 +1,16 @@
+/* vim:set sts=4 sw=4 ts=4 expandtab: */
+
+/*
+ * グローバル(サイト全体)CSS
+ */
+
+body {
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    font-family: "ＭＳ Ｐゴシック", arial, helvetica, clean, sans-serif;
+}
+
+input {
+    vertical-align: middle;
+}

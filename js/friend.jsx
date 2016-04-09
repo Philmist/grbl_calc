@@ -7,6 +7,7 @@
  */
 
 import React, { Component } from "react";
+import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 import { SummonRow_ } from "./summon";
@@ -17,28 +18,28 @@ import {
 } from "./actions";
 import ItemTypes from "./const/item_types";
 
-import "../css/calc.css";
-
+import styles from "friend.css";
 
 // テーブルヘッダ
 class TableHeader extends Component {
   render() {
     return (
       <thead>
-        <tr>
-          <th align="center">順</th>
-          <th align="center">選</th>
-          <th align="center">鍵</th>
-          <th align="center">召喚名</th>
-          <th align="center">攻撃力</th>
-          <th align="center" colSpan="2">加護1</th>
-          <th align="center" colSpan="2">加護2</th>
-          <th align="center">挿入・削除</th>
+        <tr styleName="header">
+          <th>順</th>
+          <th>選</th>
+          <th>鍵</th>
+          <th>召喚名</th>
+          <th>攻撃力</th>
+          <th colSpan="2">加護1</th>
+          <th colSpan="2">加護2</th>
+          <th>挿入・削除</th>
         </tr>
       </thead>
     );
   }
 }
+TableHeader = CSSModules(TableHeader, styles);
 
 
 /* テーブルの本体 */
@@ -55,9 +56,15 @@ function mapStateToTableBodyProps(state) {
 // 召喚表の本体(列全体)を表示させるクラス
 class TableBody extends Component {
   render() {
+    // 最初にselectedな召喚のindex
+    let selected_index = -1;
     return (
       <tbody>
-        {this.props.friend.map((val,index) => { return <Row key={"sr"+String(index)} index={index} {...this.props} />; })}
+        {this.props.friend.map((val,index) => {
+          let first_selected = ((selected_index === -1 && val.selected) ? true : false);
+          if (first_selected) { selected_index = index; }
+          return <Row key={"sr"+String(index)} index={index} checked_length={this.props.checked_length} first_selected={first_selected} />;
+        })}
       </tbody>
     );
   }
@@ -183,49 +190,51 @@ class Row_ extends SummonRow_ {
     // 必要なpropsをconst変数に展開する
     const {
       index, connectDragSource, connectDragPreview, isDragging, connectDropTarget, isOver,
-      atk, skill, selected, name, locked, inputlock
+      atk, skill, selected, name, locked, inputlock, first_selected
     } = this.props;
-    // ドラッグハンドルに適用されるスタイルを作る
-    let style_hundle = { cursor: 'move' };
-    style_hundle.color = isOver ? "red" : "blue";
-    style_hundle.color = isDragging ? "green" : style_hundle.color;
+    // つかむところに適用されるスタイルを作る
+    let style_hundle = "hundle";
+    style_hundle = isOver ? "hundle_on_over" : style_hundle;
+    style_hundle = isDragging ? "hundle_dragging" : style_hundle;
+    // 最初に選択されている武器なら背景を赤にする
+    let row_style = first_selected ? "selected" : "unselected";
     // 描画する要素を返す
     return connectDragPreview(connectDropTarget(
-      <tr className="friend_tr">
-        {connectDragSource(<td style={ style_hundle }>■</td>)}
+      <tr styleName={ row_style }>
+        {connectDragSource(<td styleName={ style_hundle }>■</td>)}
         <td>
-          <input type="checkbox" className="friend_select" checked={selected} onChange={this.on_change_select} disabled={inputlock} />
+          <input type="checkbox" styleName="select" checked={selected} onChange={this.on_change_select} disabled={inputlock} />
         </td>
-        <td><input type="checkbox" className="friend_lock" checked={locked} onChange={this.on_change_locked} disabled={inputlock} /></td>
-        <td><input type="text" className="friend_name width150" value={name} onChange={this.on_change_name} disabled={inputlock} /></td>
-        <td><input type="text" className="friend_atk width50" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
+        <td><input type="checkbox" styleName="lock" checked={locked} onChange={this.on_change_locked} disabled={inputlock} /></td>
+        <td><input type="text" styleName="name" value={name} onChange={this.on_change_name} disabled={inputlock} /></td>
+        <td><input type="text" styleName="atk" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
         <td>
-          <select className="friend_kind1" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
+          <select styleName="kind" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
             {this.skind}
           </select>
         </td>
         <td><input
             type="text"
-            className="friend_percent1 width25"
+            styleName="percent"
             value={skill[0].percent}
             onChange={this.on_change_percent1}
             disabled={inputlock}
           />%</td>
         <td>
-          <select className="friend_kind2" value={skill[1].type} onChange={this.on_change_kind2} disabled={inputlock}>
+          <select styleName="kind" value={skill[1].type} onChange={this.on_change_kind2} disabled={inputlock}>
             {this.skind}
           </select>
         </td>
         <td><input
             type="text"
-            className="friend_percent2 width25"
+            styleName="percent"
             value={skill[1].percent}
             onChange={this.on_change_percent2}
             disabled={inputlock}
           />%</td>
         <td>
-          <input type="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
-          <input type="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
+          <input styleName="button" type="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
+          <input styleName="button" type="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
         </td>
       </tr>
     ));
@@ -234,6 +243,7 @@ class Row_ extends SummonRow_ {
 // 順序が重要
 // ドラッグ&ドロップのAPIをつなげる
 let Row = Row_;
+Row = CSSModules(Row, styles);
 Row = DragSource(ItemTypes.FRIEND, RowSource, collectSourceRow)(Row);
 Row = DropTarget(ItemTypes.FRIEND, RowTarget, collectTargetRow)(Row);
 // Reduxのstoreをつなげる
@@ -241,14 +251,13 @@ Row = connect(mapStateToRowProps, mapActionCreatorsToRowProps)(Row);
 
 
 /* フレンド全体 */
-// フレンド部分
-export default class Friend extends Component {
+class Friend extends Component {
   render() {
     return (
       <section>
-        <header className="subtype">フレンド召喚</header>
+        <header styleName="title">フレンド召喚</header>
         <form>
-          <table className="grbr" id="friend_table">
+          <table styleName="base" id="friend_table">
             <TableHeader />
             <TableBody />
           </table>
@@ -257,5 +266,4 @@ export default class Friend extends Component {
     );
   }
 }
-
-
+export default CSSModules(Friend, styles);
