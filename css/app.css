@@ -1,0 +1,52 @@
+/* vim:set sts=4 sw=4 ts=4 expandtab: */
+
+/*
+ * 全体で共有するスタイルファイル
+ * 必要なところからcomposeして使う
+ *
+ * CSS Modules用
+ */
+
+.width25 {
+    width: 25px;
+}
+
+.width50 {
+    width: 50px;
+}
+
+.width150 {
+    width: 150px;
+}
+
+.input {
+    height: 1.2em;
+    line-height: 1em;
+    vertical-align: middle;
+    font-family: "ＭＳ Ｐゴシック", arial, helvetica, sans-serif;
+}
+
+.header {
+    color: #ffffff;
+    background-color: #706e7a;
+    font-size: 12pt;
+    line-height: 1px;
+    margin: 10px 0px;
+    padding: 0.7em 5px;
+    border-radius: 0px;
+}
+
+.drag_hundle {
+    cursor: "move";
+    color: blue;
+}
+
+.drag_hundle_on_over {
+    composes: drag_hundle;
+    color: #FF0000;
+}
+
+.drag_on_dragging {
+    composes: drag_hundle;
+    color: #00FF00;
+}

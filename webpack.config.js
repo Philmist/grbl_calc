@@ -43,7 +43,7 @@ module.exports = [
     resolve: {
       extensions: [".js", ".jsx", ".css"],
       modules: [
-        "node_modules"
+        "node_modules", "js", "css"
       ]
     }
   },
@@ -59,7 +59,7 @@ module.exports = [
     resolve: {
       extensions: [".js", ".jsx", ".css"],
       modules: [
-        "node_modules"
+        "node_modules", "js", "css"
       ]
     }
   }

@@ -5,20 +5,20 @@
  */
 
 import React, { Component } from "react";
+import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 
 import * as actions from "./actions.js";
 
-import "../css/calc.css";
-
+import styles from "zenith.css";
 
 // Zenith入力欄全体のコンポーネント
 class Zenith extends Component {
   render() {
     return (
       <div>
-        <header className="subtype">Zenith Perk</header>
-        <table className="grbr" id="zenith_table">
+        <header styleName="title">Zenith Perk</header>
+        <table styleName="base" id="zenith_table">
           <tbody>
             <ZenithAttack inputlock={this.props.inputlock} />
             <ZenithWeapon1 inputlock={this.props.inputlock} />
@@ -30,6 +30,7 @@ class Zenith extends Component {
     );
   }
 };
+Zenith = CSSModules(Zenith, styles);
 export default connect((state) => { return {inputlock: state.inputlock ? true : false}; })(Zenith);
 
 
@@ -65,10 +66,16 @@ class ZenithAttack extends Component {
   render() {
     var elem = renderZenithSelector();
     return (
-      <tr>
-        <th>攻撃力</th>
-        <td>
-          <select onChange={this.handleChange} id="zenith_atk" value={this.props.atk_value} disabled={this.props.inputlock} >
+      <tr styleName="row">
+        <th styleName="header">攻撃力</th>
+        <td styleName="cell">
+          <select
+            onChange={this.handleChange}
+            id="zenith_atk"
+            value={this.props.atk_value}
+            disabled={this.props.inputlock}
+            styleName="atk"
+          >
             {elem}
           </select>
         </td>
@@ -76,6 +83,8 @@ class ZenithAttack extends Component {
     );
   }
 };
+// CSS Modulesを繋げる
+ZenithAttack = CSSModules(ZenithAttack, styles);
 // コンポーネントにpropsを注入する
 // redux storeから必要なstateを注入
 // アクションモジュールから必要な関数を注入
@@ -104,10 +113,10 @@ class ZenithWeapon1 extends Component {
   render() {
     var elem = renderZenithSelector();
     return (
-      <tr>
-        <th>得意武器1</th>
-        <td>
-          <select onChange={this.handleChange} id="zenith_weapon1" value={this.props.zenith_weapon[0]} disabled={this.props.inputlock} >
+      <tr styleName="row">
+        <th styleName="header">得意武器1</th>
+        <td styleName="cell">
+          <select styleName="weapon" onChange={this.handleChange} value={this.props.zenith_weapon[0]} disabled={this.props.inputlock} >
             {elem}
           </select>
         </td>
@@ -115,6 +124,7 @@ class ZenithWeapon1 extends Component {
     );
   }
 }
+ZenithWeapon1 = CSSModules(ZenithWeapon1, styles);
 // コンポーネントにpropsを注入する
 // state.basicinfo.zenith.weaponは2要素の配列であることに注意したい
 ZenithWeapon1 = connect(
@@ -142,10 +152,10 @@ class ZenithWeapon2 extends Component {
   render() {
     var elem = renderZenithSelector();
     return (
-      <tr>
-        <th>得意武器2</th>
-        <td>
-          <select onChange={this.handleChange} id="zenith_weapon2" value={this.props.zenith_weapon[1]} disabled={this.props.inputlock} >
+      <tr styleName="row">
+        <th styleName="header">得意武器2</th>
+        <td styleName="cell">
+          <select styleName="weapon" onChange={this.handleChange} value={this.props.zenith_weapon[1]} disabled={this.props.inputlock} >
             {elem}
           </select>
         </td>
@@ -153,6 +163,7 @@ class ZenithWeapon2 extends Component {
     );
   }
 }
+ZenithWeapon2 = CSSModules(ZenithWeapon2, styles);
 // コンポーネントにpropsを注入する
 ZenithWeapon2 = connect(
   (state) => ({ zenith_weapon: state.basicinfo.zenith.weapon }),
@@ -178,17 +189,18 @@ class ZenithAttribute extends Component {
   render() {
     var elem = renderZenithSelector();
     return (
-      <tr>
-        <th>属性攻撃力</th>
-        <td>
-          <select onChange={this.handleChange} id="zenith_attribute" value={this.props.attr_value} disabled={this.props.inputlock} >
+      <tr styleName="row">
+        <th styleName="header">属性攻撃力</th>
+        <td styleName="cell">
+          <select styleName="attribute" onChange={this.handleChange} value={this.props.attr_value} disabled={this.props.inputlock} >
             {elem}
           </select>
         </td>
       </tr>
     );
   }
-};
+}
+ZenithAttribute = CSSModules(ZenithAttribute, styles);
 // コンポーネントにpropsを注入する
 ZenithAttribute = connect(
   (state) => ({ attr_value: state.basicinfo.zenith.attr }),

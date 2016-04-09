@@ -7,7 +7,8 @@
  */
 
 // 必要なスタイルシートを読みこむ
-import "../css/calc.css";
+import "normalize.css/normalize.css";
+import "../css/global.css";
 
 // 必要なライブラリを読みこむ
 import React, { Component } from "react";

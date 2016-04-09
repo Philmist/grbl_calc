@@ -1,0 +1,98 @@
+/* vim:set sts=4 sw=4 ts=4 expandtab: */
+
+/*
+ * 武器コンポーネント用のスタイル定義
+ * CSS Modules用
+ */
+
+/* タイトル */
+.title {
+    composes: header from "./app.css";
+}
+
+
+/* テーブル */
+
+.base {
+    composes: base from "./tables.css";
+}
+
+.row {
+    composes: row from "./tables.css";
+}
+
+.header {
+    composes: header from "./tables.css";
+}
+
+.selected {
+    composes: selected from "./tables.css";
+}
+
+.unselected {
+    composes: unselected from "./tables.css";
+}
+
+.input {
+    composes: input from "./app.css";
+}
+
+
+/* 入力ボックス */
+
+.select {
+    composes: input from "./app.css";
+}
+
+.lock {
+    composes: input from "./app.css";
+}
+
+.name {
+    composes: width150 from "./app.css";
+    composes: input;
+}
+
+.atk {
+    composes: width50 from "./app.css";
+    composes: input;
+}
+
+.cosmos {
+    composes: input;
+}
+
+.kind {
+    composes: input;
+}
+
+.type {
+    composes: input;
+}
+
+.lv {
+    composes: input;
+}
+
+.button {
+    composes: input;
+}
+
+
+/* ドラッグハンドル */
+
+.hundle {
+    composes: drag_hundle from "./app.css";
+    cursor: n-resize;
+}
+
+.hundle_on_over {
+    composes: drag_hundle_on_over from "./app.css";
+    cursor: n-resize;
+}
+
+.hundle_dragging {
+    composes: drag_on_dragging from "./app.css";
+    cursor: default;
+}
+

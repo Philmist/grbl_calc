@@ -6,11 +6,12 @@
 
 // モジュールのインポート
 import React, { Component } from "react";
+import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 
 import * as actions from "./actions.js";
 
-import "../css/calc.css";
+import styles from "basic_information.css";
 
 
 // ジョブを選択する要素のコンポーネント
@@ -39,12 +40,13 @@ class JobSelector extends Component {
     }
     // select要素を作って返す
     return (
-      <select id="job" onChange={this.handle_job_change} >
+      <select styleName="job" onChange={this.handle_job_change} >
         {values}
       </select>
     );
   }
 }
+JobSelector = CSSModules(JobSelector, styles);
 
 
 // ジョブ選択部分のコンポーネント
@@ -52,11 +54,11 @@ class JobSelector extends Component {
 class Job extends Component {
   render() {
     return (
-      <table className="grbr" id="job_table">
+      <table styleName="base">
         <tbody>
-          <tr>
-            <th>ジョブ</th>
-            <td>
+          <tr styleName="row">
+            <th styleName="header">ジョブ</th>
+            <td styleName="cell">
               <JobSelector {...this.props} />
             </td>
           </tr>
@@ -65,6 +67,7 @@ class Job extends Component {
     );
   }
 }
+Job = CSSModules(Job, styles);
 
 
 // ランク選択部分のコンポーネント
@@ -85,14 +88,13 @@ class Rank extends Component {
   // 最終的な要素を作って返す関数
   render() {
     return (
-      <tr>
-        <th>Rank</th>
-        <td>
+      <tr styleName="row">
+        <th styleName="header">Rank</th>
+        <td styleName="cell">
           <input
-            className="width50"
+            styleName="rank"
             type="text"
             onChange={this.handleChange}
-            id="rank"
             value={this.props.rank}
             disabled={this.props.inputlock}
           />
@@ -101,6 +103,7 @@ class Rank extends Component {
     );
   }
 }
+Rank = CSSModules(Rank, styles);
 // コンポーネントにpropsを注入する
 // reduxのstoreからデータを取ってきてpropsに注入
 // アクションを集めたモジュールから関数を取ってきて注入
@@ -127,14 +130,13 @@ class ShipBonus extends Component {
   // 最終的な要素を作って返す
   render() {
     return (
-      <tr>
-        <th>騎空艇補正</th>
-        <td>
+      <tr styleName="row">
+        <th styleName="header">騎空艇補正</th>
+        <td styleName="cell">
           <input
-            className="width50"
+            styleName="ship_bonus"
             type="text"
             onChange={this.handleChange}
-            id="ship_bonus"
             value={this.props.ship_bonus}
             disabled={this.props.inputlock}
           />
@@ -142,8 +144,8 @@ class ShipBonus extends Component {
       </tr>
     );
   }
-
 }
+ShipBonus = CSSModules(ShipBonus, styles);
 // コンポーネントにpropsを注入する
 // redux storeからデータを取ってきて注入
 // アクションモジュールからアクションを持ってきて注入
@@ -170,10 +172,10 @@ class AttributeBonus extends Component {
   // 最終的な要素を作って返す関数
   render() {
     return (
-      <tr>
-        <th>属性補正</th>
-        <td>
-          <select onChange={this.handleChange} id="attribute_type" value={this.props.affinity} disabled={this.props.inputlock}>
+      <tr styleName="row">
+        <th styleName="header">属性補正</th>
+        <td styleName="cell">
+          <select onChange={this.handleChange} styleName="attribute_bonus" value={this.props.affinity} disabled={this.props.inputlock}>
             <option value="normal">無し</option>
             <option value="good">有利</option>
             <option value="bad">不利</option>
@@ -183,9 +185,10 @@ class AttributeBonus extends Component {
     );
   }
 }
+AttributeBonus = CSSModules(AttributeBonus, styles);
 // propsに色々注入する関数(redux storeからとアクションモジュールから)
 AttributeBonus = connect(
-  (state) => ({ affinity: state.basicinfo.affinity, inputlock: state.inputlock ? true : false }),
+  (state) => ({ affinity: state.basicinfo.affinity, inputlock: (state.inputlock > 0) ? true : false }),
     { set_affinity: actions.set_affinity }
 )(AttributeBonus);
 
@@ -207,13 +210,12 @@ class HPPercent extends Component {
   // 最終的な要素を作って返す関数
   render() {
     return (
-      <tr>
-        <th>HP/MAXHP</th>
-        <td>
+      <tr styleName="row">
+        <th styleName="header">HP/MAXHP</th>
+        <td styleName="cell">
           <input
-            className="width50" type="text"
+            styleName="hp_percent" type="text"
             onChange={this.handleChange}
-            id="hp_percent"
             value={this.props.hp_percent}
             disabled={this.props.inputlock}
           />
@@ -223,6 +225,7 @@ class HPPercent extends Component {
     );
   }
 }
+HPPercent = CSSModules(HPPercent, styles);
 // コンポーネントにpropsを注入する
 // redux storeからデータを取って注入
 // アクションモジュールから関数を持ってきて注入
@@ -237,7 +240,7 @@ HPPercent = connect(
 class PlayerStats extends Component {
   render() {
     return (
-      <table className="grbr" id="info_table">
+      <table styleName="base">
         <tbody>
           <Rank />
           <ShipBonus />
@@ -248,6 +251,7 @@ class PlayerStats extends Component {
     );
   }
 }
+PlayerStats = CSSModules(PlayerStats, styles);
 
 
 // 攻撃力ボーナス部分をレンダリングするコンポーネント
@@ -272,20 +276,20 @@ class AtkBonus extends Component {
   // 最終的な結果を作って返す関数
   render() {
     return (
-      <table className="grbr" id="bonus_table">
+      <table styleName="base">
         <tbody>
-          <tr>
-            <th rowSpan="2">発動中の<br />攻撃力ボーナス</th>
-            <td>
-              <input className="width25" type="text" onChange={this.percentChange}
-                id="atk_bonus_percent" value={this.props.atk_bonus_percent} disabled={this.props.inputlock} />
+          <tr styleName="row">
+            <th styleName="header" rowSpan="2">発動中の<br />攻撃力ボーナス</th>
+            <td styleName="cell">
+              <input styleName="atk_percent" type="text" onChange={this.percentChange}
+                value={this.props.atk_bonus_percent} disabled={this.props.inputlock} />
               %
             </td>
           </tr>
-          <tr>
-            <td>
-              <input className="width50" type="text" onChange={this.valueChange}
-                id="atk_bonus_value" value={this.props.atk_bonus_value} disabled={this.props.inputlock} />
+          <tr styleName="row">
+            <td styleName="cell">
+              <input styleName="atk_value" type="text" onChange={this.valueChange}
+                value={this.props.atk_bonus_value} disabled={this.props.inputlock} />
             </td>
           </tr>
         </tbody>
@@ -293,6 +297,7 @@ class AtkBonus extends Component {
     );
   }
 }
+AtkBonus = CSSModules(AtkBonus, styles);
 // コンポーネントのpropsに注入するオブジェクトを作って返す関数
 function mapStateToAtkBonusProps(state) {
   return {
@@ -316,7 +321,7 @@ class BasicInformation extends Component {
   render() {
     return (
       <section>
-        <header className="subtype">基本情報</header>
+        <header styleName="title">基本情報</header>
         <PlayerStats />
         <AtkBonus />
         <Job set_job_type={this.props.set_job_type} job={this.props.job} />
@@ -324,6 +329,7 @@ class BasicInformation extends Component {
     );
   }
 }
+BasicInformation = CSSModules(BasicInformation, styles);
 // コンポーネントにpropsを注入して外部にこのモジュールをexport
 // defaultがついているのでimportする時はこのモジュールがimportされる
 export default connect(((state) => ({ job: state.job })), { set_job_type: actions.set_job_type })(BasicInformation);

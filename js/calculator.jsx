@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from "react";
+import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
@@ -20,7 +21,7 @@ import * as REDCONST from "./const/reducer_type.js";
 import calculate_atkval from "./atk_calc.js";
 import { fetch_job_data } from "./actions.js";
 
-import "../css/calc.css";
+import styles from "calculator.css";
 
 
 // 結果表示欄を表わすコンポーネント
@@ -31,27 +32,28 @@ class Result extends Component {
     var res = calculate_atkval(this.props.parameter, this.props.job);
     return (
       <section>
-        <header className="subtype">結果</header>
-        <table className="grbr" id="result_table" ref="result_table">
+        <header styleName="title">結果</header>
+        <table styleName="base">
           <tbody>
-            <tr>
-              <th>基本値</th>
-              <td>{res.basic_atk}</td>
+            <tr styleName="row">
+              <th styleName="header">基本値</th>
+              <td styleName="result">{res.basic_atk}</td>
             </tr>
-            <tr>
-              <th>表示攻撃力</th>
-              <td>{res.showed_atk}</td>
+            <tr styleName="row">
+              <th styleName="header">表示攻撃力</th>
+              <td styleName="result">{res.showed_atk}</td>
             </tr>
-            <tr>
-              <th>総合攻撃力</th>
-              <td>{res.total_atk}</td>
+            <tr styleName="row">
+              <th styleName="header">総合攻撃力</th>
+              <td styleName="result">{res.total_atk}</td>
             </tr>
           </tbody>
         </table>
       </section>
     );
   }
-};
+}
+Result = CSSModules(Result, styles);
 
 
 // 計算機の骨格propsに計算結果を注入する関数
@@ -100,25 +102,39 @@ class CalculatorBody extends Component {
   render() {
     var { job, params } = this.props;  // var job = this.props.job; (略)
     return (
-      <div id="site_box">
-        <div id="header_box">
-          <header className="titlecap">グランブルーファンタジー攻撃力計算機（新）</header>
+      <div styleName="whole_app">
+        <div styleName="header_box">
+          <header styleName="whole_title">グランブルーファンタジー攻撃力計算機（新）</header>
         </div>
-        <div id="left_box">
+        <div styleName="left_box">
           <BasicInformation />
           <Zenith />
           <Result job={job} parameter={params} />
           <System />
         </div>
-        <div id="right_box">
+        <div styleName="right_box">
           <Weapon />
           <Summon />
           <Friend />
+        </div>
+        <div styleName="footer_box">
+          <ul>
+            <li><a href="../grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</a></li>
+            <li><a href="../">トップページ</a></li>
+          </ul>
+          <p>
+            <br />
+            ■ 開発中<br />
+            <br />
+            　Twitter: @hibino_naoki<br />
+            　グラブルID: 39097 (日比野)<br />
+          </p>
         </div>
       </div>
     );
   }
 }
+CalculatorBody = CSSModules(CalculatorBody, styles);
 // reduxのstoreと結びつける
 CalculatorBody = connect(mapStateToCalculatorBodyProps, mapActionCreatorsToCalculatorBodyProps)(CalculatorBody);
 // ドラッグ&ドロップをこのコンポーネントとその中で使われているコンポーネントで使えるようにする

@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from "react";
+import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import {
   dangerously_replace_basicinfo_object,
@@ -17,8 +18,7 @@ import {
   set_state_saved
 } from "./actions.js";
 
-import "../css/calc.css";
-
+import styles from "system.css";
 
 // localStorageが使えるかどうかのチェック
 function storageAvailable(type) {
@@ -36,7 +36,7 @@ function storageAvailable(type) {
 
 // システム部分
 // TODO: ここらへんにセーブとロードの処理
-export default class System extends Component {
+class System extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -46,9 +46,9 @@ export default class System extends Component {
   render() {
     return (
       <section>
-        <header className="subtype">システム</header>
+        <header styleName="title">システム</header>
         <form name="system">
-          <table className="grbr" id="system">
+          <table styleName="base" id="system">
             { this.state.saveload_available ?  <SaveLoad /> : <CannotSave /> }
           </table>
         </form>
@@ -56,6 +56,7 @@ export default class System extends Component {
     );
   }
 }
+export default CSSModules(System, styles);
 
 
 // localStorageが使えない時
@@ -63,13 +64,14 @@ class CannotSave extends Component {
   render() {
     return (
       <tbody>
-        <tr>
-          <td>保存/呼出不可</td>
+        <tr styleName="row">
+          <td styleName="cell">保存/呼出不可</td>
         </tr>
       </tbody>
     );
   }
 }
+CannotSave = CSSModules(CannotSave, styles);
 
 
 // セーブロード部分
@@ -167,31 +169,30 @@ class SaveLoad extends Component {
   render() {
     return (
       <tbody>
-        <tr>
-          <th>スロット</th>
-          <td>
-            <select id="saveload_slot" value={this.state.current_slot_number} onChange={this.change_slot} >
+        <tr styleName="row">
+          <th styleName="header">スロット</th>
+          <td styleName="cell">
+            <select styleName="slot" value={this.state.current_slot_number} onChange={this.change_slot} >
               { this.option_list.map ( (i) => { return <option value={String(i[1])} key={"slot_"+String(i[1])}>{i[0]}</option>; } ) }
             </select>
           </td>
         </tr>
-        <tr>
-          <th>名前</th>
-          <td>
+        <tr styleName="row">
+          <th styleName="header">名前</th>
+          <td styleName="cell">
             <input
               type="text"
-              id="saveload_name"
-              style={{width: "100px"}}
+              styleName="name"
               value={this.state.current_slot_name}
               onChange={this.change_name}
             />
           </td>
         </tr>
-        <tr>
-          <th>
+        <tr styleName="row">
+          <th styleName="header">
             保存/呼出
           </th>
-          <td>
+          <td styleName="cell">
             <input type="button" value="保存" onClick={this.save_data} />
             <input type="button" value="呼出" onClick={this.load_data} />
           </td>
@@ -200,6 +201,7 @@ class SaveLoad extends Component {
     );
   }
 }
+SaveLoad = CSSModules(SaveLoad, styles);
 const mapStateToSaveLoadProps = (state) => {
   return {
     weapon: state.weapon,

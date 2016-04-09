@@ -8,6 +8,7 @@
  */
 
 import React, { Component } from "react";
+import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 import {
@@ -16,9 +17,8 @@ import {
   set_summon_lock, set_summon_name, set_summon_atk_value, set_summon_skill_percent, set_summon_skill_type
 } from "./actions";
 
-import ItemTypes from "./const/item_types";
-
-import "../css/calc.css";
+import ItemTypes from "const/item_types";
+import styles from "summon.css";
 
 
 // 召喚表部分
@@ -27,7 +27,7 @@ class SummonTable extends Component {
   render() {
     return (
       <form>
-        <table className="grbr" id="summon_table">
+        <table styleName="base" id="summon_table">
           <thead>
             <SummonTableHeader inputlock={this.props.inputlock} />
           </thead>
@@ -40,25 +40,27 @@ class SummonTable extends Component {
     );
   }
 }
+SummonTable = CSSModules(SummonTable, styles);
 SummonTable = connect((state) => { return { inputlock: state.inputlock ? true : false }; })(SummonTable);
 
 // 召喚表のヘッダ
 class SummonTableHeader extends Component {
   render() {
     return (
-      <tr>
+      <tr styleName="header">
         <th>順</th>
-        <th align="center">選</th>
-        <th align="center">鍵</th>
-        <th align="center">召喚名</th>
-        <th align="center">攻撃力</th>
-        <th align="center" colSpan="2">加護1</th>
-        <th align="center" colSpan="2">加護2</th>
-        <th align="center">挿入・削除</th>
+        <th>選</th>
+        <th>鍵</th>
+        <th>召喚名</th>
+        <th>攻撃力</th>
+        <th colSpan="2">加護1</th>
+        <th colSpan="2">加護2</th>
+        <th>挿入・削除</th>
       </tr>
     );
   }
 }
+SummonTableHeader = CSSModules(SummonTableHeader, styles);
 
 
 // 後述の召喚表本体のpropsに注入するstate
@@ -121,7 +123,7 @@ const SummonRowTarget = {
     const index_from = monitor.getItem().index;
     const index_to = props.index;
     // 実際にオブジェクトを移動する
-    props.move_summon_object(index_from, index_to);
+    props.move_object(index_from, index_to);
     // ここで返されたオブジェクトはソースでのmonitor.getDropResult()で使える
     return { index: props.index };
   }
@@ -267,50 +269,61 @@ export class SummonRow_ extends Component {
       index, connectDragSource, connectDragPreview, isDragging, connectDropTarget, isOver,
       atk, skill, selected, name, locked, inputlock, first_selected
     } = this.props;
-    // ドラッグハンドルに適用されるスタイルを作る
-    let style_hundle = { cursor: 'move' };
-    style_hundle.color = isOver ? "red" : "blue";
-    style_hundle.color = isDragging ? "green" : style_hundle.color;
+    // つかむところに適用されるスタイルを作る
+    let style_hundle = "hundle";
+    style_hundle = isOver ? "hundle_on_over" : style_hundle;
+    style_hundle = isDragging ? "hundle_dragging" : style_hundle;
     // 最初に選択されている武器なら背景を赤にする
-    let first_selected_style = first_selected ? { backgroundColor: "#FFAAAA" } : {};
+    let row_style = first_selected ? "selected" : "unselected";
     // 描画する要素を返す
     // connectDragPreviewとconnectDropTargetとconnectDragSourceの説明は上述
     return connectDragPreview(connectDropTarget(
-      <tr className="summon_tr" style={first_selected_style} >
-        {connectDragSource(<td style={ style_hundle }>■</td>)}
+      <tr styleName={ row_style } >
+        {connectDragSource(<td styleName={ style_hundle }>■</td>)}
         <td>
-          <input type="checkbox" className="summon_select" checked={selected} onChange={this.on_change_select} disabled={inputlock} />
+          <input type="checkbox" styleName="select" checked={selected} onChange={this.on_change_select} disabled={inputlock} />
         </td>
-        <td><input type="checkbox" className="summon_lock" checked={locked} onChange={this.on_change_locked} disabled={inputlock} /></td>
-        <td><input type="text" className="summon_name width150" value={name} onChange={this.on_change_name} disabled={inputlock} /></td>
-        <td><input type="text" className="summon_atk width50" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
         <td>
-          <select className="summon_kind1" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
+          <input type="checkbox" styleName="lock" checked={locked} onChange={this.on_change_locked} disabled={inputlock} />
+        </td>
+        <td>
+          <input type="text" styleName="name" value={name} onChange={this.on_change_name} disabled={inputlock} />
+        </td>
+        <td>
+          <input type="text" styleName="atk" value={atk} onChange={this.on_change_atk} disabled={inputlock} />
+        </td>
+        <td>
+          <select styleName="kind" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
             {this.skind}
           </select>
         </td>
-        <td><input
+        <td>
+          <input
             type="text"
-            className="summon_percent1 width25"
+            styleName="percent"
             value={skill[0].percent}
             onChange={this.on_change_percent1}
             disabled={inputlock}
-          />%</td>
+          />
+          %
+        </td>
         <td>
-          <select className="summon_kind2" value={skill[1].type} onChange={this.on_change_kind2} disabled={inputlock}>
+          <select styleName="kind" value={skill[1].type} onChange={this.on_change_kind2} disabled={inputlock}>
             {this.skind}
           </select>
         </td>
-        <td><input
+        <td>
+          <input
             type="text"
-            className="summon_percent2 width25"
+            styleName="percent"
             value={skill[1].percent}
             onChange={this.on_change_percent2}
             disabled={inputlock}
-          />%</td>
+          />%
+        </td>
         <td>
-          <input type="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
-          <input type="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
+          <input styleName="button" type="button" id="ins" value="+" onClick={this.push_insert} disabled={inputlock} />
+          <input styleName="button" type="button" id="del" value="-" onClick={this.push_delete} disabled={inputlock} />
         </td>
       </tr>
     ));
@@ -319,6 +332,7 @@ export class SummonRow_ extends Component {
 // 順序が重要
 // ドラッグ&ドロップのAPIをつなげる
 let SummonRow = SummonRow_;
+SummonRow = CSSModules(SummonRow, styles);
 SummonRow = DragSource(ItemTypes.SUMMON, SummonRowSource, collectSourceSummonRow)(SummonRow);
 SummonRow = DropTarget(ItemTypes.SUMMON, SummonRowTarget, collectTargetSummonRow)(SummonRow);
 // Reduxのstoreをつなげる
@@ -326,13 +340,14 @@ SummonRow = connect(mapStateToSummonRowProps, mapActionCreatorsToSummonRowProps)
 
 
 // 召喚獣部分
-export default class Summon extends Component {
+class Summon extends Component {
   render() {
     return (
       <section>
-        <header className="subtype">召喚獣</header>
+        <header styleName="title">召喚獣</header>
         <SummonTable />
       </section>
     );
   }
 }
+export default CSSModules(Summon, styles);
