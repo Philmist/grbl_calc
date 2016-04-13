@@ -4,9 +4,14 @@
  * グローバル(サイト全体)CSS
  */
 
+@viewport {
+    min-width: 1020px;
+    max-width: 95%;
+    zoom: 1.0;
+}
+
 body {
     font-size: 100%;
-    vertical-align: baseline;
     background: transparent;
     font-family: "ＭＳ Ｐゴシック", arial, helvetica, clean, sans-serif;
 }

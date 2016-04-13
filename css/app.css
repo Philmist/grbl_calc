@@ -19,6 +19,22 @@
     width: 150px;
 }
 
+.number {
+    width: 4em;
+}
+
+.percent {
+    width: 3em;
+}
+
+.atk {
+    composes: number;
+}
+
+.name {
+    width: 10em;
+}
+
 .input {
     height: 1.2em;
     line-height: 1em;

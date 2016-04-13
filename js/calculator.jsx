@@ -106,16 +106,18 @@ class CalculatorBody extends Component {
         <div styleName="header_box">
           <header styleName="whole_title">グランブルーファンタジー攻撃力計算機（新）</header>
         </div>
-        <div styleName="left_box">
-          <BasicInformation />
-          <Zenith />
-          <Result job={job} parameter={params} />
-          <System />
-        </div>
-        <div styleName="right_box">
-          <Weapon />
-          <Summon />
-          <Friend />
+        <div styleName="calculator_box">
+          <div styleName="left_box">
+            <BasicInformation />
+            <Zenith />
+            <Result job={job} parameter={params} />
+            <System />
+          </div>
+          <div styleName="right_box">
+            <Weapon />
+            <Summon />
+            <Friend />
+          </div>
         </div>
         <div styleName="footer_box">
           <ul>

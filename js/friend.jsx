@@ -24,18 +24,16 @@ import styles from "friend.css";
 class TableHeader extends Component {
   render() {
     return (
-      <thead>
-        <tr styleName="header">
-          <th>順</th>
-          <th>選</th>
-          <th>鍵</th>
-          <th>召喚名</th>
-          <th>攻撃力</th>
-          <th colSpan="2">加護1</th>
-          <th colSpan="2">加護2</th>
-          <th>挿入・削除</th>
-        </tr>
-      </thead>
+      <tr styleName="header">
+        <th>順</th>
+        <th>選</th>
+        <th>鍵</th>
+        <th>召喚名</th>
+        <th>攻撃力</th>
+        <th colSpan="2">加護1</th>
+        <th colSpan="2">加護2</th>
+        <th>挿入・削除</th>
+      </tr>
     );
   }
 }
@@ -207,14 +205,14 @@ class Row_ extends SummonRow_ {
         </td>
         <td><input type="checkbox" styleName="lock" checked={locked} onChange={this.on_change_locked} disabled={inputlock} /></td>
         <td><input type="text" styleName="name" value={name} onChange={this.on_change_name} disabled={inputlock} /></td>
-        <td><input type="text" styleName="atk" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
+        <td><input type="number" styleName="atk" value={atk} onChange={this.on_change_atk} disabled={inputlock} /></td>
         <td>
           <select styleName="kind" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
             {this.skind}
           </select>
         </td>
         <td><input
-            type="text"
+            type="number"
             styleName="percent"
             value={skill[0].percent}
             onChange={this.on_change_percent1}
@@ -226,7 +224,7 @@ class Row_ extends SummonRow_ {
           </select>
         </td>
         <td><input
-            type="text"
+            type="number"
             styleName="percent"
             value={skill[1].percent}
             onChange={this.on_change_percent2}
@@ -258,8 +256,13 @@ class Friend extends Component {
         <header styleName="title">フレンド召喚</header>
         <form>
           <table styleName="base" id="friend_table">
-            <TableHeader />
+            <thead>
+              <TableHeader />
+            </thead>
             <TableBody />
+            <tfoot>
+              <TableHeader />
+            </tfoot>
           </table>
         </form>
       </section>

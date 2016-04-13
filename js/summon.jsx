@@ -290,7 +290,7 @@ export class SummonRow_ extends Component {
           <input type="text" styleName="name" value={name} onChange={this.on_change_name} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" styleName="atk" value={atk} onChange={this.on_change_atk} disabled={inputlock} />
+          <input type="number" styleName="atk" value={atk} onChange={this.on_change_atk} disabled={inputlock} />
         </td>
         <td>
           <select styleName="kind" value={skill[0].type} onChange={this.on_change_kind1} disabled={inputlock} >
@@ -299,7 +299,7 @@ export class SummonRow_ extends Component {
         </td>
         <td>
           <input
-            type="text"
+            type="number"
             styleName="percent"
             value={skill[0].percent}
             onChange={this.on_change_percent1}
@@ -314,7 +314,7 @@ export class SummonRow_ extends Component {
         </td>
         <td>
           <input
-            type="text"
+            type="number"
             styleName="percent"
             value={skill[1].percent}
             onChange={this.on_change_percent2}
