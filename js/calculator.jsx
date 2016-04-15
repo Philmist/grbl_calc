@@ -120,17 +120,19 @@ class CalculatorBody extends Component {
           </div>
         </div>
         <div styleName="footer_box">
-          <ul>
-            <li><a href="../grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</a></li>
-            <li><a href="../">トップページ</a></li>
+          <ul styleName="nav">
+            <li styleName="nav-item"><a href="../grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</a></li>
+            <li styleName="nav-item"><a href="../">トップページ</a></li>
           </ul>
-          <p>
-            <br />
-            ■ 開発中<br />
-            <br />
-            　Twitter: @hibino_naoki<br />
-            　グラブルID: 39097 (日比野)<br />
-          </p>
+          <dl styleName="comment">
+            <dt>開発中</dt>
+            <dd styleName="copyright">
+              <ul styleName="copyright-list">
+                <li styleName="copyright-list-item">Twitter: @hibino_naoki</li>
+                <li styleName="copyright-list-item">グラブルID: 39097 (日比野)</li>
+              </ul>
+            </dd>
+          </dl>
         </div>
       </div>
     );

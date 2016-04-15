@@ -62,7 +62,6 @@ export function weapon(state, action) {
   // Array.from: 配列をコピーする関数
   if (action.index >= 0 && action.index < state.length) {
     ret_state = Array.from(state);
-    console.log(ret_state);
     if (action.type == RC.weapon.ENABLE) {  // 武器を有効化
       ret_state[action.index] = Object.assign({}, state[action.index], { selected: true });
     } else if (action.type == RC.weapon.DISABLE) {  // 武器を無効化

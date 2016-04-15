@@ -16,6 +16,11 @@ body {
     font-family: "ＭＳ Ｐゴシック", arial, helvetica, clean, sans-serif;
 }
 
+#react_content {
+    display: flex;
+    flex-direction: row;
+}
+
 input {
     vertical-align: middle;
 }
