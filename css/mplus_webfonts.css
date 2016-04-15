@@ -1,301 +1,129 @@
-@font-face{ 
-  font-family: 'mplus-1p-heavy';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-heavy.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-heavy.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-heavy.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-heavy.ttf') format('truetype');
+/* M+ Type-1 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Thin';
+src: url('mplus-1-thin-sub.eot');
+src: url('mplus-1-thin-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-1-thin-sub.woff') format('woff'),
+url('mplus-1-thin-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-1m-bold';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-bold.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-bold.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-bold.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-bold.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Light';
+src: url('mplus-1-light-sub.eot');
+src: url('mplus-1-light-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-1-light-sub.woff') format('woff'),
+url('mplus-1-light-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2m-regular';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-regular.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-regular.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-regular.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-regular.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Regular';
+src: url('mplus-1-regular-sub.eot');
+src: url('mplus-1-regular-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-1-regular-sub.woff') format('woff'),
+url('mplus-1-regular-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2p-thin';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-thin.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-thin.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-thin.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-thin.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Medium';
+src: url('mplus-1-medium-sub.eot');
+src: url('mplus-1-medium-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-1-medium-sub.woff') format('woff'),
+url('mplus-1-medium-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2p-regular';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-regular.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-regular.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-regular.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-regular.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Bold';
+src: url('mplus-1-bold-sub.eot');
+src: url('mplus-1-bold-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-1-bold-sub.woff') format('woff'),
+url('mplus-1-bold-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2m-thin';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-thin.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-thin.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-thin.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-thin.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Heavy';
+src: url('mplus-1-heavy-sub.eot');
+src: url('mplus-1-heavy-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-1-heavy-sub.woff') format('woff'),
+url('mplus-1-heavy-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2c-light';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-light.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-light.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-light.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-light.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Black';
+src: url('mplus-1-black-sub.eot');
+src: url('mplus-1-black-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-1-black-sub.woff') format('woff'),
+url('mplus-1-black-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2c-bold';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-bold.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-bold.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-bold.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-bold.ttf') format('truetype');
+
+/* M+ Type-2 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+@font-face
+{
+font-family: 'M+ Type-2 (general-j) Thin';
+src: url('mplus-2-thin-sub.eot');
+src: url('mplus-2-thin-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-2-thin-sub.woff') format('woff'),
+url('mplus-2-thin-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-1c-bold';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-bold.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-bold.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-bold.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-bold.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-2 (general-j) Light';
+src: url('mplus-2-light-sub.eot');
+src: url('mplus-2-light-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-2-light-sub.woff') format('woff'),
+url('mplus-2-light-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-1m-medium';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-medium.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-medium.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-medium.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-medium.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-2 (general-j) Regular';
+src: url('mplus-2-regular-sub.eot');
+src: url('mplus-2-regular-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-2-regular-sub.woff') format('woff'),
+url('mplus-2-regular-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2p-heavy';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-heavy.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-heavy.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-heavy.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-heavy.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-2 (general-j) Medium';
+src: url('mplus-2-medium-sub.eot');
+src: url('mplus-2-medium-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-2-medium-sub.woff') format('woff'),
+url('mplus-2-medium-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2c-heavy';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-heavy.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-heavy.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-heavy.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-heavy.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-2 (general-j) Bold';
+src: url('mplus-2-bold-sub.eot');
+src: url('mplus-2-bold-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-2-bold-sub.woff') format('woff'),
+url('mplus-2-bold-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-1mn-thin';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-thin.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-thin.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-thin.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-thin.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-2 (general-j) Heavy';
+src: url('mplus-2-heavy-sub.eot');
+src: url('mplus-2-heavy-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-2-heavy-sub.woff') format('woff'),
+url('mplus-2-heavy-sub.ttf') format('truetype');
 }
-@font-face{ 
-  font-family: 'mplus-2m-bold';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-bold.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-bold.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-bold.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-bold.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2p-light';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-light.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-light.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-light.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-light.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1p-black';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-black.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-black.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-black.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-black.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1m-thin';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-thin.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-thin.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-thin.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-thin.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1m-regular';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-regular.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-regular.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-regular.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-regular.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1mn-medium';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-medium.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-medium.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-medium.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-medium.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2c-regular';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-regular.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-regular.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-regular.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-regular.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1mn-regular';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-regular.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-regular.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-regular.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-regular.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2p-medium';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-medium.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-medium.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-medium.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-medium.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1p-thin';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-thin.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-thin.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-thin.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-thin.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1mn-light';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-light.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-light.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-light.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-light.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1mn-bold';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-bold.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-bold.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-bold.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1mn-bold.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1m-light';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-light.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1m-light.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-light.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1m-light.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2c-medium';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-medium.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-medium.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-medium.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-medium.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1c-black';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-black.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-black.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-black.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-black.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2c-black';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-black.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-black.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-black.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-black.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1c-regular';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-regular.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-regular.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-regular.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-regular.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1c-heavy';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-heavy.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-heavy.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-heavy.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-heavy.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2c-thin';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-thin.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2c-thin.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-thin.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2c-thin.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2m-light';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-light.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-light.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-light.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-light.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2p-black';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-black.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-black.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-black.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-black.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1c-thin';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-thin.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-thin.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-thin.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-thin.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1p-light';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-light.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-light.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-light.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-light.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2m-medium';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-medium.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2m-medium.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-medium.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2m-medium.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1c-medium';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-medium.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-medium.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-medium.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-medium.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1p-medium';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-medium.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-medium.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-medium.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-medium.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1p-bold';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-bold.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-bold.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-bold.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-bold.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1c-light';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-light.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1c-light.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-light.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1c-light.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-2p-bold';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-bold.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-2p-bold.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-bold.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-2p-bold.ttf') format('truetype');
-}
-@font-face{ 
-  font-family: 'mplus-1p-regular';
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-regular.eot');
-  src: url('http://mplus-webfonts.sourceforge.jp/mplus-1p-regular.eot?#iefix') format('embedded-opentype'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-regular.woff') format('woff'),
-       url('http://mplus-webfonts.sourceforge.jp/mplus-1p-regular.ttf') format('truetype');
+
+@font-face
+{
+font-family: 'M+ Type-2 (general-j) Black';
+src: url('mplus-2-black-sub.eot');
+src: url('mplus-2-black-sub.eot?#iefix') format('embedded-opentype'),
+url('mplus-2-black-sub.woff') format('woff'),
+url('mplus-2-black-sub.ttf') format('truetype');
 }
