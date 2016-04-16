@@ -55,7 +55,7 @@ class SummonTableHeader extends Component {
         <th>攻撃力</th>
         <th colSpan="2">加護1</th>
         <th colSpan="2">加護2</th>
-        <th>挿入・削除</th>
+        <th>追加・削除</th>
       </tr>
     );
   }

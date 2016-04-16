@@ -73,7 +73,7 @@ class WeaponTableHeader extends Component {
         <th>スキル1</th>
         <th>スキル2</th>
         <th>LV</th>
-        <th>挿入・削除</th>
+        <th>追加・削除</th>
       </tr>
     );
   }
