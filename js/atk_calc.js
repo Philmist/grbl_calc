@@ -63,27 +63,32 @@ export default function calculate_atkval (param_obj, job_data) {
   let basic_atk = 0;
 
   // 基本攻撃力の算出
-  basic_atk = param_obj.rank * 40 + 1000;
-  if (param_obj.rank < 2) {
-    basic_atk = 1000;
-  } else if (param_obj.rank > 100) {
-    basic_atk -= (param_obj.rank - 100) * 20;
+  {
+    let rank = Number(param_obj.rank);
+    basic_atk = rank * 40 + 1000;
+    if (rank < 2) {
+      basic_atk = 1000;
+    } else if (rank > 100) {
+      basic_atk -= (rank - 100) * 20;
+    }
+    showed_atk = basic_atk;
   }
-  showed_atk = basic_atk;
 
   // ゼニス攻撃力の算出
-  var zenith_atk = 0;
-  if (param_obj.zenith.atk == 1) {
-    zenith_atk = 500;
-  } else if (param_obj.zenith.atk == 2) {
-    zenith_atk = 1500;
-  } else if (param_obj.zenith.atk == 3) {
-    zenith_atk = 3000;
+  {
+    let zenith_atk = 0;
+    if (param_obj.zenith.atk == 1) {
+      zenith_atk = 500;
+    } else if (param_obj.zenith.atk == 2) {
+      zenith_atk = 1500;
+    } else if (param_obj.zenith.atk == 3) {
+      zenith_atk = 3000;
+    }
+    showed_atk += zenith_atk;
   }
-  showed_atk += zenith_atk;
 
   // 召喚加護の計算
-  var divine_percent = {
+  let divine_percent = {
     attribute: 100,
     character: 0,
     magna: 100,
@@ -157,10 +162,10 @@ export default function calculate_atkval (param_obj, job_data) {
   /* スキル */
 
   // 属性補正
-  var attribute_bonus = 0;
+  let attribute_bonus = 0;
   attribute_bonus += function() {
-    var zenith_bonus = [0, 1, 3, 5];
-    var result = 0;
+    let zenith_bonus = [0, 1, 3, 5];
+    let result = 0;
     result += param_obj.zenith.attribute ? zenith_bonus[param_obj.zenith.attribute]  : zenith_bonus[0];
     if (param_obj.affinity == "good") {
       result += 50;
@@ -172,7 +177,7 @@ export default function calculate_atkval (param_obj, job_data) {
 
   // 武器ごとのスキル計算
   /// 変数の初期化
-  var total_skill = {
+  let total_skill = {
     baha: {percent: 0},
     koujin: {percent: 0},
     magna: {percent: 0, backwater: 0},
@@ -180,8 +185,8 @@ export default function calculate_atkval (param_obj, job_data) {
     unknown: {percent: 0},
     collabo: {percent: 0}
   };
-  var hp_p_n = param_obj.hp_percent / 100;
-  var hp_coefficient = 2 * hp_p_n * hp_p_n - 5 * hp_p_n + 3; // = 2 * (hp_p_n ** 2) - 5 * hp_p_n + 3
+  let hp_p_n = param_obj.hp_percent / 100;
+  let hp_coefficient = 2 * hp_p_n * hp_p_n - 5 * hp_p_n + 3; // = 2 * (hp_p_n ** 2) - 5 * hp_p_n + 3
   /// スキルの計算をするための関数を定義
   //// ロジックの異なる部分を引数として受けとり関数として返す
   //// type_str: "baha" | "koujin" | "magna" | "normal" | "unknown" | "collabo"
@@ -202,7 +207,7 @@ export default function calculate_atkval (param_obj, job_data) {
   //// true_func, false_func: skill_levelを受けとりcoefficientを計算する関数
   function bwfunc_gen (type_str, lv_check_func, true_func, false_func) {
     return function (level) {
-      var bw_coefficient = 0;
+      let bw_coefficient = 0;
       if (lv_check_func(level)) {
         bw_coefficient = true_func(level);
       } else {
@@ -223,7 +228,7 @@ export default function calculate_atkval (param_obj, job_data) {
   }
   /// スキルと関数を対応させる
   const CHECK_LEVEL = 10;
-  var skill_calc_dict = {
+  let skill_calc_dict = {
     // total_skill.kj1.percent = 0 + (lv - 0) * 1  [lv<10]
     // total_skill.kj1.percent = 10 + (lv - 10) * 0.4 [lv>=10]
     "kj1": pfunc_gen(
@@ -314,7 +319,7 @@ export default function calculate_atkval (param_obj, job_data) {
   });
 
   // 総合計算
-  var total_atk = showed_atk;
+  let total_atk = showed_atk;
   total_atk *= (100 + (divine_percent.character + total_skill.baha.percent + (total_skill.koujin.percent * divine_percent.zeus / 100) )) / 100;
   total_atk *= (100 + total_skill.normal.backwater * divine_percent.zeus / 100) / 100;
   total_atk *= (100 + total_skill.magna.percent * divine_percent.magna / 100) / 100;
