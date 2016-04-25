@@ -8,7 +8,7 @@ var loaders = [
     // を使うための設定
     test: /\.css$/,
     loader: [
-      { loader: "style-loader", query: {sourceMap: true} },
+      { loader: "style-loader", query: { sourceMap: true } },
       { loader: "css-loader", query: { modules: true, importLoaders: 1, localIdentName: "[name]__[local]___[hash:base64:5]" } }
     ]
   },
@@ -24,6 +24,12 @@ var loaders = [
       // プリセットは順序が大事
       presets: ['react', 'es2015-webpack', 'stage-0']
     }
+  },
+  {
+    test: /\.(woff|ttf|eot|svg)$/,
+    loader: [
+      { loader: "url-loader", query: { limit: 30000, name: "[name]-[hash].[ext]" } }
+    ]
   }
 ];
 

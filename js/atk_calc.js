@@ -58,14 +58,18 @@
   }
 */
 export default function calculate_atkval (param_obj, job_data) {
+  // 攻撃力の定義
+  let showed_atk = 0;
+  let basic_atk = 0;
+
   // 基本攻撃力の算出
-  var basic_atk = param_obj.rank * 40 + 1000;
+  basic_atk = param_obj.rank * 40 + 1000;
   if (param_obj.rank < 2) {
     basic_atk = 1000;
   } else if (param_obj.rank > 100) {
     basic_atk -= (param_obj.rank - 100) * 20;
   }
-  var showed_atk = basic_atk;
+  showed_atk = basic_atk;
 
   // ゼニス攻撃力の算出
   var zenith_atk = 0;
