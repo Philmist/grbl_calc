@@ -28,7 +28,7 @@ var loaders = [
   {
     test: /\.(woff|ttf|eot|svg)$/,
     loader: [
-      { loader: "url-loader", query: { limit: 30000, name: "[name]-[hash].[ext]" } }
+      { loader: "url-loader", query: { limit: 30000, name: "./dist/[name]-[hash].[ext]" } }
     ]
   }
 ];
@@ -41,7 +41,7 @@ module.exports = [
       js: "./js/entry.jsx",
     },
     output: {
-      filename: "./dist/bundle.js"
+      filename: "./dist/bundle.js",
     },
     module: {
       loaders: loaders,
@@ -57,7 +57,7 @@ module.exports = [
     devtool: "cheap-module-source-map",
     entry: "mocha!./js/test/test.js",
     output: {
-      filename: "./dist/test_bundle.js"
+      filename: "./dist/test_bundle.js",
     },
     module: {
       loaders: loaders,
