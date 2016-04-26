@@ -8,6 +8,8 @@
 
 // 必要なスタイルシートを読みこむ
 import "normalize.css/normalize.css";
+import "balloon-css/balloon.css";
+import "../css/mplus_webfonts.css";
 import "../css/global.css";
 
 // 必要なライブラリを読みこむ

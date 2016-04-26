@@ -73,7 +73,7 @@ class WeaponTableHeader extends Component {
         <th>スキル1</th>
         <th>スキル2</th>
         <th>LV</th>
-        <th>挿入・削除</th>
+        <th>追加・削除</th>
       </tr>
     );
   }
@@ -361,7 +361,7 @@ class WeaponRow extends Component {
           <input type="text" styleName="name" value={name} onChange={this.change_name} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" styleName="atk" value={atk} onChange={this.change_atk} disabled={inputlock} />
+          <input type="number" styleName="atk" value={atk} onChange={this.change_atk} disabled={inputlock} />
         </td>
         <td>
           <input type="checkbox" styleName="cosmos" checked={cosmos} onChange={this.change_cosmos} disabled={inputlock} />

@@ -42,6 +42,6 @@
 
 .name {
     composes: input;
-    width: 100px;
+    width: 7em;
 }
 

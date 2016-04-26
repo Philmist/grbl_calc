@@ -17,6 +17,8 @@ import {
   set_state_saving,
   set_state_saved
 } from "./actions.js";
+import pako from "pako";
+import base64 from "base64-js";
 
 import styles from "system.css";
 
@@ -125,6 +127,7 @@ class SaveLoad extends Component {
     let slot_names = this.state.slot_names;
     slot_names[this.state.current_slot_number] = this.state.current_slot_name;
     this.storage.setItem("slot_names", JSON.stringify(slot_names));
+    console.log("SAVE: " + base64.fromByteArray(pako.deflate(JSON.stringify(slot_names))));
     // セーブ終了に状態を変更
     this.props.set_state_saved();
     // スロット名も変更

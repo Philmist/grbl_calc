@@ -8,7 +8,7 @@ var loaders = [
     // を使うための設定
     test: /\.css$/,
     loader: [
-      { loader: "style-loader", query: {sourceMap: true} },
+      { loader: "style-loader", query: { sourceMap: true } },
       { loader: "css-loader", query: { modules: true, importLoaders: 1, localIdentName: "[name]__[local]___[hash:base64:5]" } }
     ]
   },
@@ -24,6 +24,12 @@ var loaders = [
       // プリセットは順序が大事
       presets: ['react', 'es2015-webpack', 'stage-0']
     }
+  },
+  {
+    test: /\.(woff|ttf|eot|svg)$/,
+    loader: [
+      { loader: "url-loader", query: { limit: 30000, name: "./dist/[name]-[hash].[ext]" } }
+    ]
   }
 ];
 
@@ -35,7 +41,7 @@ module.exports = [
       js: "./js/entry.jsx",
     },
     output: {
-      filename: "./dist/bundle.js"
+      filename: "./dist/bundle.js",
     },
     module: {
       loaders: loaders,
@@ -51,7 +57,7 @@ module.exports = [
     devtool: "cheap-module-source-map",
     entry: "mocha!./js/test/test.js",
     output: {
-      filename: "./dist/test_bundle.js"
+      filename: "./dist/test_bundle.js",
     },
     module: {
       loaders: loaders,

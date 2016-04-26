@@ -1,0 +1,15 @@
+/* M+ WebFontsを使うための設定 */
+
+@font-face
+{
+font-family: 'M+ P Type-1 (basic latin) Regular';
+src: url('../fonts/basic_latin/mplus-1p-regular-sub.woff') format('woff');
+src: url('../fonts/basic_latin/mplus-1p-regular-sub.ttf') format('truetype');
+}
+
+@font-face
+{
+font-family: 'M+ Type-1 (general-j) Regular';
+src: url('../fonts/general_j/mplus-1-regular-sub.woff') format('woff');
+src: url('../fonts/general_j/mplus-1-regular-sub.ttf') format('truetype');
+}

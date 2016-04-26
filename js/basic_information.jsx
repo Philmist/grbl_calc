@@ -93,7 +93,7 @@ class Rank extends Component {
         <td styleName="cell">
           <input
             styleName="rank"
-            type="text"
+            type="number"
             onChange={this.handleChange}
             value={this.props.rank}
             disabled={this.props.inputlock}
@@ -135,7 +135,7 @@ class ShipBonus extends Component {
         <td styleName="cell">
           <input
             styleName="ship_bonus"
-            type="text"
+            type="number"
             onChange={this.handleChange}
             value={this.props.ship_bonus}
             disabled={this.props.inputlock}
@@ -214,7 +214,7 @@ class HPPercent extends Component {
         <th styleName="header">HP/MAXHP</th>
         <td styleName="cell">
           <input
-            styleName="hp_percent" type="text"
+            styleName="hp_percent" type="number"
             onChange={this.handleChange}
             value={this.props.hp_percent}
             disabled={this.props.inputlock}
@@ -281,14 +281,14 @@ class AtkBonus extends Component {
           <tr styleName="row">
             <th styleName="header" rowSpan="2">発動中の<br />攻撃力ボーナス</th>
             <td styleName="cell">
-              <input styleName="atk_percent" type="text" onChange={this.percentChange}
+              <input styleName="atk_percent" type="number" onChange={this.percentChange}
                 value={this.props.atk_bonus_percent} disabled={this.props.inputlock} />
               %
             </td>
           </tr>
           <tr styleName="row">
             <td styleName="cell">
-              <input styleName="atk_value" type="text" onChange={this.valueChange}
+              <input styleName="atk_value" type="number" onChange={this.valueChange}
                 value={this.props.atk_bonus_value} disabled={this.props.inputlock} />
             </td>
           </tr>

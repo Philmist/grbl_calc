@@ -111,8 +111,10 @@ function createfunc_dispatch_number(action_type) {
       let numval = Number(param);
       if (!isNaN(numval) && (numval >= 0)) {
         dispatch({ type: action_type, value: numval });
+        return true;
       } else {
         console.warn("Parameter doesn't fit to " + action_type + " : " + String(param));
+        return false;
       }
     };
   };
@@ -160,8 +162,10 @@ export function set_zenith_atk(param) {
     let atk_val = Number(param);
     if (atk_val >= 0 && atk_val <= 3) {
       dispatch({ type: RC.basic.ZENITH_ATK, value: atk_val });
+      return true;
     } else {
       console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_ATK + " : " + String(param));
+      return false;
     }
   };
 }
@@ -172,8 +176,10 @@ export function set_zenith_attr(param) {
     let attr_val = Number(param);
     if (attr_val >= 0 && attr_val <= 3) {
       dispatch({ type: RC.basic.ZENITH_ATTR, value: attr_val });
+      return true;
     } else {
       console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_ATTR + " : " + String(param));
+      return false;
     }
   };
 }
@@ -184,8 +190,10 @@ export function set_zenith_weapon(param) {
   return function (dispatch) {
     if (!(param instanceof Array)) {
       console.warn("Parameter is not Array (" + RC.basic.ZENITH_WEAPON + ")");
+      return false;
     } else if (param.length != 2) {
       console.warn("Parameter length is not 2 (" + RC.basic.ZENITH_WEAPON + ")");
+      return false;
     } else {
       // TODO: もっとマシな書き方を考えるべき
       let w0 = Number(param[0]);
@@ -197,6 +205,7 @@ export function set_zenith_weapon(param) {
       } else {
         console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
       }
+      return true;
     }
   };
 }
@@ -208,6 +217,7 @@ export function set_zenith_weapon(param) {
 export function dangerously_replace_weapon_object(obj) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.DANGER_REPLACE, value: obj });
+    return true;
   };
 }
 
@@ -215,6 +225,7 @@ export function dangerously_replace_weapon_object(obj) {
 export function set_weapon_name(index, name) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.NAME, index: Number(index), value: name });
+    return true;
   };
 }
 
@@ -222,7 +233,8 @@ export function set_weapon_name(index, name) {
 // TODO: エラー処理
 export function set_weapon_type(index, weapon_type) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.JOB, index: Number(index), value: String(weapon_type) });
+    dispatch({ type: RC.weapon.TYPE, index: Number(index), value: String(weapon_type) });
+    return true;
   };
 }
 
@@ -230,6 +242,7 @@ export function set_weapon_type(index, weapon_type) {
 export function set_weapon_atk_value(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.ATK, index: Number(index), value: Number(value) });
+    return true;
   }
 }
 
@@ -238,6 +251,7 @@ export function set_weapon_atk_value(index, value) {
 export function set_weapon_skill_type(index, target, skill) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.SKILL, index: Number(index), target: Number(target), value: String(skill) });
+    return true;
   };
 }
 
@@ -245,6 +259,7 @@ export function set_weapon_skill_type(index, target, skill) {
 export function set_weapon_skill_lv(index, lv) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.LV, index: Number(index), value: Number(lv) });
+    return true;
   };
 }
 
@@ -252,6 +267,7 @@ export function set_weapon_skill_lv(index, lv) {
 export function set_weapon_cosmos(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.COSMOS, index: Number(index), value: Boolean(value) });
+    return true;
   };
 }
 
@@ -259,6 +275,7 @@ export function set_weapon_cosmos(index, value) {
 export function set_weapon_lock(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.LOCK, index: Number(index), value: Boolean(value) });
+    return true;
   };
 }
 
@@ -266,6 +283,7 @@ export function set_weapon_lock(index, value) {
 export function enable_weapon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.ENABLE, index: Number(index) });
+    return true;
   };
 }
 
@@ -273,6 +291,7 @@ export function enable_weapon_object(index) {
 export function disable_weapon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.DISABLE, index: Number(index) });
+    return true;
   };
 }
 
@@ -280,6 +299,7 @@ export function disable_weapon_object(index) {
 export function move_weapon_object(from, to) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.MOVE, from: Number(from), to: Number(to) });
+    return true;
   };
 }
 
@@ -287,6 +307,7 @@ export function move_weapon_object(from, to) {
 export function delete_weapon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.DELETE, index: Number(index) });
+    return true;
   };
 }
 
@@ -294,6 +315,7 @@ export function delete_weapon_object(index) {
 export function insert_weapon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.APPEND, index: (Number(index)) });
+    return true;
   };
 }
 
@@ -304,6 +326,7 @@ export function insert_weapon_object(index) {
 export function dangerously_replace_summon_object(obj) {
   return function (dispatch, getState) {
     dispatch({ type: RC.summon.DANGER_REPLACE, value: obj });
+    return true;
   };
 }
 
@@ -311,6 +334,7 @@ export function dangerously_replace_summon_object(obj) {
 export function enable_summon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.summon.ENABLE, index: Number(index) });
+    return true;
   };
 }
 
@@ -318,6 +342,7 @@ export function enable_summon_object(index) {
 export function disable_summon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.summon.DISABLE, index: Number(index) });
+    return true;
   };
 }
 
@@ -325,6 +350,7 @@ export function disable_summon_object(index) {
 export function set_summon_lock(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.summon.LOCK, index: Number(index), value: Boolean(value) });
+    return true;
   };
 }
 
@@ -332,6 +358,7 @@ export function set_summon_lock(index, value) {
 export function set_summon_name(index, name) {
   return function (dispatch) {
     dispatch({ type: RC.summon.NAME, index: Number(index), value: String(name) });
+    return true;
   };
 }
 
@@ -339,6 +366,7 @@ export function set_summon_name(index, name) {
 export function set_summon_atk_value(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.summon.ATK, index: Number(index), value: Number(value) });
+    return true;
   };
 }
 
@@ -347,13 +375,14 @@ export function set_summon_skill_percent(index, target, percent) {
   return function (dispatch, getState) {
     let summon_obj = Array.from(getState().summon);
     if (Number(index) < 0 || Number(index) > summon_obj.length) {
-      return;
+      return false;
     } else if (Number(percent) < 0) {
-      return;
+      return false;
     }
     if (target === 0 || target === 1) {
       let skill_obj = Object.assign({}, summon_obj[index].skill[target], { percent: Number(percent) });
       dispatch({ type: RC.summon.SKILL, index: Number(index), target: target, value: skill_obj });
+      return true;
     }
   };
 }
@@ -363,11 +392,12 @@ export function set_summon_skill_type(index, target, skill_type) {
   return function (dispatch, getState) {
     let summon_obj = Array.from(getState().summon);
     if (Number(index) < 0 || Number(index) > summon_obj.length) {
-      return;
+      return false;
     }
     if (target === 0 || target === 1) {
       let skill_obj = Object.assign({}, summon_obj[index].skill[target], { type: String(skill_type) });
       dispatch({ type: RC.summon.SKILL, index: Number(index), target: target, value: skill_obj });
+      return true;
     }
   };
 }
@@ -376,6 +406,7 @@ export function set_summon_skill_type(index, target, skill_type) {
 export function move_summon_object(from, to) {
   return function (dispatch) {
     dispatch({ type: RC.summon.MOVE, from: Number(from), to: Number(to) });
+    return true;
   };
 }
 
@@ -383,6 +414,7 @@ export function move_summon_object(from, to) {
 export function delete_summon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.summon.DELETE, index: Number(index) });
+    return true;
   };
 }
 
@@ -390,6 +422,7 @@ export function delete_summon_object(index) {
 export function insert_summon_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.summon.APPEND, index: (Number(index)) });
+    return true;
   };
 }
 
@@ -400,6 +433,7 @@ export function insert_summon_object(index) {
 export function dangerously_replace_friend_object(obj) {
   return function (dispatch, getState) {
     dispatch({ type: RC.friend.DANGER_REPLACE, value: obj });
+    return true;
   };
 }
 
@@ -407,6 +441,7 @@ export function dangerously_replace_friend_object(obj) {
 export function enable_friend_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.friend.ENABLE, index: Number(index) });
+    return true;
   };
 }
 
@@ -414,6 +449,7 @@ export function enable_friend_object(index) {
 export function disable_friend_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.friend.DISABLE, index: Number(index) });
+    return true;
   };
 }
 
@@ -421,6 +457,7 @@ export function disable_friend_object(index) {
 export function set_friend_lock(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.friend.LOCK, index: Number(index), value: Boolean(value) });
+    return true;
   };
 }
 
@@ -428,6 +465,7 @@ export function set_friend_lock(index, value) {
 export function set_friend_name(index, name) {
   return function (dispatch) {
     dispatch({ type: RC.friend.NAME, index: Number(index), value: String(name) });
+    return true;
   };
 }
 
@@ -435,6 +473,7 @@ export function set_friend_name(index, name) {
 export function set_friend_atk_value(index, value) {
   return function (dispatch) {
     dispatch({ type: RC.friend.ATK, index: Number(index), value: Number(value) });
+    return true;
   };
 }
 
@@ -443,13 +482,14 @@ export function set_friend_skill_percent(index, target, percent) {
   return function (dispatch, getState) {
     let ary = Array.from(getState().friend);
     if (Number(index) < 0 || Number(index) > ary.length) {
-      return;
+      return false;
     } else if (Number(percent) < 0) {
-      return;
+      return false;
     }
     if (target === 0 || target === 1) {
       let skill_obj = Object.assign({}, ary[index].skill[target], { percent: Number(percent) });
       dispatch({ type: RC.friend.SKILL, index: Number(index), target: target, value: skill_obj });
+      return true;
     }
   };
 }
@@ -459,11 +499,12 @@ export function set_friend_skill_type(index, target, skill_type) {
   return function (dispatch, getState) {
     let ary = Array.from(getState().friend);
     if (Number(index) < 0 || Number(index) > ary.length) {
-      return;
+      return false;
     }
     if (target === 0 || target === 1) {
       let skill_obj = Object.assign({}, ary[index].skill[target], { type: String(skill_type) });
       dispatch({ type: RC.friend.SKILL, index: Number(index), target: target, value: skill_obj });
+      return true;
     }
   };
 }
@@ -472,6 +513,7 @@ export function set_friend_skill_type(index, target, skill_type) {
 export function move_friend_object(from, to) {
   return function (dispatch) {
     dispatch({ type: RC.friend.MOVE, from: Number(from), to: Number(to) });
+    return true;
   };
 }
 
@@ -479,6 +521,7 @@ export function move_friend_object(from, to) {
 export function delete_friend_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.friend.DELETE, index: Number(index) });
+    return true;
   };
 }
 
@@ -486,5 +529,6 @@ export function delete_friend_object(index) {
 export function insert_friend_object(index) {
   return function (dispatch) {
     dispatch({ type: RC.friend.APPEND, index: (Number(index)) });
+    return true;
   };
 }

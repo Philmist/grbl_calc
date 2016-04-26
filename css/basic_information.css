@@ -41,30 +41,31 @@
 }
 
 .rank {
+    composes: number from "./app.css";
     composes: input;
-    composes: width50 from "./app.css";
 }
 
 .ship_bonus {
+    composes: number from "./app.css";
     composes: input;
-    composes: width50 from "./app.css";
 }
 
 .attribute_bonus {
+    composes: number from "./app.css";
     composes: input;
 }
 
 .hp_percent {
-    composes: width50 from "./app.css";
+    composes: percent from "./app.css";
     composes: input;
 }
 
 .atk_percent {
-    composes: width25 from "./app.css";
+    composes: percent from "./app.css";
     composes: input;
 }
 
 .atk_value {
-    composes: width50 from "./app.css";
+    composes: number from "./app.css";
     composes: input;
 }

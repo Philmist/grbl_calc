@@ -6,42 +6,74 @@
  * CSS Modules用
  */
 
+
 /* 画面全体の構成 */
 
+/* アプリ全体 */
 .app {
     font-size: 100%;
     vertical-align: baseline;
     background: transparent;
 }
 
+/* アプリの配置 */
 .whole_app {
     composes: app;
-    width : 1020px;
+    margin: auto;
+    width : -moz-fit-content;
+    width : -webkit-fit-content;
+    width : fit-content;
+    flex: 1;
 }
 
+/* ヘッダ(タイトル)部分の配置 */
 .header_box {
     margin : 5px;
-    width : 100%;
+    width : -moz-fit-content;
+    width : -webkit-fit-content;
+    width : fit-content;
 }
 
+/* 計算機本体部分の配置 */
+.calculator_box {
+    width: available;
+    display: flex;
+    flex-direction: row;
+    width: -moz-fit-content;
+    width: -webkit-fit-content;
+    width: fit-content;
+}
+
+/* 計算機内左側の配置 */
 .left_box {
-    margin : 5px;
-    float: left;
-    width : 200px;
+    margin: 5px;
+    width: auto;
 }
 
+/* 計算機内右側の配置 */
 .right_box {
     margin : 5px;
-    float: left;
-    width : auto;
+    width : -moz-fit-content;
+    width : -webkit-fit-content;
+    width : fit-content;
+    flex: 1;
 }
 
+
+/* フッタ(著作権表示等) */
 .footer_box {
-    clear : left;
+    clear : both;
     margin : 5px;
-    width : 1000px;
+    width : auto;
+    width : -moz-fit-content;
+    width : -webkit-fit-content;
+    width : fit-content;
 }
 
+
+/* 要素 */
+
+/* 上部タイトルバーの装飾等 */
 .whole_title {
     color: #ffffff;
     background-color: #2a2a2a;
@@ -54,9 +86,6 @@
     border-radius: 5px;
 }
 
-.title {
-    composes: header from "./app.css";
-}
 
 /* テーブル */
 
@@ -81,8 +110,41 @@
     width: 5em;
 }
 
-/* タイトル */
+/* 小タイトル */
 .title {
     composes: header from "./app.css";
 }
 
+/* 下部ナビゲーション */
+.nav {
+    padding: 0;
+    margin: 0em 1em;
+}
+
+.nav-item {
+    display: inline-block;
+    padding-left: 0.5em;
+}
+
+.nav-item::before {
+    content: ">";
+}
+
+/* 下部著作権表示 */
+.comment {
+    margin: 0.5em 0;
+}
+
+.copyright {
+    margin-left: 1em;
+}
+
+.copyright-list {
+    margin-left: 0.5em;
+    padding-left: 0;
+}
+
+.copyright-list-item {
+    list-style-type: none;
+    list-style-position: inside;
+}

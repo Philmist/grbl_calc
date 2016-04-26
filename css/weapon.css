@@ -49,12 +49,12 @@
 }
 
 .name {
-    composes: width150 from "./app.css";
+    composes: name from "./app.css";
     composes: input;
 }
 
 .atk {
-    composes: width50 from "./app.css";
+    composes: atk from "./app.css";
     composes: input;
 }
 

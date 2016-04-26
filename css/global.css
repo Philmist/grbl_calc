@@ -4,11 +4,21 @@
  * グローバル(サイト全体)CSS
  */
 
+@viewport {
+    min-width: 1020px;
+    max-width: 95%;
+    zoom: 1.0;
+}
+
 body {
     font-size: 100%;
-    vertical-align: baseline;
     background: transparent;
-    font-family: "ＭＳ Ｐゴシック", arial, helvetica, clean, sans-serif;
+    font-family: "M+ P Type-1 (basic latin) Regular","M+ Type-1 (general-j) Regular", sans-serif;
+}
+
+#react_content {
+    display: flex;
+    flex-direction: row;
 }
 
 input {
