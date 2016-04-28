@@ -229,8 +229,8 @@ export default function calculate_atkval (param_obj, job_data) {
   /// スキルと関数を対応させる
   const CHECK_LEVEL = 10;
   let skill_calc_dict = {
-    // total_skill.kj1.percent = 0 + (lv - 0) * 1  [lv<10]
-    // total_skill.kj1.percent = 10 + (lv - 10) * 0.4 [lv>=10]
+    // total_skill.koujin.percent = 0 + (lv - 0) * 1  [lv<10]
+    // total_skill.koujin.percent = 10 + (lv - 10) * 0.4 [lv>=10]
     "kj1": pfunc_gen(
       "koujin", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0.4)
@@ -277,7 +277,7 @@ export default function calculate_atkval (param_obj, job_data) {
     ),
     "bha": pfunc_gen(
       "baha", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(19, 0, 1), pcalc_gen(30, 0, 0)
+      pcalc_gen(19, 0, 1), pcalc_gen(30, CHECK_LEVEL, 0.4)
     ),
     "bhah": pfunc_gen(
       "baha", less_than_chklv(CHECK_LEVEL),
@@ -291,12 +291,12 @@ export default function calculate_atkval (param_obj, job_data) {
     "bw2": bwfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.4 + l * 2.4),
-      (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
+      (l) => (24 + (l - CHECK_LEVEL) / 5 * 6)
     ),
     "bw3": bwfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.5 + l * 3.0),
-      (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
+      (l) => (30 + (l - CHECK_LEVEL) / 5 * 7.5)
     ),
     "mbw1": bwfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
@@ -304,6 +304,11 @@ export default function calculate_atkval (param_obj, job_data) {
       (l) => (18 + (l - CHECK_LEVEL) / 5 * 3)
     ),
     "mbw2": bwfunc_gen(
+      "magna", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.4 + l * 2.4),
+      (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "mbw3": bwfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.5 + l * 3.0),
       (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
@@ -317,6 +322,9 @@ export default function calculate_atkval (param_obj, job_data) {
       if (skill_type != "none") { skill_calc_dict[skill_type](weapon.skill_level); }
     });
   });
+
+  // ステータスの上限等補正
+  total_skill.baha.percent = total_skill.baha.percent > 50 ? 50 : total_skill.baha.percent;
 
   // 総合計算
   let total_atk = showed_atk;
