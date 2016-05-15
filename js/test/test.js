@@ -31,7 +31,7 @@ const param_for_test = {
        skill_level: 20,
        skill_type: ["kj4", "bw3"]
        }
-       */
+     */
   ],
   summon: [  // 召喚獣
     {
@@ -42,7 +42,7 @@ const param_for_test = {
            type: "attribute",
            percent: 50
            }
-           */
+         */
       ]
     }
   ],
@@ -112,11 +112,10 @@ describe('atk_calc.js', function() {
       expect(result.total_atk).to.equal(1467);
     });
   });
-  describe('背水武器単体のテスト(fighter,sword,ATK:100,SLV:10,bw3,mbw3,hp%:30,affinity:"good")', function() {
+  describe('背水武器単体のテスト(fighter)(sword,ATK:100,SLV:10,bw3,mbw3,hp%:30,affinity:"good")', function() {
     let result;
     before('武器を作って計算する', function() {
-      let param;
-      param = Object.assign({}, param_for_test);
+      let param = Object.assign({}, param_for_test);
       param.weapon = [{
         atk: 100,
         skill_level: 10,
@@ -134,5 +133,30 @@ describe('atk_calc.js', function() {
     it('総合攻撃力は2292', () => {
       expect(result.total_atk).to.equal(2292);
     });
+  });
+  describe('単純な召喚1つのテスト(fighter)(ATK:100,SLV:0,affinity:"none",type:"sword")(ATK:100,attribute30%,character20%)', function() {
+    let result;
+    before('武器と召喚を作って計算する', function() {
+      let param = Object.assign({}, param_for_test);
+      param.job = 'fighter';
+      param.weapon = [{
+        atk: 100,
+        skill_level: 0,
+        skill_type: ['none', 'none'],
+        type: 'sword'
+      }];
+      param.summon = [
+        {
+          atk: 100,
+          skill: [
+            { type: 'attribute', percent: 30 },
+            { type: 'character', percent: 20 }
+          ]
+        }
+      ];
+      result = calculate_atkval(param, job_data);
+    });
+    it('表示攻撃力は1220', () => { expect(result.showed_atk).to.equal(1220); });
+    it('総合攻撃力は1903', () => { expect(result.total_atk).to.equal(1903); });
   });
 });
