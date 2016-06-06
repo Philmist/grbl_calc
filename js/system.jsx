@@ -177,7 +177,7 @@ class SaveLoad extends Component {
     return (
       <tbody>
         <tr styleName="row">
-          <th styleName="header">スロット</th>
+          <Translate component="th" styleName="header" content="system.slot" />
           <td styleName="cell">
             <select styleName="slot" value={this.state.current_slot_number} onChange={this.change_slot} >
               { this.option_list.map ( (i) => { return <option value={String(i[1])} key={"slot_"+String(i[1])}>{i[0]}</option>; } ) }
@@ -185,7 +185,7 @@ class SaveLoad extends Component {
           </td>
         </tr>
         <tr styleName="row">
-          <th styleName="header">名前</th>
+          <Translate component="th" styleName="header" content="system.name" />
           <td styleName="cell">
             <input
               type="text"
@@ -196,12 +196,10 @@ class SaveLoad extends Component {
           </td>
         </tr>
         <tr styleName="row">
-          <th styleName="header">
-            保存/呼出
-          </th>
+          <Translate component="th" styleName="header" content="system.saveload_header" />
           <td styleName="cell">
-            <input type="button" value="保存" onClick={this.save_data} />
-            <input type="button" value="呼出" onClick={this.load_data} />
+            <Translate component="input" type="button" attributes={ {value:"system.save"} } onClick={this.save_data} />
+            <Translate component="input" type="button" attributes={ {value:"system.load"} } onClick={this.load_data} />
           </td>
         </tr>
       </tbody>

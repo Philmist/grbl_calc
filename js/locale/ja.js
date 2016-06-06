@@ -81,6 +81,13 @@ let text = {
       14: "14",
       15: "15"
     }
+  },
+  system: {
+    slot: "スロット",
+    name: "名前",
+    saveload_header: "保存/呼出",
+    save: "保存",
+    load: "呼出"
   }
 };
 
