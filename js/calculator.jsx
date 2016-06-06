@@ -10,6 +10,10 @@ import { connect } from "react-redux";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import BasicInformation from "./basic_information.jsx";
 import Zenith from "./zenith.jsx";
 import Weapon from "./weapon.jsx";

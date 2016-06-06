@@ -11,6 +11,10 @@ import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import ItemTypes from "./const/item_types";
 import {
   replace_weapon_object,

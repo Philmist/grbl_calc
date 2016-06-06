@@ -20,6 +20,10 @@ import {
 import pako from "pako";
 import base64 from "base64-js";
 
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import styles from "system.css";
 
 // localStorageが使えるかどうかのチェック

@@ -17,6 +17,10 @@ import {
   set_summon_lock, set_summon_name, set_summon_atk_value, set_summon_skill_percent, set_summon_skill_type
 } from "./actions";
 
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import ItemTypes from "const/item_types";
 import styles from "summon.css";
 

@@ -9,6 +9,10 @@ import React, { Component } from "react";
 import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import * as actions from "./actions.js";
 
 import styles from "basic_information.css";
