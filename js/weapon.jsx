@@ -41,7 +41,7 @@ class Weapon extends Component {
   render() {
     return (
       <section>
-        <header styleName="title">武器</header>
+        <Translate component="header" styleName="title" content="weapon.title" />
         <form name="weapon">
           <table styleName="base" id="weapon_table">
             <thead>
@@ -65,19 +65,20 @@ export default connect((state) => { return { inputlock: state.inputlock ? true :
 // 武器テーブルのヘッダ
 class WeaponTableHeader extends Component {
   render() {
+    let t_header = "weapon.header.";
     return (
       <tr styleName="header">
-        <th>順</th>
-        <th>選</th>
-        <th>鍵</th>
-        <th>名前</th>
-        <th>攻撃力</th>
-        <th>コ</th>
-        <th>種別</th>
-        <th>スキル1</th>
-        <th>スキル2</th>
-        <th>LV</th>
-        <th>追加・削除</th>
+        <Translate component="th" content={ t_header+"list" } />
+        <Translate component="th" content={ t_header+"select" } />
+        <Translate component="th" content={ t_header+"lock" } />
+        <Translate component="th" content={ t_header+"name" } />
+        <Translate component="th" content={ t_header+"value" } />
+        <Translate component="th" content={ t_header+"cosmos" } />
+        <Translate component="th" content={ t_header+"type" } />
+        <Translate component="th" content={ t_header+"skill1" } />
+        <Translate component="th" content={ t_header+"skill2" } />
+        <Translate component="th" content={ t_header+"lv" } />
+        <Translate component="th" content={ t_header+"add_del" } />
       </tr>
     );
   }
@@ -198,71 +199,72 @@ var mapActionCreatorsToWeaponRowProps = {
 // 表示に使うための変数群
 // TODO: もっとマシな形でどうにかする
 const WEAPON_KIND = [
-  ["sword", "剣"],
-  ["dagger", "短剣"],
-  ["spear", "槍"],
-  ["axe", "斧"],
-  ["stuff", "杖"],
-  ["gun", "銃"],
-  ["knuckle", "格闘"],
-  ["bow", "弓"],
-  ["instrument", "楽器"],
-  ["blade", "刀"]
+  ["sword"],
+  ["dagger"],
+  ["spear"],
+  ["axe"],
+  ["stuff"],
+  ["gun"],
+  ["knuckle"],
+  ["bow"],
+  ["instrument"],
+  ["blade"]
 ];
 const SKILL_TYPE = [
-  ["none", "無し"],
-  ["kj1", "攻刃(小)"],
-  ["kj2", "攻刃(中)"],
-  ["kj3", "攻刃(大)"],
-  ["kj4", "攻刃II"],
-  ["bw1", "背水(小)"],
-  ["bw2", "背水(中)"],
-  ["bw3", "背水(大)"],
-  ["mkj1", "Ｍ攻刃"],
-  ["mkj2", "Ｍ攻刃II"],
-  ["mbw1", "Ｍ背水(小)"],
-  ["mbw2", "Ｍ背水(中)"],
-  ["mbw3", "Ｍ背水(大)"],
-  ["mkm1", "Ｍ神威"],
-  ["bha", "バハ攻"],
-  ["bhah", "バハ攻HP"],
-  ["unk1", "ｱﾝﾉｳﾝI"],
-  ["unk2", "ｱﾝﾉｳﾝII"],
-  ["str", "ｺﾗﾎﾞ枠"]
+  ["none"],
+  ["kj1"],
+  ["kj2"],
+  ["kj3"],
+  ["kj4"],
+  ["bw1"],
+  ["bw2"],
+  ["bw3"],
+  ["mkj1"],
+  ["mkj2"],
+  ["mbw1"],
+  ["mbw2"],
+  ["mbw3"],
+  ["mkm1"],
+  ["bha"],
+  ["bhah"],
+  ["unk1"],
+  ["unk2"],
+  ["str"]
 ];
 const SKILL_LV = [
-  ["0", "無し"],
-  ["1", "1"],
-  ["2", "2"],
-  ["3", "3"],
-  ["4", "4"],
-  ["5", "5"],
-  ["6", "6"],
-  ["7", "7"],
-  ["8", "8"],
-  ["9", "9"],
-  ["10", "10"],
-  ["11", "11"],
-  ["12", "12"],
-  ["13", "13"],
-  ["14", "14"],
-  ["15", "15"]
+  ["0"],
+  ["1"],
+  ["2"],
+  ["3"],
+  ["4"],
+  ["5"],
+  ["6"],
+  ["7"],
+  ["8"],
+  ["9"],
+  ["10"],
+  ["11"],
+  ["12"],
+  ["13"],
+  ["14"],
+  ["15"]
 ];
 // 武器の1行を表わすコンポーネント
 // フォームはControlled Componentsにしているので割と面倒くさい
 class WeaponRow extends Component {
   // 武器のoptionを生成するための関数
-  create_optfunc(key) {
+  create_optfunc(type, key) {
     return (
-      <option value={key[0]} key={key[0]}>{key[1]}</option>
+      <Translate component="option" value={key} key={key} content={ "weapon."+type+"."+key } />
     );
   }
+  // function.prototype.bind : 関数オブジェクトの引数を束縛するための関数(第1引数はthis, 第2引数以降がそれ以降)
   // 武器種別
-  e_kind = WEAPON_KIND.map(this.create_optfunc);
+  e_kind = WEAPON_KIND.map(this.create_optfunc.bind(this, "kind"));
   // スキル種別
-  e_skill_type = SKILL_TYPE.map(this.create_optfunc);
+  e_skill_type = SKILL_TYPE.map(this.create_optfunc.bind(this, "skill"));
   // スキルレベル
-  e_skill_lv = SKILL_LV.map(this.create_optfunc);
+  e_skill_lv = SKILL_LV.map(this.create_optfunc.bind(this, "lv"));
 
   // 武器の名前が変更された時に呼ばれる関数
   change_name(e) {
