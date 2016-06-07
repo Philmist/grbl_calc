@@ -39,7 +39,7 @@ class JobSelector extends Component {
     var values = new Array();
     for (var i in this.props.job) {
       values.push(
-        <option value={i} key={i}>{this.props.job[i].name}</option>
+        <Translate component="option" value={i} key={i} content={ "basic_information.job.type."+i } />
       );
     }
     // select要素を作って返す
@@ -61,7 +61,7 @@ class Job extends Component {
       <table styleName="base">
         <tbody>
           <tr styleName="row">
-            <th styleName="header">ジョブ</th>
+            <Translate component="th" styleName="header" content="basic_information.job.title" />
             <td styleName="cell">
               <JobSelector {...this.props} />
             </td>
@@ -93,7 +93,7 @@ class Rank extends Component {
   render() {
     return (
       <tr styleName="row">
-        <th styleName="header">Rank</th>
+        <Translate component="th" styleName="header" content="basic_information.rank.title" />
         <td styleName="cell">
           <input
             styleName="rank"
@@ -135,7 +135,7 @@ class ShipBonus extends Component {
   render() {
     return (
       <tr styleName="row">
-        <th styleName="header">騎空艇補正</th>
+        <Translate component="th" styleName="header" content="basic_information.ship_bonus.title" />
         <td styleName="cell">
           <input
             styleName="ship_bonus"
@@ -175,14 +175,15 @@ class AttributeBonus extends Component {
 
   // 最終的な要素を作って返す関数
   render() {
+    let t_header = "basic_information.attribute_bonus.";
     return (
       <tr styleName="row">
-        <th styleName="header">属性補正</th>
+        <Translate component="th" styleName="header" content={ t_header+"title" } />
         <td styleName="cell">
           <select onChange={this.handleChange} styleName="attribute_bonus" value={this.props.affinity} disabled={this.props.inputlock}>
-            <option value="normal">無し</option>
-            <option value="good">有利</option>
-            <option value="bad">不利</option>
+            <Translate component="option" value="normal" content={ t_header+"normal" } />
+            <Translate component="option" value="good" content={ t_header+"good" } />
+            <Translate component="option" value="bad" content={ t_header+"bad" } />
           </select>
         </td>
       </tr>
@@ -215,7 +216,7 @@ class HPPercent extends Component {
   render() {
     return (
       <tr styleName="row">
-        <th styleName="header">HP/MAXHP</th>
+        <Translate component="th" styleName="header" content="basic_information.hp_percent.title" />
         <td styleName="cell">
           <input
             styleName="hp_percent" type="number"
@@ -283,7 +284,7 @@ class AtkBonus extends Component {
       <table styleName="base">
         <tbody>
           <tr styleName="row">
-            <th styleName="header" rowSpan="2">発動中の<br />攻撃力ボーナス</th>
+            <Translate component="th" styleName="header" rowSpan="2" content="basic_information.atk_bonus.title" unsafe />
             <td styleName="cell">
               <input styleName="atk_percent" type="number" onChange={this.percentChange}
                 value={this.props.atk_bonus_percent} disabled={this.props.inputlock} />
@@ -325,7 +326,7 @@ class BasicInformation extends Component {
   render() {
     return (
       <section>
-        <header styleName="title">基本情報</header>
+        <Translate component="header" styleName="title" content="basic_information.title" />
         <PlayerStats />
         <AtkBonus />
         <Job set_job_type={this.props.set_job_type} job={this.props.job} />

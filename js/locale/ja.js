@@ -88,6 +88,68 @@ let text = {
     saveload_header: "保存/呼出",
     save: "保存",
     load: "呼出"
+  },
+  summon: {
+    header: {
+      list: "順",
+      select: "選",
+      lock: "鍵",
+      name: "召喚名",
+      value: "攻撃力",
+      type1: "加護1",
+      type2: "加護2",
+      add_del: "追加・削除"
+    },
+    type: {
+      none: "無し",
+      attribute: "属性",
+      character: "キャラ",
+      magna: "マグナ",
+      unknown: "ｱﾝﾉｳﾝ",
+      zeus: "ｾﾞｳｽ枠"
+    },
+    title: "召喚獣"
+  },
+  friend: {
+    title: "フレンド召喚"
+  },
+  calculator: {
+    result: {
+      title: "結果",
+      basic_atk: "基本値",
+      showed_atk: "表示攻撃力",
+      total_atk: "総合攻撃力"
+    },
+    title: "グランブルーファンタジー攻撃力計算機（新）"
+  },
+  basic_information: {
+    job: {
+      type: {
+        "fighter": "ファイター",
+        "knight": "ナイト",
+        "priest":  "プリースト"
+      },
+      title: "ジョブ"
+    },
+    rank: {
+      title: "ランク"
+    },
+    ship_bonus: {
+      title: "騎空艇補正"
+    },
+    attribute_bonus: {
+      title: "属性補正",
+      good: "有利",
+      bad: "不利",
+      normal: "無し"
+    },
+    hp_percent: {
+      title: "HP/MAXHP"
+    },
+    atk_bonus: {
+      title: "発動中の<br />攻撃力ボーナス"
+    },
+    title: "基本情報"
   }
 };
 
