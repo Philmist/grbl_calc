@@ -12,7 +12,7 @@ import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 import {
-  replace_summon_object, enable_summon_object, disable_summon_object,
+  enable_summon_object, disable_summon_object,
   move_summon_object, insert_summon_object, delete_summon_object,
   set_summon_lock, set_summon_name, set_summon_atk_value, set_summon_skill_percent, set_summon_skill_type
 } from "./actions";
@@ -154,7 +154,6 @@ function mapStateToSummonRowProps(state, props) {
 }
 // reduxのaction creatorをpropsに注入するためのオブジェクト
 const mapActionCreatorsToSummonRowProps = {
-  replace_object: replace_summon_object,
   enable_object: enable_summon_object,
   disable_object: disable_summon_object,
   move_object: move_summon_object,

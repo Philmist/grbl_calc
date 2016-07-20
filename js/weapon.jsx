@@ -13,7 +13,6 @@ import { DragSource, DropTarget } from "react-dnd";
 
 import ItemTypes from "./const/item_types";
 import {
-  replace_weapon_object,
   enable_weapon_object,
   disable_weapon_object,
   move_weapon_object,
@@ -177,7 +176,6 @@ function mapStateToWeaponRowProps(state, props) {
 }
 // reduxのaction creatorをpropsに注入するためのobject
 var mapActionCreatorsToWeaponRowProps = {
-  replace_weapon_object,
   enable_weapon_object,
   disable_weapon_object,
   move_weapon_object,

@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 import { SummonRow_ } from "./summon";
 import {
-  replace_friend_object, enable_friend_object, disable_friend_object,
+  enable_friend_object, disable_friend_object,
   move_friend_object, insert_friend_object, delete_friend_object,
   set_friend_lock, set_friend_name, set_friend_atk_value, set_friend_skill_percent, set_friend_skill_type
 } from "./actions";
@@ -137,7 +137,6 @@ function mapStateToRowProps(state, props) {
 // reduxのaction creatorをpropsに注入するためのオブジェクト
 // コンポーネントを使いまわしているので注入元を変える
 const mapActionCreatorsToRowProps = {
-  replace_object: replace_friend_object,
   enable_object: enable_friend_object,
   disable_object: disable_friend_object,
   move_object: move_friend_object,
