@@ -114,6 +114,17 @@ export default function calculate_atkval (param_obj, job_data) {
     }
   }
 
+  // コスモス武器の武器種を確認する
+  // 一番最初のコスモス武器が該当
+  let cosmos_weapon_type = "no_cosmos";  // "none"では該当が出てきてしまう
+  for (let i = 0; i < param_obj.weapon.length; i++) {
+    if (param_obj.weapon[i].cosmos) {
+      cosmos_weapon_type = param_obj.weapon[i].type;
+      break;
+    }
+  }
+  console.log(cosmos_weapon_type);
+
   // 武器攻撃力の計算
   showed_atk += function () {  // 表示攻撃力に処理で得られた総合武器攻撃力を加算する
     let total_atk = 0;
@@ -134,7 +145,7 @@ export default function calculate_atkval (param_obj, job_data) {
           }
         }
       }
-      let specialty_cosmos = weapon.cosmos ? 30 : 0; // コスモス武器の追加%
+      let specialty_cosmos = (weapon.type == cosmos_weapon_type && weapon.cosmos != true) ? 30 : 0; // コスモス該当武器の追加%
       // 武器攻撃力に倍率をかける
       atk = atk * (specialty_basic + specialty_bonus + specialty_cosmos) / 100;
       // 全武器攻撃力を更新する
