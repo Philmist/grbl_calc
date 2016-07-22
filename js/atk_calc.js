@@ -123,7 +123,6 @@ export default function calculate_atkval (param_obj, job_data) {
       break;
     }
   }
-  console.log(cosmos_weapon_type);
 
   // 武器攻撃力の計算
   showed_atk += function () {  // 表示攻撃力に処理で得られた総合武器攻撃力を加算する
