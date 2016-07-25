@@ -2,7 +2,7 @@
 
 import { expect } from 'chai';
 import get_job_data from "../get_job_data.js";
-import calculate_atkval from "../atk_calc.js";
+import { calculate_atkval } from "../atk_calc.js";
 
 
 // 以下の値はテストケース内で変更して使うことを想定している

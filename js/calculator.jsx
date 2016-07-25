@@ -22,7 +22,7 @@ import Friend from "./friend.jsx";
 import System from "./system.jsx";
 
 import * as REDCONST from "./const/reducer_type.js";
-import calculate_atkval from "./atk_calc.js";
+import { calculate_atkval } from "./atk_calc.js";
 import { fetch_job_data } from "./actions.js";
 
 import styles from "calculator.css";
