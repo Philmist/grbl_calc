@@ -56,7 +56,7 @@
     }, ...
   }
 */
-export default function calculate_atkval (param_obj, job_data) {
+export function calculate_atkval (param_obj, job_data) {
   // 攻撃力の定義
   let showed_atk = 0;
   let basic_atk = 0;
@@ -354,4 +354,70 @@ export default function calculate_atkval (param_obj, job_data) {
     "showed_atk": showed_atk,
     "total_atk": total_atk
   };
+}
+
+
+// 武器1つのオブジェクトが妥当な形式かチェックする
+export function is_valid_weapon_obj(weapon_obj) {
+  if (!(weapon_obj instanceof Object)) {
+    return false;
+  }
+  let weapon_keys = Object.keys(weapon_obj);
+  // 攻撃力
+  if (!(weapon_keys.includes("atk") && weapon_obj.atk >= 0)) {
+    return false;
+  }
+  // 武器種別
+  if (!(weapon_keys.includes("type") && weapon_obj.type instanceof String)) {
+    return false;
+  }
+  // スキルレベル
+  if (!(weapon_keys.includes("skill_level") && weapon_obj.skill_level >= 0)) {
+    return false;
+  }
+  // スキル種別
+  if (!(weapon_keys.includes("skill_type") && weapon_obj.skill_type instanceof Array)) {
+    return false;
+  } else {
+    for (let i = 0; i < weapon_obj.skill_type.length; i++) {
+      if (!(weapon_obj.skill_type[i] instanceof String)) {
+        return false;
+      }
+    }
+  }
+  // コスモスか否か
+  if (!(weapon_keys.includes("cosmos"))) {
+    return false;
+  }
+  // チェックを全部パスした
+  return true;
+}
+
+
+// 召喚1つのオブジェクトが妥当な形式かをチェックする
+export function is_valid_summon_obj(summon_obj) {
+  // 攻撃力
+  if (!(summon_obj.atk >= 0)) {
+    return false;
+  }
+
+  // 加護
+  if (!(summon_obj.skill instanceof Array)) {
+    return false;
+  }
+  for (let i = 0; i < summon_obj.skill.length; i++) {
+    let chk_val = summon_obj.skill[i];
+    if (!(chk_val instanceof Object)) {
+      return false;
+    }
+    if (!(chk_val.includes("type") && chk_val.type instanceof String)) {
+      return false;
+    }
+    if (!(chk_val.includes("percent") && chk_val.percent >= 0)) {
+      return false;
+    }
+  }
+
+  // チェックを全て通った
+  return true;
 }
