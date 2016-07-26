@@ -20,6 +20,7 @@ import Weapon from "./weapon.jsx";
 import Summon from "./summon.jsx";
 import Friend from "./friend.jsx";
 import System from "./system.jsx";
+import Optimizer from "./optimizer.jsx";
 
 import * as REDCONST from "./const/reducer_type.js";
 import { calculate_atkval } from "./atk_calc.js";
@@ -116,6 +117,7 @@ class CalculatorBody extends Component {
             <BasicInformation />
             <Zenith />
             <Result job={job} parameter={params} />
+            <Optimizer job={job} />
             <System />
           </div>
           <div styleName="right_box">
