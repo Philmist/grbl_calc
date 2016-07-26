@@ -1,0 +1,35 @@
+/* vim:set sts=4 sw=4 ts=4 expandtab: */
+
+/*
+ * システムコンポーネント用のスタイル定義
+ * CSS Modules用
+ */
+
+/* タイトル */
+.title {
+    composes: header from "./app.css";
+}
+
+
+/* テーブル */
+
+.base {
+    composes: base from "./tables.css";
+}
+
+.row {
+    composes: row from "./tables.css";
+}
+
+.header {
+    composes: header from "./tables.css";
+}
+
+.input {
+    composes: input from "./app.css";
+}
+
+.cell {
+    composes: data from "./tables.css";
+}
+
