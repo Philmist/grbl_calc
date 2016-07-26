@@ -55,8 +55,9 @@ let plugins = [
 if (isProd) {
   plugins.push(
     new webpack.optimize.UglifyJsPlugin({
-      compress: { warning: false },
-      output: { comments: false }
+      compress: { warnings: false },
+      output: { comments: false },
+      sourceMap: false
     })
   );
 }
