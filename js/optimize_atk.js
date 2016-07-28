@@ -144,8 +144,6 @@ export class GrblFormGAOptimizer {
     this.summon_ga_state = create_ga_state(this.summon_ref.length, this.summon_max_chromo_length, summon_mutation);
     this.friend_ga_state = create_ga_state(this.friend_ref.length, this.friend_max_chromo_length, friend_mutation);
 
-    console.log(this.weapon_ga_state);
-
     // 現在の状態を設定する
     this.state.status = CALC_STATE.GA_INITED;
     return true;
