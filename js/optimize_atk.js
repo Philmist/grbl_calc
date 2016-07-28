@@ -122,9 +122,9 @@ export class GrblFormGAOptimizer {
     // 集団を作成する汎用関数
     let create_ga_state = (max_num, c_length, m_prob) => {
       // パラメータを設定
-      let mutation_prob = Number(m_prob);
+      let mutation_probability = Number(m_prob);
       let chromo_length = Number(c_length);
-      let max_gene_num = Number(max_num);
+      let max_gene_number = Number(max_num);
       let length = population_length;
       let population = [];
       // 初期集団を生成する
@@ -132,21 +132,46 @@ export class GrblFormGAOptimizer {
         // 個体の生成
         let individual = [];
         for (let j = 0; j < chromo_length; j++) {
-          individual.push(get_random_int(1, max_gene_num));
+          individual.push(get_random_int(1, max_gene_number));
         }
         population.push(individual);
       }
-      return { population, mutation_prob, chromo_length, max_gene_num };
+      return [ population, { mutation_probability, chromo_length, max_gene_number }];
     };
 
     // 実際に武器等の状態を作成する
-    this.weapon_ga_state = create_ga_state(this.weapon_ref.length, this.weapon_max_chromo_length, weapon_mutation);
-    this.summon_ga_state = create_ga_state(this.summon_ref.length, this.summon_max_chromo_length, summon_mutation);
-    this.friend_ga_state = create_ga_state(this.friend_ref.length, this.friend_max_chromo_length, friend_mutation);
+    let [weapon_ga_ary, weapon_ga_param] = create_ga_state(this.weapon_ref.length, this.weapon_max_chromo_length, weapon_mutation);
+    let [summon_ga_ary, summon_ga_param] = create_ga_state(this.summon_ref.length, this.summon_max_chromo_length, summon_mutation);
+    let [friend_ga_ary, friend_ga_param] = create_ga_state(this.friend_ref.length, this.friend_max_chromo_length, friend_mutation);
+    let ga_param = { population: [], weapon_param: weapon_ga_param, summon_param: summon_ga_param, friend_param: friend_ga_param };
+    for (let i = 0; i < population_length; i++) {
+      let individual = { weapon: weapon_ga_ary[i], summon: summon_ga_ary[i], friend: friend_ga_ary[i] };
+      ga_param.population.push(individual);
+    }
 
     // 現在の状態を設定する
     this.state.status = CALC_STATE.GA_INITED;
+    this.state.ga_state = ga_param;
     return true;
+  }
+
+  /*
+   * 個体はobjtorefで作成されたリストを参照する染色体で出来ている。
+   * objtorefによって作成されたリストはarytoobjで作成されたObjectを参照している。
+   *
+   * 個々の遺伝子(数値)は前の遺伝子からのリスト(objtorefで作成されたリスト)上での距離を示している。
+   * リストの後端を超えると先端に戻って余った分を進める(つまりループしている)。
+   *
+   * つまり、評価するための個体を作成するためには次の手順を踏む。
+   * 0. objtorefで作成されたリストの先端にポインタをセットする。
+   * 1. 遺伝子(数値)分だけポインタを進める。
+   * 2. ポインタが示しているリストの値を読みとる。
+   * 3. 2で読みとった値はarytoobjで作成されたオブジェクトのキーである。
+   * 4. 3で特定されたキーから対象オブジェクトを個体の一部としてpushする。
+   * 5. 必要なだけ1から繰りかえす。
+   */
+
+  evaluate_value(individual) {
   }
 
   // 計算を進めるジェネレータ関数
