@@ -42,13 +42,15 @@ class Button extends Component {
   }
 
   next_button(event) {
-    if (this.optimizer_instance.calc_state == CALC_STATE.UNINIT || (!this.optimizer_generator)) {
+    if (this.optimizer_instance.state.status == CALC_STATE.UNINIT || (!this.optimizer_generator)) {
       this.optimizer_generator = this.optimizer_instance.init(
         this.props.basicinfo,
         this.props.weapon,
         this.props.friend,
         this.props.job_data
       );
+    } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
+      this.optimizer_instance.create_first_ga_state(1000, 0.01, 0.01, 0.1);
     }
     console.log(this.optimizer_generator.next());
   }
