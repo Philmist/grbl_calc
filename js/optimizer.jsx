@@ -50,7 +50,7 @@ class Button extends Component {
         this.props.job_data
       );
     } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
-      this.optimizer_instance.create_first_ga_state(1000, 0.01, 0.01, 0.1);
+      this.optimizer_instance.create_first_ga_state(500, 0.01, 0.01, 0.1);
     }
     console.log(this.optimizer_generator.next());
   }
