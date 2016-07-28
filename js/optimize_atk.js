@@ -122,7 +122,7 @@ export class GrblFormGAOptimizer {
     // 集団を作成する汎用関数
     let create_ga_state = (max_num, c_length, m_prob) => {
       // パラメータを設定
-      let prob = Number(m_prob);
+      let mutation_prob = Number(m_prob);
       let chromo_length = Number(c_length);
       let max_gene_num = Number(max_num);
       let length = population_length;
@@ -136,7 +136,7 @@ export class GrblFormGAOptimizer {
         }
         population.push(individual);
       }
-      return { population, prob, chromo_length, max_gene_num };
+      return { population, mutation_prob, chromo_length, max_gene_num };
     };
 
     // 実際に武器等の状態を作成する
