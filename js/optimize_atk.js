@@ -51,9 +51,9 @@ export class GrblFormGAOptimizer {
   init(base_param, weapon_list, summon_list, friend_list, job_data) {
     // 必要な変数に代入する
     this.base = Object.assign({}, base_param);
-    this.weapon_list = Array.from(weapon_list, (x) => {is_valid_weapon_obj(x) ? x : null} );
-    this.summon_list = Array.from(summon_list, (x) => {is_valid_summon_obj(x) ? x : null} );
-    this.friend_list = Array.from(friend_list, (x) => {is_valid_summon_obj(x) ? x : null} );  // フレンド召喚も召喚
+    this.weapon_list = Array.from(weapon_list, x => {return is_valid_weapon_obj(x) ? x : null;} );
+    this.summon_list = Array.from(summon_list, x => {return is_valid_summon_obj(x) ? x : null;} );
+    this.friend_list = Array.from(friend_list, x => {return is_valid_summon_obj(x) ? x : null;} );  // フレンド召喚も召喚
     this.job_data = job_data;  // job_dataは変更されないことが前提
 
     // 配列を辞書に変換する関数
