@@ -410,10 +410,10 @@ export function is_valid_summon_obj(summon_obj) {
     if (!(chk_val instanceof Object)) {
       return false;
     }
-    if (!(chk_val.includes("type") && chk_val.type instanceof String)) {
+    if (!(chk_val.hasOwnProperty("type") && chk_val.type instanceof String)) {
       return false;
     }
-    if (!(chk_val.includes("percent") && chk_val.percent >= 0)) {
+    if (!(chk_val.hasOwnProperty("percent") && chk_val.percent >= 0)) {
       return false;
     }
   }

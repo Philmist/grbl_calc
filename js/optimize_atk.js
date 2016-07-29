@@ -51,9 +51,9 @@ export class GrblFormGAOptimizer {
   init(base_param, weapon_list, summon_list, friend_list, job_data) {
     // 必要な変数に代入する
     this.base = Object.assign({}, base_param);
-    this.weapon_list = Array.from(weapon_list, x => is_valid_weapon_obj ? x : null);
-    this.summon_list = Array.from(summon_list, x => is_valid_summon_obj ? x : null);
-    this.friend_list = Array.from(friend_list, x => is_valid_summon_obj ? x : null);  // フレンド召喚も召喚
+    this.weapon_list = Array.from(weapon_list, (x) => {is_valid_weapon_obj(x) ? x : null} );
+    this.summon_list = Array.from(summon_list, (x) => {is_valid_summon_obj(x) ? x : null} );
+    this.friend_list = Array.from(friend_list, (x) => {is_valid_summon_obj(x) ? x : null} );  // フレンド召喚も召喚
     this.job_data = job_data;  // job_dataは変更されないことが前提
 
     // 配列を辞書に変換する関数
@@ -101,7 +101,7 @@ export class GrblFormGAOptimizer {
     // TODO: ハードコーディングなのでもっとマシにする
     this.weapon_max_chromo_length = this.weapon_ref.length > 10 ? 10 : this.weapon_ref.length;
     this.summon_max_chromo_length = this.summon_ref.length > 5 ? 5 : this.summon_ref.length;
-    this.friend_max_chromo_length = this.friend_max_chromo_length > 1 ? 1 : this.friend_ref.length;
+    this.friend_max_chromo_length = this.friend_ref.length > 1 ? 1 : this.friend_ref.length;
 
     // 状態変数を初期状態に
     this.state.status = CALC_STATE.PARAM_INITED;
@@ -172,6 +172,53 @@ export class GrblFormGAOptimizer {
    */
 
   evaluate_value(individual) {
+    // 染色体をobjのキーを表わす配列に変換する関数
+    function conv_chromos_to_array(chromo, conv_array) {
+      let result = [];
+      let pointer = 0;
+      chromo.forEach(function (gene) {
+        pointer = pointer + Number(gene);
+        if (pointer >= conv_array.length) {
+          pointer = pointer - conv_array.length;
+        }
+        result.push(conv_array[pointer]);
+      });
+      return result;
+    }
+
+    // キーの配列からObjectの配列に変換する関数
+    function objkeyarray_to_objarray(ary, obj) {
+      let result = [];
+      ary.forEach(function (key) {
+        result.push(obj[String(key)]);
+      });
+      return result;
+    }
+
+    // キーの配列に対して同じキーを指しているものが「ない」かをチェックする
+    function is_valid_key_array(ary) {
+      let s = new Set(ary);
+      return (s.size != ary.length);
+    }
+
+    // 個体の染色体をキーを表わす配列に変換する
+    let [weapon_ary, summon_ary, friend_ary] =
+    [
+      conv_chromos_to_array(individual.weapon, this.weapon_ref),
+      conv_chromos_to_array(individual.summon, this.summon_ref),
+      conv_chromos_to_array(individual.friend, this.friend_ref)
+    ];
+
+    // もし同じものを2度選択しているなら、その個体の価値は0
+    if (weapon_ary.every(is_valid_key_array)) {
+      return 0;
+    }
+    if (summon_ary.every(is_valid_key_array)) {
+      return 0;
+    }
+    if (friend_ary.every(is_valid_key_array)) {
+      return 0;
+    }
   }
 
   // 計算を進めるジェネレータ関数
@@ -183,4 +230,3 @@ export class GrblFormGAOptimizer {
     yield this.state;
   }
 }
-
