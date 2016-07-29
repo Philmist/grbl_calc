@@ -478,7 +478,7 @@ export function is_valid_weapon_obj(weapon_obj) {
     return false;
   }
   // 武器種別
-  if (!(weapon_keys.includes("type") && weapon_obj.type instanceof String)) {
+  if (!(weapon_keys.includes("type") && typeof weapon_obj.type == "string")) {
     return false;
   }
   // スキルレベル
@@ -490,7 +490,7 @@ export function is_valid_weapon_obj(weapon_obj) {
     return false;
   } else {
     for (let i = 0; i < weapon_obj.skill_type.length; i++) {
-      if (!(weapon_obj.skill_type[i] instanceof String)) {
+      if (!(typeof weapon_obj.skill_type[i] == "string")) {
         return false;
       }
     }
@@ -520,7 +520,7 @@ export function is_valid_summon_obj(summon_obj) {
     if (!(chk_val instanceof Object)) {
       return false;
     }
-    if (!(chk_val.hasOwnProperty("type") && chk_val.type instanceof String)) {
+    if (!(chk_val.hasOwnProperty("type") && typeof chk_val.type == "string")) {
       return false;
     }
     if (!(chk_val.hasOwnProperty("percent") && chk_val.percent >= 0)) {
