@@ -46,6 +46,7 @@ class Button extends Component {
       this.optimizer_generator = this.optimizer_instance.init(
         this.props.basicinfo,
         this.props.weapon,
+        this.props.summon,
         this.props.friend,
         this.props.job_data
       );
