@@ -16,7 +16,8 @@ import {
 export const CALC_STATE = {
   UNINIT: "UNINIT",
   PARAM_INITED: "PARAM_INITED",
-  GA_INITED: "GA_INITED"
+  GA_INITED: "GA_INITED",
+  CALC_VALUE: "CALC_VALUE"
 };
 
 
@@ -145,7 +146,7 @@ export class GrblFormGAOptimizer {
     let [friend_ga_ary, friend_ga_param] = create_ga_state(this.friend_ref.length, this.friend_max_chromo_length, friend_mutation);
     let ga_param = { population: [], weapon_param: weapon_ga_param, summon_param: summon_ga_param, friend_param: friend_ga_param };
     for (let i = 0; i < population_length; i++) {
-      let individual = { weapon: weapon_ga_ary[i], summon: summon_ga_ary[i], friend: friend_ga_ary[i] };
+      let individual = { weapon: weapon_ga_ary[i], summon: summon_ga_ary[i], friend: friend_ga_ary[i], value: null };
       ga_param.population.push(individual);
     }
 
@@ -187,10 +188,10 @@ export class GrblFormGAOptimizer {
     }
 
     // キーの配列からObjectの配列に変換する関数
-    function objkeyarray_to_objarray(ary, obj) {
+    function objkeyarray_to_objarray(ary, ref_obj) {
       let result = [];
       ary.forEach(function (key) {
-        result.push(obj[String(key)]);
+        result.push(ref_obj[String(key)]);
       });
       return result;
     }
@@ -211,13 +212,37 @@ export class GrblFormGAOptimizer {
 
     // もし同じものを2度選択しているなら、その個体の価値は0
     if (weapon_ary.every(is_valid_key_array)) {
-      return 0;
+      return null;
     }
     if (summon_ary.every(is_valid_key_array)) {
-      return 0;
+      return null;
     }
     if (friend_ary.every(is_valid_key_array)) {
-      return 0;
+      return null;
+    }
+
+    let param_weapon = objkeyarray_to_objarray(weapon_ary, this.weapon_obj);
+    let param_summon = objkeyarray_to_objarray(summon_ary, this.summon_obj);
+    let param_friend = objkeyarray_to_objarray(friend_ary, this.friend_obj);
+
+    let final_param = Object.assign({}, this.base, {
+      weapon: param_weapon,
+      summon: param_summon,
+      friend: param_friend[0]
+    });
+
+    let result = calculate_atkval(final_param, this.job_data);
+    return result;
+  }
+
+  *assign_value() {
+    this.state.status = CALC_STATE.CALC_VALUE;
+    for (let i = 0; i < this.state.ga_state.population.length; i++ ) {
+      let individual = this.state.ga_state.population[i];
+      let value = this.evaluate_value(individual);
+      this.state.message = "CALC:" + String(i);
+      this.state.ga_state.population[i].value = value;
+      yield this.state;
     }
   }
 
@@ -227,6 +252,7 @@ export class GrblFormGAOptimizer {
     while (this.state.status == CALC_STATE.PARAM_INITED) {
       yield this.state;
     }
+    yield* this.assign_value();
     yield this.state;
   }
 }
