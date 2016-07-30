@@ -130,10 +130,26 @@ export class GrblFormGAOptimizer {
       let population = [];
       // 初期集団を生成する
       for (let i = 0; i < length; i++) {
-        // 個体の生成
+        // 順序列の生成
+        let tmp_ary = [...Array(max_gene_number).keys()];  // [0,1,2,...]
+        for (let j = max_gene_number - 1; j > 0; j--) {
+          let ri = get_random_int(0, j);
+          [tmp_ary[ri], tmp_ary[j]] = [tmp_ary[j], tmp_ary[ri]];
+        }
+        let del_len = tmp_ary.length - chromo_length;
+        tmp_ary.splice(del_len, del_len);
         let individual = [];
-        for (let j = 0; j < chromo_length; j++) {
-          individual.push(get_random_int(1, max_gene_number));
+        // 個体の生成
+        for (let j = 0; j < tmp_ary.length; j++) {
+          if (j == 0) {
+            individual.push(tmp_ary[j]);
+          } else {
+            let v = tmp_ary[j-1] - tmp_ary[j];
+            if (v < 0) {
+              v = v + tmp_ary.length;
+            }
+            individual.push(v);
+          }
         }
         population.push(individual);
       }
@@ -211,13 +227,13 @@ export class GrblFormGAOptimizer {
     ];
 
     // もし同じものを2度選択しているなら、その個体の価値は0
-    if (weapon_ary.every(is_valid_key_array)) {
+    if (is_valid_key_array(weapon_ary)) {
       return null;
     }
-    if (summon_ary.every(is_valid_key_array)) {
+    if (is_valid_key_array(summon_ary)) {
       return null;
     }
-    if (friend_ary.every(is_valid_key_array)) {
+    if (is_valid_key_array(friend_ary)) {
       return null;
     }
 
