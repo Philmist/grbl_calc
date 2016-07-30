@@ -253,10 +253,11 @@ export class GrblFormGAOptimizer {
 
   *assign_value() {
     this.state.status = CALC_STATE.CALC_VALUE;
+    let l = String(this.state.ga_state.population.length);
     for (let i = 0; i < this.state.ga_state.population.length; i++ ) {
       let individual = this.state.ga_state.population[i];
       let value = this.evaluate_value(individual);
-      this.state.message = "CALC:" + String(i);
+      this.state.message = String(i+1) + "/" + String(l);
       this.state.ga_state.population[i].value = value;
       yield this.state;
     }
