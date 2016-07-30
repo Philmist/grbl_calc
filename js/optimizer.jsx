@@ -20,9 +20,7 @@ class Optimizer extends Component {
         <header styleName="title">編成最適化</header>
         <form name="optimizer">
           <table styleName="base" id="optimizer_table">
-            <tbody>
-              <Button job_data={this.props.job} />
-            </tbody>
+            <Button job_data={this.props.job} />
           </table>
         </form>
       </section>
@@ -38,7 +36,9 @@ class Button extends Component {
     super(props);
     this.next_button = ::this.next_button;
     this.optimizer_instance = new GrblFormGAOptimizer();
-    this.state = {};
+    this.state = {
+      generator_message: ""
+    };
   }
 
   next_button(event) {
@@ -51,21 +51,30 @@ class Button extends Component {
         this.props.job_data
       );
     } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
-      this.optimizer_instance.create_first_ga_state(500, 0.01, 0.01, 0.1);
+      this.optimizer_instance.create_first_ga_state(50, 0.01, 0.01, 0.1);
     }
-    console.log(this.optimizer_generator.next());
+    let iter_obj = this.optimizer_generator.next();
+    if (iter_obj.value && iter_obj.value.message) {
+      this.setState({generator_message: iter_obj.value.message});
+    }
+    console.log(iter_obj);
   }
 
   render() {
     return (
-      <tr styleName="row">
-        <th styleName="header">
-          ぼたん
-        </th>
-        <td>
-          <input type="button" value="次" onClick={this.next_button} />
-        </td>
-      </tr>
+      <tbody>
+        <tr styleName="row">
+          <th styleName="header">
+            ぼたん
+          </th>
+          <td>
+            <input type="button" value="次" onClick={this.next_button} />
+          </td>
+        </tr>
+        <tr>
+          <td colSpan="2"><span>{this.state.generator_message}</span></td>
+        </tr>
+      </tbody>
     );
   }
 }
