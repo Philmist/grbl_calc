@@ -38,12 +38,14 @@ class Button extends Component {
     this.optimizer_instance = new GrblFormGAOptimizer();
     this.state = {
       generator_message: "",
-      state: ""
+      finish: false
     };
   }
 
   next_button(event) {
-    if (this.optimizer_instance.state.status == CALC_STATE.UNINIT || (!this.optimizer_generator)) {
+    if (this.state.finish) {
+      this.setState({generator_message: "FINISHED"});
+    } else if (this.optimizer_instance.state.status == CALC_STATE.UNINIT || (!this.optimizer_generator)) {
       this.optimizer_generator = this.optimizer_instance.init(
         this.props.basicinfo,
         this.props.weapon,
@@ -51,15 +53,17 @@ class Button extends Component {
         this.props.friend,
         this.props.job_data
       );
+      this.setState({generator_message: "INITED"});
     } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
       this.optimizer_instance.create_first_ga_state(100, 0.01, 0.01, 0.1);
+      this.setState({generator_message: "GA_GENERATED"});
     } else {
-      let iter_obj = this.optimizer_generator.next();
-      if (iter_obj.value && iter_obj.value.message) {
-        this.setState({generator_message: iter_obj.value.message});
+      for (let i of this.optimizer_generator) {
+        this.setState({generator_message: i.message});
       }
+      this.setState({finish: true});
+      this.setState({generator_message: this.optimizer_instance.state.message});
     }
-    console.log(iter_obj);
   }
 
   render() {
