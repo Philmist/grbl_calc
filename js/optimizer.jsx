@@ -37,7 +37,8 @@ class Button extends Component {
     this.next_button = ::this.next_button;
     this.optimizer_instance = new GrblFormGAOptimizer();
     this.state = {
-      generator_message: ""
+      generator_message: "",
+      state: ""
     };
   }
 
@@ -52,10 +53,10 @@ class Button extends Component {
       );
     } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
       this.optimizer_instance.create_first_ga_state(100, 0.01, 0.01, 0.1);
-    }
-    let iter_obj = this.optimizer_generator.next();
-    if (iter_obj.value && iter_obj.value.message) {
-      this.setState({generator_message: iter_obj.value.message});
+    } else {
+      let iter_obj = this.optimizer_generator.next();
+      if (iter_obj.value && iter_obj.value.message) {
+        this.setState({generator_message: iter_obj.value.message});
     }
     console.log(iter_obj);
   }
