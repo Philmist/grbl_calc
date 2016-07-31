@@ -57,6 +57,7 @@ class Button extends Component {
       let iter_obj = this.optimizer_generator.next();
       if (iter_obj.value && iter_obj.value.message) {
         this.setState({generator_message: iter_obj.value.message});
+      }
     }
     console.log(iter_obj);
   }
