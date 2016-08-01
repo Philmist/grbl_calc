@@ -45,6 +45,7 @@ class Button extends Component {
   next_button(event) {
     if (this.state.finish) {
       this.setState({generator_message: "FINISHED"});
+      console.log(this.optimizer_instance.state.ga_state);
     } else if (this.optimizer_instance.state.status == CALC_STATE.UNINIT || (!this.optimizer_generator)) {
       this.optimizer_generator = this.optimizer_instance.init(
         this.props.basicinfo,
