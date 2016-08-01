@@ -99,6 +99,9 @@ class SaveLoad extends Component {
           slot_names_array.push("");
         }
       }
+    } else {
+      slot_names_array = Array(this.option_list.length);
+      slot_names_array.fill("");
     }
     // 初期stateをセット
     this.state = {
