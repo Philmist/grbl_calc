@@ -17,7 +17,8 @@ export const CALC_STATE = {
   UNINIT: "UNINIT",
   PARAM_INITED: "PARAM_INITED",
   GA_INITED: "GA_INITED",
-  CALC_VALUE: "CALC_VALUE"
+  CALC_VALUE: "CALC_VALUE",
+  SORT_POPULATION: "SORT_POPULATION"
 };
 
 
@@ -114,7 +115,8 @@ export class GrblFormGAOptimizer {
   // 初期状態を作成する関数
   create_first_ga_state(population_length, weapon_mutation, summon_mutation, friend_mutation) {
     // 集団の大きさをチェックする
-    population_length = population_length > 0 ? population_length : 300;
+    // 最低でも50個体は欲しい
+    population_length = population_length > 50 ? population_length : 50;
     // 突然変異確率を指定する
     weapon_mutation = ((weapon_mutation > 0) && (weapon_mutation < 1)) ? weapon_mutation : 0.01;
     summon_mutation = ((summon_mutation > 0) && (summon_mutation < 1)) ? summon_mutation : 0.01;
@@ -138,6 +140,9 @@ export class GrblFormGAOptimizer {
         }
         let del_len = tmp_ary.length - chromo_length;
         tmp_ary.splice(del_len, del_len);
+
+        console.log(tmp_ary);
+        
         let individual = [];
         // 個体の生成
         for (let j = 0; j < tmp_ary.length; j++) {
@@ -226,6 +231,8 @@ export class GrblFormGAOptimizer {
       conv_chromos_to_array(individual.friend, this.friend_ref)
     ];
 
+    console.log(weapon_ary);
+
     // もし同じものを2度選択しているなら、その個体の価値は0
     if (is_valid_key_array(weapon_ary)) {
       return null;
@@ -248,9 +255,11 @@ export class GrblFormGAOptimizer {
     });
 
     let result = calculate_atkval(final_param, this.job_data);
+    result = result.total_atk;
     return result;
   }
 
+  // 各個体に価値(攻撃力)を設定する
   *assign_value() {
     this.state.status = CALC_STATE.CALC_VALUE;
     let l = String(this.state.ga_state.population.length);
@@ -263,13 +272,34 @@ export class GrblFormGAOptimizer {
     }
   }
 
+  // 集団を価値によってソートする
+  sort_population() {
+    this.state.status = CALC_STATE.SORT_POPULATION;
+    this.state.ga_state.population.sort((l, r) => {
+      if (l === null && r === null) {
+        return 0;
+      } else if (r === null) {
+        return -1;
+      } else if (l === null) {
+        return 1;
+      } else {
+        let l_value = this.evaluate_value(l);
+        let r_value = this.evaluate_value(r);
+        return l_value - r_value;
+      }
+    });
+  }
+
   // 計算を進めるジェネレータ関数
   // 計算の状態はObjectで返ってくる(はず)
   *calculate_() {
+    // パラメータを初期化(=初期集団を生成)するまで待つ
     while (this.state.status == CALC_STATE.PARAM_INITED) {
       yield this.state;
     }
+    // 初期集団に価値を設定してソートする
     yield* this.assign_value();
+    this.sort_population();
     yield this.state;
   }
 }
