@@ -56,7 +56,7 @@ class Button extends Component {
       );
       this.setState({generator_message: "INITED"});
     } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
-      this.optimizer_instance.create_first_ga_state(100, 0.01, 0.01, 0.1);
+      this.optimizer_instance.create_first_ga_state(10, 0.01, 0.01, 0.1);
       this.setState({generator_message: "GA_GENERATED"});
     } else {
       for (let i of this.optimizer_generator) {
