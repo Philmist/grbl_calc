@@ -43,13 +43,15 @@ function get_random_int(min, max) {
  */
 export class GrblFormGAOptimizer {
   // コンストラクタ
-  // 渡されたパラメータを自身の中に保存する
+  // 初期の計算状態を設定する
   constructor() {
     this.state = { status: CALC_STATE.UNINIT };
   }
 
   // 計算前の初期化関数
+  // 計算に必要な各オブジェクトを受けとる
   // 戻り値としてジェネレータを返す
+  // (まだ)再度initされることは想定していない
   init(base_param, weapon_list, summon_list, friend_list, job_data) {
     // 必要な変数に代入する
     this.base = Object.assign({}, base_param);
@@ -113,15 +115,16 @@ export class GrblFormGAOptimizer {
   }
 
   // 初期状態を作成する関数
+  // 集団の大きさ、各パラメータごとの変異率を設定する
   create_first_ga_state(population_length, weapon_mutation, summon_mutation, friend_mutation) {
+
     // 集団の大きさをチェックする
-    // 最低でも50個体は欲しい
-    // population_length = population_length > 50 ? population_length : 50;
+    population_length = population_length > 0 ? population_length : 50;
 
     // 突然変異確率を指定する
     weapon_mutation = ((weapon_mutation > 0) && (weapon_mutation < 1)) ? weapon_mutation : 0.01;
     summon_mutation = ((summon_mutation > 0) && (summon_mutation < 1)) ? summon_mutation : 0.01;
-    friend_mutation = ((friend_mutation > 0) && (friend_mutation < 1)) ? friend_mutation : 0.1;
+    friend_mutation = ((friend_mutation > 0) && (friend_mutation < 1)) ? friend_mutation : 0.01;
 
     // 集団を作成する汎用関数
     let create_ga_state = (max_num, c_length, m_prob) => {
@@ -131,24 +134,28 @@ export class GrblFormGAOptimizer {
       let max_gene_number = Number(max_num);
       let length = population_length;
       let population = [];
+
       // 初期集団を生成する
       for (let i = 0; i < length; i++) {
         // 順序列の生成
         let tmp_ary = [...Array(max_gene_number).keys()];  // [0,1,2,...]
+        // 生成された順序列を乱雑なものにする
         for (let j = max_gene_number - 1; j > 0; j--) {
           let ri = get_random_int(0, j);
           [tmp_ary[ri], tmp_ary[j]] = [tmp_ary[j], tmp_ary[ri]];
         }
+
+        // 長過ぎる部分を切りおとす
         let del_len = tmp_ary.length - chromo_length;
         tmp_ary.splice(del_len, del_len);
 
-        let individual = [];
-
         // 個体の生成
+        // 遺伝子は順序表現(前の位置からの差分)
+        let individual = [];
         for (let j = 0; j < tmp_ary.length; j++) {
-          if (j == 0) {
+          if (j == 0) {  // 一番最初の場合
             individual.push(tmp_ary[j]);
-          } else {
+          } else {  // それ以外(前に値がある)
             let v = tmp_ary[j] - tmp_ary[j-1];
             if (v < 0) {
               v = v + max_gene_number;
@@ -156,16 +163,22 @@ export class GrblFormGAOptimizer {
             individual.push(v);
           }
         }
+
+        // 集団に積みこむ
         population.push(individual);
       }
 
+      // 生成された集団と各パラメータを返す
       return [ population, { mutation_probability, chromo_length, max_gene_number }];
     };
 
     // 実際に武器等の状態を作成する
+    // [a, b] = [1, 2] -> a = 1; b = 2;
     let [weapon_ga_ary, weapon_ga_param] = create_ga_state(this.weapon_ref.length, this.weapon_max_chromo_length, weapon_mutation);
     let [summon_ga_ary, summon_ga_param] = create_ga_state(this.summon_ref.length, this.summon_max_chromo_length, summon_mutation);
     let [friend_ga_ary, friend_ga_param] = create_ga_state(this.friend_ref.length, this.friend_max_chromo_length, friend_mutation);
+
+    // 最終的な初期状態を生成する
     let ga_param = { population: [], weapon_param: weapon_ga_param, summon_param: summon_ga_param, friend_param: friend_ga_param };
     for (let i = 0; i < population_length; i++) {
       let individual = { weapon: weapon_ga_ary[i], summon: summon_ga_ary[i], friend: friend_ga_ary[i], value: null };
@@ -194,6 +207,7 @@ export class GrblFormGAOptimizer {
    * 5. 必要なだけ1から繰りかえす。
    */
 
+  // individualとして渡された個体の価値を求める
   evaluate_value(individual) {
     // 染色体をobjのキーを表わす配列に変換する関数
     function conv_chromos_to_array(chromo, conv_array) {
@@ -233,45 +247,53 @@ export class GrblFormGAOptimizer {
     ];
 
     // もし同じものを2度選択しているなら、その個体の価値は0
-    if (is_valid_key_array(weapon_ary)) {
-      return null;
-    }
-    if (is_valid_key_array(summon_ary)) {
-      return null;
-    }
-    if (is_valid_key_array(friend_ary)) {
-      return null;
-    }
+    let valid_ary = [weapon_ary, summon_ary, friend_ary];
+    let valid_result = new Array();
+    valid_ary.forEach((v) => { valid_result.push(is_valid_key_array(v)) });
+    if (valid_result.includes(false)) return null;
 
+    // キー値を示す配列からパラメータを生成する
     let param_weapon = objkeyarray_to_objarray(weapon_ary, this.weapon_obj);
     let param_summon = objkeyarray_to_objarray(summon_ary, this.summon_obj);
     let param_friend = objkeyarray_to_objarray(friend_ary, this.friend_obj);
 
+    // 最終的な算出に使うパラメータを生成する
     let final_param = Object.assign({}, this.base, {
       weapon: param_weapon,
       summon: param_summon,
       friend: param_friend[0]
     });
 
+    // 最終的な攻撃力を算出して返す
     let result = calculate_atkval(final_param, this.job_data);
     result = result.total_atk;
     return result;
   }
 
   // 各個体に価値(攻撃力)を設定する
+  // 価値の見積りは途中で中断可能にする
   *assign_value() {
+    // 現在のステートを実行前に設定する
     this.state.status = CALC_STATE.CALC_VALUE;
+    // 分数形式の文字列として渡すために最大長を文字列として保管する
     let l = String(this.state.ga_state.population.length);
+
+    // 集団を個体に分解して価値を付ける
     for (let i = 0; i < this.state.ga_state.population.length; i++ ) {
+      // 個体を取りだす
       let individual = this.state.ga_state.population[i];
+      // 価値を付ける
       let value = this.evaluate_value(individual);
-      this.state.message = String(i+1) + "/" + String(l);
       this.state.ga_state.population[i].value = value;
+      // 外に出すメッセージ用の文字列を設定する
+      this.state.message = String(i+1) + "/" + String(l);
+      // いったん中断する
       yield this.state;
     }
   }
 
   // 集団を価値によってソートする
+  // ソートは中断困難なのでジェネレータにしない
   sort_population() {
     this.state.status = CALC_STATE.SORT_POPULATION;
     this.state.ga_state.population.sort((l, r) => {
