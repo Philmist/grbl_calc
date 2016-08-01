@@ -116,7 +116,8 @@ export class GrblFormGAOptimizer {
   create_first_ga_state(population_length, weapon_mutation, summon_mutation, friend_mutation) {
     // 集団の大きさをチェックする
     // 最低でも50個体は欲しい
-    population_length = population_length > 50 ? population_length : 50;
+    // population_length = population_length > 50 ? population_length : 50;
+
     // 突然変異確率を指定する
     weapon_mutation = ((weapon_mutation > 0) && (weapon_mutation < 1)) ? weapon_mutation : 0.01;
     summon_mutation = ((summon_mutation > 0) && (summon_mutation < 1)) ? summon_mutation : 0.01;
@@ -141,23 +142,23 @@ export class GrblFormGAOptimizer {
         let del_len = tmp_ary.length - chromo_length;
         tmp_ary.splice(del_len, del_len);
 
-        console.log(tmp_ary);
-        
         let individual = [];
+
         // 個体の生成
         for (let j = 0; j < tmp_ary.length; j++) {
           if (j == 0) {
             individual.push(tmp_ary[j]);
           } else {
-            let v = tmp_ary[j-1] - tmp_ary[j];
+            let v = tmp_ary[j] - tmp_ary[j-1];
             if (v < 0) {
-              v = v + tmp_ary.length;
+              v = v + max_gene_number;
             }
             individual.push(v);
           }
         }
         population.push(individual);
       }
+
       return [ population, { mutation_probability, chromo_length, max_gene_number }];
     };
 
@@ -231,8 +232,6 @@ export class GrblFormGAOptimizer {
       conv_chromos_to_array(individual.friend, this.friend_ref)
     ];
 
-    console.log(weapon_ary);
-
     // もし同じものを2度選択しているなら、その個体の価値は0
     if (is_valid_key_array(weapon_ary)) {
       return null;
@@ -285,7 +284,7 @@ export class GrblFormGAOptimizer {
       } else {
         let l_value = this.evaluate_value(l);
         let r_value = this.evaluate_value(r);
-        return l_value - r_value;
+        return r_value - l_value;
       }
     });
   }
@@ -301,5 +300,11 @@ export class GrblFormGAOptimizer {
     yield* this.assign_value();
     this.sort_population();
     yield this.state;
+
+    // ここらへんに選別
+
+    // ここらへんに交叉
+
+    // ここらへんに終了条件判定
   }
 }
