@@ -150,18 +150,14 @@ export class GrblFormGAOptimizer {
         tmp_ary.splice(del_len, del_len);
 
         // 個体の生成
-        // 遺伝子は順序表現(前の位置からの差分)
+        // 遺伝子は順序表現(残りの中で何番目にあるか)
+        // ※0ベース
         let individual = [];
-        for (let j = 0; j < tmp_ary.length; j++) {
-          if (j == 0) {  // 一番最初の場合
-            individual.push(tmp_ary[j]);
-          } else {  // それ以外(前に値がある)
-            let v = tmp_ary[j] - tmp_ary[j-1];
-            if (v < 0) {
-              v = v + max_gene_number;
-            }
-            individual.push(v);
-          }
+        let gene_numbers = [...Array(max_gene_number).keys()];
+        for (let i of tmp_ary) {
+          let index = gene_numbers.indexOf(i);
+          individual.push(index);
+          gene_numbers.splice(index, 1);
         }
 
         // 集団に積みこむ
@@ -194,32 +190,18 @@ export class GrblFormGAOptimizer {
   /*
    * 個体はobjtorefで作成されたリストを参照する染色体で出来ている。
    * objtorefによって作成されたリストはarytoobjで作成されたObjectを参照している。
-   *
-   * 個々の遺伝子(数値)は前の遺伝子からのリスト(objtorefで作成されたリスト)上での距離を示している。
-   * リストの後端を超えると先端に戻って余った分を進める(つまりループしている)。
-   *
-   * つまり、評価するための個体を作成するためには次の手順を踏む。
-   * 0. objtorefで作成されたリストの先端にポインタをセットする。
-   * 1. 遺伝子(数値)分だけポインタを進める。
-   * 2. ポインタが示しているリストの値を読みとる。
-   * 3. 2で読みとった値はarytoobjで作成されたオブジェクトのキーである。
-   * 4. 3で特定されたキーから対象オブジェクトを個体の一部としてpushする。
-   * 5. 必要なだけ1から繰りかえす。
    */
 
   // individualとして渡された個体の価値を求める
   evaluate_value(individual) {
     // 染色体をobjのキーを表わす配列に変換する関数
     function conv_chromos_to_array(chromo, conv_array) {
+      let gene_array = [...Array(conv_array.length).keys()];
       let result = [];
-      let pointer = 0;
-      chromo.forEach(function (gene) {
-        pointer = pointer + Number(gene);
-        if (pointer >= conv_array.length) {
-          pointer = pointer - conv_array.length;
-        }
-        result.push(conv_array[pointer]);
-      });
+      for (let i of chromo) {
+        result.push(gene_array[i]);
+        gene_array.splice(i, 1);
+      }
       return result;
     }
 
@@ -235,7 +217,7 @@ export class GrblFormGAOptimizer {
     // キーの配列に対して同じキーを指しているものが「ない」かをチェックする
     function is_valid_key_array(ary) {
       let s = new Set(ary);
-      return (s.size != ary.length);
+      return (s.size == ary.length);
     }
 
     // 個体の染色体をキーを表わす配列に変換する
@@ -250,7 +232,7 @@ export class GrblFormGAOptimizer {
     let valid_ary = [weapon_ary, summon_ary, friend_ary];
     let valid_result = new Array();
     valid_ary.forEach((v) => { valid_result.push(is_valid_key_array(v)) });
-    if (valid_result.includes(false)) return null;
+    if (valid_result.includes(false)) return 0;
 
     // キー値を示す配列からパラメータを生成する
     let param_weapon = objkeyarray_to_objarray(weapon_ary, this.weapon_obj);
