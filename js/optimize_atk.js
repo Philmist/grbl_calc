@@ -286,9 +286,7 @@ export class GrblFormGAOptimizer {
       } else if (l === null) {
         return 1;
       } else {
-        let l_value = this.evaluate_value(l);
-        let r_value = this.evaluate_value(r);
-        return r_value - l_value;
+        return r.value - l.value;
       }
     });
   }
