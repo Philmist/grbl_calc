@@ -83,8 +83,9 @@ WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 // 武器並び全体にプロパティを注入する関数
 // reduxのstoreからstateを取りだす
 function mapStateToWeaponTableBodyProps(state) {
-  // どれが最初のenabledな武器かをチェックする
+  // どれが最初のenabledな武器かをチェックし、チェックされている武器の数を数える
   return {
+    checked_length: (state.weapon.filter( i => i.selected )).length,
     weapon: state.weapon  // indexを使うために必要
   }
 }
@@ -99,7 +100,7 @@ class WeaponTableBody extends Component {
         {this.props.weapon.map((val, index) => {
           let first_selected = ((selected_index === -1 && val.selected) ? true : false);
           if (first_selected) { selected_index = index; }
-          return <WeaponRow key={"wr_"+String(index)} index={index} inputlock={this.props.inputlock} first_selected={first_selected} />;
+          return <WeaponRow key={"wr_"+String(index)} index={index} inputlock={this.props.inputlock} first_selected={first_selected} checked_length={this.props.checked_length} />;
         })}
       </tbody>
     );
@@ -242,6 +243,8 @@ const SKILL_LV = [
   ["14", "14"],
   ["15", "15"]
 ];
+// 武器の最大チェック数
+const WEAPON_CHECKED_MAX = 10;
 // 武器の1行を表わすコンポーネント
 // フォームはControlled Componentsにしているので割と面倒くさい
 class WeaponRow extends Component {
@@ -292,7 +295,9 @@ class WeaponRow extends Component {
   // 武器の選択状態が変更された時に呼ばれる関数
   change_select(e) {
     if (e.target.checked) {
-      this.props.enable_weapon_object(this.props.index);
+      if (this.props.checked_length < WEAPON_CHECKED_MAX) {
+        this.props.enable_weapon_object(this.props.index);
+      }
     } else {
       this.props.disable_weapon_object(this.props.index);
     }
