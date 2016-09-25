@@ -59,11 +59,13 @@ class Button extends Component {
       this.optimizer_instance.create_first_ga_state(10, 0.01, 0.01, 0.1);
       this.setState({generator_message: "GA_GENERATED"});
     } else {
-      for (let i of this.optimizer_generator) {
-        this.setState({generator_message: i.message});
+      let next_value = this.optimizer_generator.next().value;
+      if (next_value) {
+        this.setState({generator_message: next_value.message});
+      } else {
+        this.setState({finish: true});
+        this.setState({generator_message: this.optimizer_instance.state.message});
       }
-      this.setState({finish: true});
-      this.setState({generator_message: this.optimizer_instance.state.message});
     }
   }
 
