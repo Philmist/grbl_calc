@@ -18,7 +18,8 @@ export const CALC_STATE = {
   PARAM_INITED: "PARAM_INITED",
   GA_INITED: "GA_INITED",
   CALC_VALUE: "CALC_VALUE",
-  SORT_POPULATION: "SORT_POPULATION"
+  SORT_POPULATION: "SORT_POPULATION",
+  SELECTION_POPULATION: "SELECTION_POPULATION"
 };
 
 
@@ -268,7 +269,7 @@ export class GrblFormGAOptimizer {
       let value = this.evaluate_value(individual);
       this.state.ga_state.population[i].value = value;
       // 外に出すメッセージ用の文字列を設定する
-      this.state.message = String(i+1) + "/" + String(l);
+      this.state.message = "ASSIGN VALUE: " + String(i+1) + "/" + String(l);
       // いったん中断する
       yield this.state;
     }
@@ -278,6 +279,7 @@ export class GrblFormGAOptimizer {
   // ソートは中断困難なのでジェネレータにしない
   sort_population() {
     this.state.status = CALC_STATE.SORT_POPULATION;
+    this.state.message = "SORTING";
     this.state.ga_state.population.sort((l, r) => {
       if (l === null && r === null) {
         return 0;
@@ -289,6 +291,41 @@ export class GrblFormGAOptimizer {
         return r.value - l.value;
       }
     });
+    this.state.message = "SORTED";
+  }
+
+  // 集団の選別をする関数
+  *selection_population() {
+    this.state.status = CALC_STATE.SELECTION_POPULATION;
+    this.state.message = "START SELECTION";
+    // 価値が無い個体を削除する
+    this.state.ga_state.population = this.state.ga_state.population.filter((v) => {
+      return (v.value != null && v.value > 0);
+    });
+    yield this.state;
+    // 個体が1つだと選別できない
+    if (this.state.ga_state.population.length > 1){
+      // 全体の価値最大値を保存する
+      let max_value = this.state.ga_state.population[0].value;
+      let population_length = this.state.ga_state.population.length;
+      let min_value = this.state.ga_state.population[population_length - 1].value;
+      // 全体の半分以上になるまで選別する
+      // TODO: ハードコーディングしているのをどうにかする
+      let target_length = Math.round(this.state.ga_state.population.length / 2);
+      let result_population = [];
+      while (result_population <= target_length) {
+        for (let v of this.state.ga_state.population) {
+          if (Math.random() < ((v.value - min_value) / (max_value - min_value))) {
+            result_population.push(v);
+          }
+        }
+        this.state.message = "SELECTION: " + String(result_population.length) + ":" + String(target_length);
+        yield this.state;
+      }
+      this.state.ga_state.population = result_population;
+    }
+    this.state.message = "FINISH SELECTION";
+    yield this.state;
   }
 
   // 計算を進めるジェネレータ関数
@@ -303,7 +340,8 @@ export class GrblFormGAOptimizer {
     this.sort_population();
     yield this.state;
 
-    // ここらへんに選別
+    // 選別
+    yield* this.selection_population();
 
     // ここらへんに交叉
 
