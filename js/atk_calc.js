@@ -285,17 +285,17 @@ export function calculate_atkval (param_obj, job_data) {
       pcalc_gen(5, 0, 1), pcalc_gen(5, 0, 1)
     ),
     "ubw1": bwfunc_gen(
-      "unknown", less_than_chklv(CHECL_LEVEL),
+      "unknown", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.3 + l * 1.8),
       (l) => (18)
     ),
     "ubw2": bwfunc_gen(
-      "unknown", less_than_chklv(CHECL_LEVEL),
+      "unknown", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.4 + l * 2.4),
       (l) => (24)
     ),
     "ubw3": bwfunc_gen(
-      "unknown", less_than_chklv(CHECL_LEVEL),
+      "unknown", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.5 + l * 3.0),
       (l) => (30)
     ),
