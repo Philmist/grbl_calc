@@ -17,7 +17,6 @@ let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
 import {
-  replace_weapon_object,
   enable_weapon_object,
   disable_weapon_object,
   move_weapon_object,
@@ -182,7 +181,6 @@ function mapStateToWeaponRowProps(state, props) {
 }
 // reduxのaction creatorをpropsに注入するためのobject
 var mapActionCreatorsToWeaponRowProps = {
-  replace_weapon_object,
   enable_weapon_object,
   disable_weapon_object,
   move_weapon_object,
@@ -219,6 +217,8 @@ const SKILL_TYPE = [
   ["bw1"],
   ["bw2"],
   ["bw3"],
+  ["km1"],
+  ["ks"],
   ["mkj1"],
   ["mkj2"],
   ["mbw1"],
@@ -229,6 +229,10 @@ const SKILL_TYPE = [
   ["bhah"],
   ["unk1"],
   ["unk2"],
+  ["unk3"],
+  ["ubw1"],
+  ["ubw2"],
+  ["ubw3"],
   ["str"]
 ];
 const SKILL_LV = [
