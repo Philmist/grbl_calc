@@ -30,7 +30,7 @@ let loaders = [
     query: {
       plugins: ['transform-runtime'],
       // プリセットは順序が大事
-      presets: ['react', 'es2015-webpack', 'stage-0']
+      presets: ['react', ['es2015', { module: false }], 'stage-0'],
     }
   },
   {
