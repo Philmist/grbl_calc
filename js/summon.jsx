@@ -17,6 +17,10 @@ import {
   set_summon_lock, set_summon_name, set_summon_atk_value, set_summon_skill_percent, set_summon_skill_type
 } from "./actions";
 
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import ItemTypes from "const/item_types";
 import styles from "summon.css";
 
@@ -46,16 +50,17 @@ SummonTable = connect((state) => { return { inputlock: state.inputlock ? true : 
 // 召喚表のヘッダ
 class SummonTableHeader extends Component {
   render() {
+    let t_header = "summon.header.";
     return (
       <tr styleName="header">
-        <th>順</th>
-        <th>選</th>
-        <th>鍵</th>
-        <th>召喚名</th>
-        <th>攻撃力</th>
-        <th colSpan="2">加護1</th>
-        <th colSpan="2">加護2</th>
-        <th>追加・削除</th>
+        <Translate component="th" content={ t_header+"list" } />
+        <Translate component="th" content={ t_header+"select" } />
+        <Translate component="th" content={ t_header+"lock" } />
+        <Translate component="th" content={ t_header+"name" } />
+        <Translate component="th" content={ t_header+"value" } />
+        <Translate component="th" content={ t_header+"type1" } colSpan="2" />
+        <Translate component="th" content={ t_header+"type2" } colSpan="2" />
+        <Translate component="th" content={ t_header+"add_del" } />
       </tr>
     );
   }
@@ -171,19 +176,18 @@ export class SummonRow_ extends Component {
   // オプション要素を作るための関数
   create_optfunc(key) {
     return (
-      <option value={key[0]} key={key[0]}>{key[1]}</option>
+      <Translate component="option" value={key} key={key} content={ "summon.type."+key } />
     );
   }
 
   // optionのvalueと中身の対応
-  // TODO: なんとかして分離したい
   SUMMON_KIND = [
-    ["none", "無し"],
-    ["attribute", "属性"],
-    ["character", "キャラ"],
-    ["magna", "マグナ"],
-    ["unknown", "ｱﾝﾉｳﾝ"],
-    ["zeus", "ｾﾞｳｽ枠"]
+    ["none"],
+    ["attribute"],
+    ["character"],
+    ["magna"],
+    ["unknown"],
+    ["zeus"]
   ];
 
   // 実際にオプションの配列を作る
@@ -343,7 +347,7 @@ class Summon extends Component {
   render() {
     return (
       <section>
-        <header styleName="title">召喚獣</header>
+        <Translate component="header" styleName="title" content="summon.title" />
         <SummonTable />
       </section>
     );

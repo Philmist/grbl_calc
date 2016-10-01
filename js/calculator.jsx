@@ -10,6 +10,10 @@ import { connect } from "react-redux";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import BasicInformation from "./basic_information.jsx";
 import Zenith from "./zenith.jsx";
 import Weapon from "./weapon.jsx";
@@ -30,21 +34,22 @@ import styles from "calculator.css";
 class Result extends Component {
   render() {
     var res = calculate_atkval(this.props.parameter, this.props.job);
+    let t_header = "calculator.result.";
     return (
       <section>
-        <header styleName="title">結果</header>
+        <Translate component="header" styleName="title" content={ t_header+"title" } />
         <table styleName="base">
           <tbody>
             <tr styleName="row">
-              <th styleName="header">基本値</th>
+              <Translate component="th" styleName="header" content={ t_header+"basic_atk" } />
               <td styleName="result">{res.basic_atk}</td>
             </tr>
             <tr styleName="row">
-              <th styleName="header">表示攻撃力</th>
+              <Translate component="th" styleName="header" content={ t_header+"showed_atk" } />
               <td styleName="result">{res.showed_atk}</td>
             </tr>
             <tr styleName="row">
-              <th styleName="header">総合攻撃力</th>
+              <Translate component="th" styleName="header" content={ t_header+"total_atk" } />
               <td styleName="result">{res.total_atk}</td>
             </tr>
           </tbody>
@@ -104,7 +109,7 @@ class CalculatorBody extends Component {
     return (
       <div styleName="whole_app">
         <div styleName="header_box">
-          <header styleName="whole_title">グランブルーファンタジー攻撃力計算機（新）</header>
+          <Translate component="header" styleName="whole_title" content="calculator.title" />
         </div>
         <div styleName="calculator_box">
           <div styleName="left_box">

@@ -10,6 +10,11 @@ import React, { Component } from "react";
 import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
+
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
+
 import { SummonRow_ } from "./summon";
 import {
   enable_friend_object, disable_friend_object,
@@ -23,16 +28,17 @@ import styles from "friend.css";
 // テーブルヘッダ
 class TableHeader extends Component {
   render() {
+    let t_header = "summon.header.";  // 召喚部分を再利用する
     return (
       <tr styleName="header">
-        <th>順</th>
-        <th>選</th>
-        <th>鍵</th>
-        <th>召喚名</th>
-        <th>攻撃力</th>
-        <th colSpan="2">加護1</th>
-        <th colSpan="2">加護2</th>
-        <th>追加・削除</th>
+        <Translate component="th" content={ t_header+"list" } />
+        <Translate component="th" content={ t_header+"select" } />
+        <Translate component="th" content={ t_header+"lock" } />
+        <Translate component="th" content={ t_header+"name" } />
+        <Translate component="th" content={ t_header+"value" } />
+        <Translate component="th" content={ t_header+"type1" } colSpan="2" />
+        <Translate component="th" content={ t_header+"type2" } colSpan="2" />
+        <Translate component="th" content={ t_header+"add_del" } />
       </tr>
     );
   }
@@ -252,7 +258,7 @@ class Friend extends Component {
   render() {
     return (
       <section>
-        <header styleName="title">フレンド召喚</header>
+        <Translate component="header" styleName="title" content="friend.title" />
         <form>
           <table styleName="base" id="friend_table">
             <thead>
