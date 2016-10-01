@@ -145,6 +145,10 @@ export default function calculate_atkval (param_obj, job_data) {
         }
       }
       let specialty_cosmos = (weapon.type == cosmos_weapon_type) ? 30 : 0; // コスモス該当武器の追加%
+      // 自身がコスモス武器なら自身の倍率は0
+      if (weapon.cosmos) {
+        specialty_cosmos = 0;
+      }
       // 武器攻撃力に倍率をかける
       atk = atk * (specialty_basic + specialty_bonus + specialty_cosmos) / 100;
       // 全武器攻撃力を更新する
