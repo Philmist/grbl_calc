@@ -30,7 +30,7 @@ let loaders = [
     query: {
       plugins: ['transform-runtime'],
       // プリセットは順序が大事
-      presets: ['react', 'es2015-webpack', 'stage-0']
+      presets: ['react', ['es2015', { module: false }], 'stage-0'],
     }
   },
   {
@@ -66,7 +66,7 @@ if (isProd) {
 // webpack(1|2)は同時にいくつかのファイルをバンドルできます
 module.exports = [
   {
-    devtool: isProd ? "hidden-source-map" : "cheap-module-source-map",
+    devtool: isProd ? "#hidden-source-map" : "#source-map",
     entry: {
       js: "./js/entry.jsx",
     },
@@ -85,7 +85,7 @@ module.exports = [
     plugins: plugins
   },
   {
-    devtool: isProd ? "hidden-source-map" : "cheap-module-source-map",
+    devtool: isProd ? "#hidden-source-map" : "#source-map",
     entry: "mocha!./js/test/test.js",
     output: {
       filename: "./dist/test_bundle.js",
