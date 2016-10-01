@@ -19,10 +19,20 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import createLogger from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 import { Provider } from "react-redux";
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
 
 // 必要なユーザースクリプトを読みこむ
 import Calculator from "./calculator.jsx";
 import * as reducers from "./reducers.js";
+
+
+// 使用する言語がどこにあるかを指定する
+import locale_ja from "./locale/ja";
+counterpart.registerTranslations("ja", locale_ja);
+
+// デフォルトの言語を設定する
+counterpart.setLocale("ja");
 
 
 // 適用するミドルウェアを設定する
@@ -33,7 +43,6 @@ if (process.env.NODE_ENV === "development") {
   const loggerMiddleware = createLogger();
   middlewares.push(loggerMiddleware);
 }
-
 
 // reducerを組みあわせて新しいreducerを作る
 // このオブジェクトがstateの骨格になるので**うかつに変更しない**
