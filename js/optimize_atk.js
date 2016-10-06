@@ -181,6 +181,7 @@ export class GrblFormGAOptimizer {
       let individual = { weapon: weapon_ga_ary[i], summon: summon_ga_ary[i], friend: friend_ga_ary[i], value: null };
       ga_param.population.push(individual);
     }
+    ga_param.max_population_length = population_length;
 
     // 現在の状態を設定する
     this.state.status = CALC_STATE.GA_INITED;
@@ -295,7 +296,7 @@ export class GrblFormGAOptimizer {
   }
 
   // 集団の選別をする関数
-  *selection_population() {
+  *select_population() {
     this.state.status = CALC_STATE.SELECTION_POPULATION;
     this.state.message = "START SELECTION";
     // 価値が無い個体を削除する
@@ -328,6 +329,30 @@ export class GrblFormGAOptimizer {
     yield this.state;
   }
 
+  // 交叉を行なうジェネレータ関数
+  *intersect() {
+    // 2つの遺伝子を受けとり交叉して新しい2つの遺伝子を返す関数
+    // l_gene.length === r_gene.length
+    let intersect_gene = (l_gene, r_gene) => {
+      let intersect_point = get_random_int(0, l_gene.length);
+      // 特殊な条件だけは別にする
+      if (intersect_point === l_gene.length) {
+        return [l_gene, r_gene];
+      } else if (intersect_point === 0) {
+        return [r_gene, l_gene];
+      }
+    };
+    // 必要な分だけ交叉して個体を集団に追加する
+    for (let i = this.state.population.length; i < this.state.max_population_length; i++) {
+      // 交叉の対象となる2つの個体を選択する
+      let target = [0, 0];
+      while (target[0] === target[1]) {
+        target[0] = get_random_int(0, this.state.population.length - 1);
+        target[1] = get_random_int(0, this.state.population.length - 1);
+      }
+    }
+  }
+
   // 計算を進めるジェネレータ関数
   // 計算の状態はObjectで返ってくる(はず)
   *calculate_() {
@@ -341,7 +366,7 @@ export class GrblFormGAOptimizer {
     yield this.state;
 
     // 選別
-    yield* this.selection_population();
+    yield* this.select_population();
 
     // ここらへんに交叉
 
