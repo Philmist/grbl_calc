@@ -56,16 +56,22 @@ class Button extends Component {
       );
       this.setState({generator_message: "INITED"});
     } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
-      this.optimizer_instance.create_first_ga_state(10, 0.01, 0.01, 0.1);
+      this.optimizer_instance.create_first_ga_state(100, 0.05, 0.05, 0.05);
       this.setState({generator_message: "GA_GENERATED"});
-    } else {
+    } else if (false) {
       let next_value = this.optimizer_generator.next().value;
       if (next_value) {
         this.setState({generator_message: next_value.message});
+        console.log(next_value);
       } else {
         this.setState({finish: true});
         this.setState({generator_message: this.optimizer_instance.state.message});
       }
+    } else {
+      while(this.optimizer_generator.next().value) {
+        this.setState({generator_message: this.optimizer_instance.state.message});
+      }
+      this.setState({finish: true});
     }
   }
 
