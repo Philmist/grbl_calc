@@ -65,7 +65,7 @@ if (isProd) {
 
 // webpack(1|2)は同時にいくつかのファイルをバンドルできます
 module.exports = [
-  {
+  {  // 計算機のメイン(エントリポイント)
     devtool: isProd ? "#hidden-source-map" : "#source-map",
     entry: {
       js: "./js/entry.jsx",
@@ -84,7 +84,26 @@ module.exports = [
     },
     plugins: plugins
   },
-  {
+  {  // 編成計算機のWebWorkerファイル(必要最低限)
+    devtool: isProd ? "#hidden-source-map" : "#source-map",
+    entry: {
+      js: "./js/worker_ga.js",
+    },
+    output: {
+      filename: "./dist/optimizer.js",
+    },
+    module: {
+      loaders: loaders,
+    },
+    resolve: {
+      extensions: [".js"],
+      modules: [
+        "node_modules", "js"
+      ]
+    },
+    plugins: plugins
+  },
+  {  // 計算機部分単体のテストスイート
     devtool: isProd ? "#hidden-source-map" : "#source-map",
     entry: "mocha!./js/test/test.js",
     output: {
