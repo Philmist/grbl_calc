@@ -12,8 +12,31 @@ import { GrblFormGAOptimizer, CALC_STATE } from "./optimize_atk.js";
 import styles from "optimizer.css";
 
 
+// 最適化用のWebWorker
+var optimize_worker = new Worker("./dist/optimizer.js");  // Webpackのコンフィグ参照
+
+
 // 最適化をまとめるセクション
 class Optimizer extends Component {
+  constructor() {
+    super();
+    this.state = {};
+    this.on_message = ::this.on_message;
+  }
+
+  componentDidMount() {
+    optimize_worker.addEventListener("message", this.on_message);
+    optimize_worker.postMessage("Hello!");
+  }
+
+  componentWillUnmount() {
+    optimize_worker.removeEventListener("message", this.on_message);
+  }
+
+  on_message(e) {
+    console.log(e);
+  }
+
   render() {
     return (
       <section>
