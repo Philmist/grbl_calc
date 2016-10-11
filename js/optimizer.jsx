@@ -8,6 +8,7 @@ import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 
 import { GrblFormGAOptimizer, CALC_STATE } from "./optimize_atk.js";
+import { WORKER_STATE, WORKER_COMMAND } from "./const/worker_type.js";
 
 import styles from "optimizer.css";
 
@@ -26,7 +27,7 @@ class Optimizer extends Component {
 
   componentDidMount() {
     optimize_worker.addEventListener("message", this.on_message);
-    optimize_worker.postMessage("Hello!");
+    optimize_worker.postMessage({ command: WORKER_COMMAND.GET_STATE });
   }
 
   componentWillUnmount() {
@@ -34,7 +35,7 @@ class Optimizer extends Component {
   }
 
   on_message(e) {
-    console.log(e);
+    console.log(e.data);
   }
 
   render() {
