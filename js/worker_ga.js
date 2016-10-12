@@ -9,15 +9,17 @@
  */
 
 
-// 必要なモジュールとかをインポート
+// 必要な関数とか定数とかをインポート
 import { GrblFormGAOptimizer, CALC_STATE } from "./optimize_atk.js";
 import { WORKER_STATE, WORKER_COMMAND } from "./const/worker_type.js";
 import { is_valid_weapon_obj, is_valid_summon_obj } from "./atk_calc.js";
+import JOB_DATA from "./const/job_data.js";
 
 
 // モジュールローカルな変数群
-let optimizer_instance;  //< 編成最適化のインスタンス
-let optimizer_state = WORKER_STATE.INITIAL;  //< Workerの状態
+let optimizer_instance = null;  //< 編成最適化のインスタンス
+let optimizer_generator = null;  //< 編成最適化インスタンスから出来るジェネレータ
+let optimizer_state = WORKER_STATE.STOP;  //< Workerの状態
 let optimizer_parameter = {  //< GAのパラメータ
   population: 100,  //< 個体数
   mutation_probability: {  //< 突然変異の確率([0,1))
@@ -25,9 +27,25 @@ let optimizer_parameter = {  //< GAのパラメータ
     summon: 0.05,
     friend: 0.05
   },
-  count: 100  //< 世代数(ループ回数)
+  generation: 100  //< 世代数(ループ回数)
 };
-let optimizer_target = {};
+let optimizer_target = {  //< 最適化を行なうターゲット
+  basic_info: {},
+  weapon: [],
+  summon: [],
+  friend: []
+};
+let optimizer_flag = {  //< 設定されたパラメータを表わすフラグ
+  p_count: false,  //< 個体数
+  g_count: false,  //< 世代数
+  m_weapon: false,  //< 変異率(武器)
+  m_summon: false,  //< 変異率(召喚)
+  m_friend: false,  //< 変異率(フレンド)
+  i_basic: false,  //< 基本情報
+  i_weapon: false,  //< 武器情報
+  i_summon: false,  //< 召喚情報
+  i_friend: false  //< フレンド召喚情報
+};
 
 
 // 念のためpostMessageをbindしておく
@@ -39,7 +57,7 @@ let postMessage = ::self.postMessage;
 
 // 現在のステートを返す関数
 function post_state(data) {
-  postMessage({ result: true, data: optimizer_state });
+  postMessage({ result: true, data: optimizer_state, flags: optimizer_flag });
 }
 
 // GAのパラメータを初期化する
@@ -51,6 +69,7 @@ function set_ga_parameter(data) {
     let population = Number(ga_p.population);
     if (population > 10) {
       optimizer_parameter.population = Math.round(population);
+      optimizer_flag.p_count = true;
     }
     // 突然変異率の設定
     if (ga_p.mutation_probability) {
@@ -60,28 +79,35 @@ function set_ga_parameter(data) {
         optimizer_parameter.weapon = Number(prob.all);
         optimizer_parameter.summon = Number(prob.all);
         optimizer_parameter.friend = Number(prob.all);
+        optimizer_flag.m_weapon = true;
+        optimizer_flag.m_summon = true;
+        optimizer_flag.m_friend = true;
       } else {
         if (prob.weapon && is_valid_prob(prob.weapon)) {
           optimizer_parameter.weapon = Number(prob.weapon);
+          optimizer_flag.m_weapon = true;
         }
         if (prob.summon && is_valid_prob(prob.summon)) {
           optimizer_parameter.summon = Number(prob.summon);
+          optimizer_flag.m_summon = true;
         }
         if (prob.friend && is_valid_prob(prob.friend)) {
           optimizer_parameter.friend = Number(prob.friend);
+          optimizer_flag.m_friend = true;
         }
       }
     }
     // 世代数の設定
-    if (ga_p.count) {
-      let c = Number(ga_p.count);
+    if (ga_p.generation) {
+      let c = Number(ga_p.generation);
       if (c >= 10) {
-        optimizer_parameter.count = Math.round(c);
+        optimizer_parameter.generation = Math.round(c);
+        optimizer_flag.g_count = true;
       }
     }
     postMessage({
       result: true,
-      message: "GA parameter may be set.",
+      message: "GA parameter is set.",
       data: optimizer_parameter
     });
   } else {
@@ -89,19 +115,126 @@ function set_ga_parameter(data) {
   }
 }
 
+// 攻撃力を計算するための基本的な情報を受けとる関数
+function set_basic_info(data) {
+  if (data.data && data.data instanceof Object) {
+    Object.assign(optimizer_target.basic_info, data.data);
+    postMessage({ result: true, message: "basic_info is set."});
+    optimizer_flag.i_basic = true;
+  } else {
+    postMessage({ result: false, message: "data must be Object."});
+  }
+}
+
+// 最適編成計算の対象になる武器一覧を受けとる関数
+function set_weapon(data) {
+  if (data.data && data.data instanceof Array) {
+    let valid = data.data.every(is_valid_weapon_obj);
+    if (!valid) {
+      postMessage({ result: false, message: "data has invalid weapon object." });
+      return;
+    }
+    optimizer_target.weapon = data.data;
+    optimizer_flag.i_weapon = true;
+  } else {
+    postMessage({ result: false, message: "data must be Array." });
+  }
+}
+
+// 最適編成計算の対象になる召喚一覧を受けとる関数
+function set_summon(data) {
+  if (data.data && data.data instanceof Array) {
+    let valid = data.data.every(is_valid_summon_obj);
+    if (!valid) {
+      postMessage({ result: false, message: "data has invalid summon object." });
+      return;
+    }
+    optimizer_target.summon = data.data;
+    optimizer_flag.i_summon = true;
+  } else {
+    postMessage({ result: false, message: "data must be Array." });
+  }
+}
+
+// 最適編成計算の対象になるフレンド召喚一覧を受けとる関数
+function set_friend(data) {
+  if (data.data && data.data instanceof Array) {
+    let valid = data.data.every(is_valid_summon_obj);  // フレンド召喚も召喚
+    if (!valid) {
+      postMessage({ result: false, message: "data has invalid friend object." });
+      return;
+    }
+    optimizer_target.friend = data.data;
+    optimizer_flag.i_friend = true;
+  } else {
+    postMessage({ result: false, message: "data must be Array." });
+  }
+}
+
+// GAを初期化する関数
+function init_optimizer(data) {
+  // 必要なフラグが全部立っているかどうかをチェックする
+  if (!Object.values(optimizer_flag).every((v) => {v})) {
+    postMessage({ result: false, message: "Cannot run optimizer because of missing parameter."});
+    return;
+  }
+  // 計算機のインスタンスを作る
+  optimizer_instance = new GrblFormGAOptimizer();
+  // ジェネレータ(generator.next()を呼びだすごとに値を返すやつ)を作る
+  optimizer_generator = optimizer_instance(
+    optimizer_target.basic_info,
+    optimizer_target.weapon,
+    optimizer_target.summon,
+    optimizer_target.friend,
+    JOB_DATA
+  );
+  // 変異率等を設定する
+  optimizer_instance.create_first_ga_state(
+    optimizer_parameter.population,
+    optimizer_parameter.mutation_probability.weapon,
+    optimizer_parameter.mutation_probability.summon,
+    optimizer_parameter.mutation_probability.friend
+  );
+  // 現在の状態を初期化されたことにする
+  optimizer_state = WORKER_STATE.INITED;
+}
+
 
 // コマンド定数と関数を対応付けるオブジェクト
-const COMMAND_TABLE = {
+const STOPPED_COMMAND_TABLE = {
   [WORKER_COMMAND.GET_STATE]: post_state,
-  [WORKER_COMMAND.SET_GA_PARAM]: set_ga_parameter
+  [WORKER_COMMAND.SET_GA_PARAM]: set_ga_parameter,
+  [WORKER_COMMAND.SET_BASIC_INFO]: set_basic_info,
+  [WORKER_COMMAND.SET_WEAPON]: set_weapon,
+  [WORKER_COMMAND.SET_SUMMON]: set_summon,
+  [WORKER_COMMAND.SET_FRIEND]: set_friend,
+  [WORKER_COMMAND.INIT_OPTIMIZER]: init_optimizer
 };
 
 
 // ワーカーのメイン(イベント待ち受け)
 self.addEventListener("message", (e) => {
   let data = e.data;
-  if (COMMAND_TABLE.hasOwnProperty(data.command)) {
-    COMMAND_TABLE[data.command](data);
+  // コマンドが無いとどうしようもない
+  if (!data.command) {
+    postMessage({ result: false, message: "Need command." });
+    return;
+  }
+  // 計算機の停止時コマンドが該当するものならば
+  if (STOPPED_COMMAND_TABLE.hasOwnProperty(data.command)) {
+    // 該当のコマンドを実行する
+    if (data.command === WORKER_COMMAND.INIT_OPTIMIZER) {  //< 初期化は何があっても中断する
+      optimizer_generator = null;
+      optimizer_instance = null;
+      optimizer_state = WORKER_STATE.STOP;
+      STOPPED_COMMAND_TABLE[data.command](data);
+    } else if (optimizer_state === WORKER_STATE.RUNNING) {  //< 走っている間はパラメータ変更を受けつけない
+      postMessage({ result: false, message: "Optimizer is running."});
+    } else {  //< 他は該当コマンドを実行
+      STOPPED_COMMAND_TABLE[data.command](data);
+    }
+  } else if (data.command === WORKER_COMMAND.TERMINATE_OPTIMIZER && optimizer_state === WORKER_STATE.RUNNING) {
+    optimizer_state = WORKER_STATE.TERMINATE;
   } else {
     postMessage({ result: false, message: "Unknown command type." });
   }

@@ -21,7 +21,9 @@ export const CALC_STATE = {
   SORT_POPULATION: "SORT_POPULATION",
   SELECT_POPULATION: "SELECT_POPULATION",
   INTERSECT_GENE: "INTERSECT_GENE",
-  MUTATION: "MUTATION"
+  MUTATION: "MUTATION",
+  LOOP_START: "LOOP_START",
+  LOOP_END: "LOOP_END"
 };
 
 
@@ -449,7 +451,14 @@ export class GrblFormGAOptimizer {
     this.sort_population();
     yield this.state;
 
-    for (let i = 0; i < 100; i++) {
+    // 永久に回す
+    // 止めるかどうかは呼びだし元次第
+    while (true) {
+      // ループスタート
+      this.state.status == CALC_STATE.LOOP_START;
+      this.state.message == "Loop begin.";
+      yield this.state;
+
       // 選別
       yield* this.select_population();
 
@@ -464,7 +473,9 @@ export class GrblFormGAOptimizer {
       this.sort_population();
       yield this.state;
 
-      // トップの価値をいったんメッセージにする
+      // ループエンド
+      // トップの価値をメッセージにする
+      this.state.status = CALC_STATE.LOOP_END;
       this.state.message = "CURRENT TOP: " + String(this.state.ga_state.population[0].value);
       yield this.state;
     }
