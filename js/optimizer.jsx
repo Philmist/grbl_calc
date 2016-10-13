@@ -57,8 +57,13 @@ class Optimizer extends Component {
   }
 
   on_message(e) {
-    console.info(e.data);
-    if (e.data.data === WORKER_STATE.STOP && e.data.can_run) {
+    console.log(e.data);
+    if (e.data.state === WORKER_STATE.RUNNING) {
+      this.setState({ gen_count: e.data.count });
+    }
+    if (e.data.state === WORKER_STATE.STOP && e.data.can_run) {
+      console.log(e.data);
+      this.setState({ gen_count: 0 });
       this.optimize_worker.postMessage({
         command: WORKER_COMMAND.INIT
       });
@@ -96,11 +101,11 @@ class Optimizer extends Component {
       [...Array(FRIEND_CHECKED_MAX).keys()].forEach((v, i) => {
         this.props.enable_friend_object(i);
       });
-      this.setState({ gen_count: Number(this.state.max_gen) });
       this.optimize_worker.postMessage({
         command: WORKER_COMMAND.RESET
       });
       this.props.input_unlock();
+      this.setState({ gen_count: 0 });
     }
   }
 
@@ -139,7 +144,7 @@ class Optimizer extends Component {
         <header styleName="title">編成最適化</header>
         <form name="optimizer">
           <table styleName="base" id="optimizer_table">
-            <Button optimizer_func={this.optimizer_func} value={this.state.gen_count} />
+            <Button optimizer_func={this.optimizer_func} value={String(this.state.gen_count)+"/"+String(this.state.max_gen)} />
           </table>
         </form>
       </section>

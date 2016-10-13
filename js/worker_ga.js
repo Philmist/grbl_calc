@@ -59,7 +59,7 @@ let postMessage = ::self.postMessage;
 function post_state(data) {
   postMessage({
     result: true,
-    data: optimizer_state,
+    state: optimizer_state,
     flags: optimizer_flag,
     can_run: Object.values(optimizer_flag).every((v) => { return v; })
   });
