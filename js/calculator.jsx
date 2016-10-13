@@ -106,7 +106,7 @@ class CalculatorBody extends Component {
   }
   // 実際に要素をレンダリングするための関数
   render() {
-    var { job, params } = this.props;  // var job = this.props.job; (略)
+    let { job, params } = this.props;  // var job = this.props.job; (略)
     return (
       <div styleName="whole_app">
         <div styleName="header_box">
