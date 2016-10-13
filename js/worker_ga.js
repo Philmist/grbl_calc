@@ -249,6 +249,22 @@ function run_optimizer(data) {
   });
 }
 
+// 実際に最適化計算機を与えられたパラメータで走らせる
+function run_optimizer(data) {
+  optimizer_state = WORKER_STATE.RUNNING;
+  let next_value = optimizer_generator.next().value;
+  for (let i = 0;
+    (i < optimizer_parameter.generation)
+    && (optimizer_state === WORKER_STATE.RUNNING);
+    i++) {
+    while (next_value && next_value.state.status != CALC_STATE.LOOP_END) {
+      next_value = optimizer_generator.next().value;
+    }
+    postMessage({ message: "Optimizer running.", count: i+1, state: optimizer_state });
+  }
+  optimizer_state = WORKER_STATE.FINISH;
+}
+
 
 // コマンド定数と関数を対応付けるオブジェクト
 const STOPPED_COMMAND_TABLE = {
