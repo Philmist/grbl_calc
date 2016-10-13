@@ -303,6 +303,14 @@ export function move_weapon_object(from, to) {
   };
 }
 
+// 武器を与えられたindex配列通りにソートする
+export function sort_weapon_object(to_array) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.SORT, to_array: to_array });
+    return true;
+  };
+}
+
 // 武器を削除する
 export function delete_weapon_object(index) {
   return function (dispatch) {
@@ -410,6 +418,14 @@ export function move_summon_object(from, to) {
   };
 }
 
+// 召喚を与えられたindex配列通りにソートする
+export function sort_summon_object(to_array) {
+  return function (dispatch) {
+    dispatch({ type: RC.summon.SORT, to_array: to_array });
+    return true;
+  };
+}
+
 // 召喚を削除する
 export function delete_summon_object(index) {
   return function (dispatch) {
@@ -513,6 +529,14 @@ export function set_friend_skill_type(index, target, skill_type) {
 export function move_friend_object(from, to) {
   return function (dispatch) {
     dispatch({ type: RC.friend.MOVE, from: Number(from), to: Number(to) });
+    return true;
+  };
+}
+
+// フレンド召喚を与えられたindex配列通りにソートする
+export function sort_friend_object(to_array) {
+  return function (dispatch) {
+    dispatch({ type: RC.friend.SORT, to_array: to_array });
     return true;
   };
 }

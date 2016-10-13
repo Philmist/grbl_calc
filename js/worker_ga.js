@@ -57,7 +57,12 @@ let postMessage = ::self.postMessage;
 
 // 現在のステートを返す関数
 function post_state(data) {
-  postMessage({ result: true, data: optimizer_state, flags: optimizer_flag });
+  postMessage({
+    result: true,
+    data: optimizer_state,
+    flags: optimizer_flag,
+    can_run: Object.values(optimizer_flag).every((v) => { return v; })
+  });
 }
 
 // GAのパラメータを初期化する
@@ -74,8 +79,8 @@ function set_ga_parameter(data) {
     // 突然変異率の設定
     if (ga_p.mutation_probability) {
       let prob = ga_p.mutation_probability;
-      let is_valid_prob = (v) => { (Number(v) >= 0) && (Number(v) < 1) };
-      if (prob.all && is_valid_prob(prob.all)) {
+      let is_valid_prob = (v) => { return ((v >= 0) && (v < 1)); };
+      if (prob.hasOwnProperty("all") && is_valid_prob(prob.all)) {
         optimizer_parameter.weapon = Number(prob.all);
         optimizer_parameter.summon = Number(prob.all);
         optimizer_parameter.friend = Number(prob.all);
@@ -136,6 +141,7 @@ function set_weapon(data) {
     }
     optimizer_target.weapon = data.data;
     optimizer_flag.i_weapon = true;
+    postMessage({ result: true, message: "Weapon data is set." });
   } else {
     postMessage({ result: false, message: "data must be Array." });
   }
@@ -151,6 +157,7 @@ function set_summon(data) {
     }
     optimizer_target.summon = data.data;
     optimizer_flag.i_summon = true;
+    postMessage({ result: true, message: "Summon data is set." });
   } else {
     postMessage({ result: false, message: "data must be Array." });
   }
@@ -166,6 +173,7 @@ function set_friend(data) {
     }
     optimizer_target.friend = data.data;
     optimizer_flag.i_friend = true;
+    postMessage({ result: true, message: "friend data is set." });
   } else {
     postMessage({ result: false, message: "data must be Array." });
   }
@@ -174,14 +182,14 @@ function set_friend(data) {
 // GAを初期化する関数
 function init_optimizer(data) {
   // 必要なフラグが全部立っているかどうかをチェックする
-  if (!Object.values(optimizer_flag).every((v) => {v})) {
+  if (!Object.values(optimizer_flag).every((v) => { return v; })) {
     postMessage({ result: false, message: "Cannot run optimizer because of missing parameter."});
     return;
   }
   // 計算機のインスタンスを作る
   optimizer_instance = new GrblFormGAOptimizer();
   // ジェネレータ(generator.next()を呼びだすごとに値を返すやつ)を作る
-  optimizer_generator = optimizer_instance(
+  optimizer_generator = optimizer_instance.init(
     optimizer_target.basic_info,
     optimizer_target.weapon,
     optimizer_target.summon,
@@ -197,22 +205,43 @@ function init_optimizer(data) {
   );
   // 現在の状態を初期化されたことにする
   optimizer_state = WORKER_STATE.INITED;
+  postMessage({ result: true, message: "Optimizer is inited." });
 }
 
 // 実際に最適化計算機を与えられたパラメータで走らせる
 function run_optimizer(data) {
+  // 初期化されてないなら中止
+  if (optimizer_state != WORKER_STATE.INITED) {
+    postMessage({ result: false, message: "Optimizer isn't inited." });
+    return;
+  }
+  // 実際に編成計算機を走らせる
   optimizer_state = WORKER_STATE.RUNNING;
   let next_value = optimizer_generator.next().value;
   for (let i = 0;
     (i < optimizer_parameter.generation)
     && (optimizer_state === WORKER_STATE.RUNNING);
     i++) {
-    while (next_value && next_value.state.status != CALC_STATE.LOOP_END) {
+    while (next_value && next_value.status != CALC_STATE.LOOP_END) {
       next_value = optimizer_generator.next().value;
     }
     postMessage({ message: "Optimizer running.", count: i+1, state: optimizer_state });
   }
   optimizer_state = WORKER_STATE.FINISH;
+  let top_individual = next_value.ga_state.population[0];
+  let [weapon, summon, friend] = [
+    optimizer_instance.conv_chromos_to_array(top_individual.weapon, optimizer_instance.ref.weapon),
+    optimizer_instance.conv_chromos_to_array(top_individual.summon, optimizer_instance.ref.summon),
+    optimizer_instance.conv_chromos_to_array(top_individual.friend, optimizer_instance.ref.friend),
+  ];
+  postMessage({
+    message: "Optimize finished.",
+    state: optimizer_state,
+    top: next_value.ga_state.population[0],
+    weapon: weapon,
+    summon: summon,
+    friend: friend
+  });
 }
 
 
@@ -224,7 +253,12 @@ const STOPPED_COMMAND_TABLE = {
   [WORKER_COMMAND.SET_WEAPON]: set_weapon,
   [WORKER_COMMAND.SET_SUMMON]: set_summon,
   [WORKER_COMMAND.SET_FRIEND]: set_friend,
-  [WORKER_COMMAND.INIT_OPTIMIZER]: init_optimizer
+  [WORKER_COMMAND.INIT]: init_optimizer,
+  [WORKER_COMMAND.RESET]: (d) => {
+    optimizer_generator = null;
+    optimizer_instance = null;
+    optimizer_state = WORKER_STATE.STOP;
+  }
 };
 
 
@@ -239,18 +273,22 @@ self.addEventListener("message", (e) => {
   // 計算機の停止時コマンドが該当するものならば
   if (STOPPED_COMMAND_TABLE.hasOwnProperty(data.command)) {
     // 該当のコマンドを実行する
-    if (data.command === WORKER_COMMAND.INIT_OPTIMIZER) {  //< 初期化は何があっても中断する
+    if (data.command === WORKER_COMMAND.INIT || data.command === WORKER_COMMAND.RESET) {  //< 初期化とリセット
       optimizer_generator = null;
       optimizer_instance = null;
       optimizer_state = WORKER_STATE.STOP;
-      STOPPED_COMMAND_TABLE[data.command](data);
+      if (data.command === WORKER_COMMAND.INIT) {
+        STOPPED_COMMAND_TABLE[data.command](data);
+      }
     } else if (optimizer_state === WORKER_STATE.RUNNING) {  //< 走っている間はパラメータ変更を受けつけない
       postMessage({ result: false, message: "Optimizer is running."});
     } else {  //< 他は該当コマンドを実行
       STOPPED_COMMAND_TABLE[data.command](data);
     }
-  } else if (data.command === WORKER_COMMAND.TERMINATE_OPTIMIZER && optimizer_state === WORKER_STATE.RUNNING) {
+  } else if (data.command === WORKER_COMMAND.TERMINATE && optimizer_state === WORKER_STATE.RUNNING) {
     optimizer_state = WORKER_STATE.TERMINATE;
+  } else if (data.command === WORKER_COMMAND.RUN) {
+    run_optimizer(data);
   } else {
     postMessage({ result: false, message: "Unknown command type." });
   }
