@@ -7,20 +7,139 @@ import React, { Component } from "react";
 import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
 
-import { GrblFormGAOptimizer, CALC_STATE } from "./optimize_atk.js";
+import {
+  enable_weapon_object,
+  disable_weapon_object,
+  enable_summon_object,
+  disable_summon_object,
+  enable_friend_object,
+  disable_friend_object,
+  sort_weapon_object,
+  sort_summon_object,
+  sort_friend_object,
+  input_lock,
+  input_unlock
+} from "./actions.js";
+
+import { WORKER_STATE, WORKER_COMMAND } from "./const/worker_type.js";
+import { WEAPON_CHECKED_MAX, SUMMON_CHECKED_MAX, FRIEND_CHECKED_MAX } from "./const/number_const.js";
 
 import styles from "optimizer.css";
 
 
+
 // 最適化をまとめるセクション
 class Optimizer extends Component {
+  constructor() {
+    super();
+    this.state = {
+      max_gen: 10000,
+      max_pop: 200,
+      mut_prob: 0.005,
+      gen_count: 0
+    };
+    this.on_message = ::this.on_message;
+    this.optimizer_func = ::this.optimizer_func;
+  }
+
+  componentDidMount() {
+    // 最適化用のWebWorkerを読み込み
+    this.optimize_worker = new Worker("./dist/optimizer.js");  // Webpackのコンフィグ参照
+    // イベントリスナーを追加
+    this.optimize_worker.addEventListener("message", this.on_message);
+    this.optimize_worker.postMessage({ command: WORKER_COMMAND.GET_STATE });
+  }
+
+  componentWillUnmount() {
+    this.optimize_worker.removeEventListener("message", this.on_message);
+    this.optimize_worker.terminate();
+    this.optimize_worker = undefined;
+  }
+
+  on_message(e) {
+    console.info(e.data);
+    if (e.data.data === WORKER_STATE.STOP && e.data.can_run) {
+      this.optimize_worker.postMessage({
+        command: WORKER_COMMAND.INIT
+      });
+      this.optimize_worker.postMessage({ command: WORKER_COMMAND.RUN });
+    }
+    if (e.data.state === WORKER_STATE.FINISH) {
+      console.info(e.data);
+      // 結果を格納する
+      let target = {
+        weapon: e.data.weapon,
+        summon: e.data.summon,
+        friend: e.data.friend
+      };
+      // 一度選択状態を解除する
+      this.props.weapon.forEach((v, i) => {
+        this.props.disable_weapon_object(i);
+      });
+      this.props.summon.forEach((v, i) => {
+        this.props.disable_summon_object(i);
+      });
+      this.props.friend.forEach((v, i) => {
+        this.props.disable_friend_object(i);
+      });
+      // 指定された順番に並びかえる
+      this.props.sort_weapon_object(target.weapon);
+      this.props.sort_summon_object(target.summon);
+      this.props.sort_friend_object(target.friend);
+      // 一番上から選択状態にする
+      [...Array(WEAPON_CHECKED_MAX).keys()].forEach((v, i) => {
+        this.props.enable_weapon_object(i);
+      });
+      [...Array(SUMMON_CHECKED_MAX).keys()].forEach((v, i) => {
+        this.props.enable_summon_object(i);
+      });
+      [...Array(FRIEND_CHECKED_MAX).keys()].forEach((v, i) => {
+        this.props.enable_friend_object(i);
+      });
+      this.setState({ gen_count: Number(this.state.max_gen) });
+      this.optimize_worker.postMessage({
+        command: WORKER_COMMAND.RESET
+      });
+      this.props.input_unlock();
+    }
+  }
+
+  optimizer_func() {
+    this.props.input_lock();
+    this.optimize_worker.postMessage({
+      command: WORKER_COMMAND.SET_BASIC_INFO,
+      data: this.props.basicinfo
+    });
+    this.optimize_worker.postMessage({
+      command: WORKER_COMMAND.SET_WEAPON,
+      data: this.props.weapon
+    });
+    this.optimize_worker.postMessage({
+      command: WORKER_COMMAND.SET_SUMMON,
+      data: this.props.summon
+    });
+    this.optimize_worker.postMessage({
+      command: WORKER_COMMAND.SET_FRIEND,
+      data: this.props.friend
+    });
+    this.optimize_worker.postMessage({
+      command: WORKER_COMMAND.SET_GA_PARAM,
+      data: {
+        generation: this.state.max_gen,
+        population: this.state.max_pop,
+        mutation_probability: { all: this.state.mut_prob }
+      }
+    });
+    this.optimize_worker.postMessage({ command: WORKER_COMMAND.GET_STATE });
+  }
+
   render() {
     return (
       <section>
         <header styleName="title">編成最適化</header>
         <form name="optimizer">
           <table styleName="base" id="optimizer_table">
-            <Button job_data={this.props.job} />
+            <Button optimizer_func={this.optimizer_func} value={this.state.gen_count} />
           </table>
         </form>
       </section>
@@ -28,51 +147,40 @@ class Optimizer extends Component {
   }
 }
 Optimizer = CSSModules(Optimizer, styles);
+const mapStateToOptimizerProps = (state) => {
+  return {
+    weapon: state.weapon,
+    summon: state.summon,
+    friend: state.friend,
+    basicinfo: state.basicinfo
+  };
+};
+const mapActionCreatorsToOptimizerProps = {
+  enable_weapon_object,
+  disable_weapon_object,
+  sort_weapon_object,
+  enable_summon_object,
+  disable_summon_object,
+  sort_summon_object,
+  enable_friend_object,
+  disable_friend_object,
+  sort_friend_object,
+  input_lock,
+  input_unlock
+};
+Optimizer = connect(mapStateToOptimizerProps, mapActionCreatorsToOptimizerProps)(Optimizer);
 export default Optimizer;
 
 
 class Button extends Component {
   constructor(props) {
     super(props);
-    this.next_button = ::this.next_button;
-    this.optimizer_instance = new GrblFormGAOptimizer();
-    this.state = {
-      generator_message: "",
-      finish: false
-    };
+    this.start_button = ::this.start_button;
+    this.state = {};
   }
 
-  next_button(event) {
-    if (this.state.finish) {
-      this.setState({generator_message: "FINISHED"});
-      console.log(this.optimizer_instance.state.ga_state);
-    } else if (this.optimizer_instance.state.status == CALC_STATE.UNINIT || (!this.optimizer_generator)) {
-      this.optimizer_generator = this.optimizer_instance.init(
-        this.props.basicinfo,
-        this.props.weapon,
-        this.props.summon,
-        this.props.friend,
-        this.props.job_data
-      );
-      this.setState({generator_message: "INITED"});
-    } else if (this.optimizer_instance.state.status == CALC_STATE.PARAM_INITED) {
-      this.optimizer_instance.create_first_ga_state(100, 0.05, 0.05, 0.05);
-      this.setState({generator_message: "GA_GENERATED"});
-    } else if (false) {
-      let next_value = this.optimizer_generator.next().value;
-      if (next_value) {
-        this.setState({generator_message: next_value.message});
-        console.log(next_value);
-      } else {
-        this.setState({finish: true});
-        this.setState({generator_message: this.optimizer_instance.state.message});
-      }
-    } else {
-      while(this.optimizer_generator.next().value) {
-        this.setState({generator_message: this.optimizer_instance.state.message});
-      }
-      this.setState({finish: true});
-    }
+  start_button(event) {
+    this.props.optimizer_func();
   }
 
   render() {
@@ -83,23 +191,11 @@ class Button extends Component {
             ぼたん
           </th>
           <td>
-            <input type="button" value="次" onClick={this.next_button} />
+            <input type="button" value={this.props.value} onClick={this.start_button} />
           </td>
-        </tr>
-        <tr>
-          <td colSpan="2"><span>{this.state.generator_message}</span></td>
         </tr>
       </tbody>
     );
   }
 }
 Button = CSSModules(Button, styles);
-const mapStateToButtonProps = (state) => {
-  return {
-    weapon: state.weapon,
-    summon: state.summon,
-    friend: state.friend,
-    basicinfo: state.basicinfo
-  };
-};
-Button = connect(mapStateToButtonProps)(Button);

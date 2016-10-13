@@ -21,7 +21,9 @@ export const CALC_STATE = {
   SORT_POPULATION: "SORT_POPULATION",
   SELECT_POPULATION: "SELECT_POPULATION",
   INTERSECT_GENE: "INTERSECT_GENE",
-  MUTATION: "MUTATION"
+  MUTATION: "MUTATION",
+  LOOP_START: "LOOP_START",
+  LOOP_END: "LOOP_END"
 };
 
 
@@ -328,10 +330,20 @@ export class GrblFormGAOptimizer {
       let max_value = this.state.ga_state.population[0].value;
       let population_length = this.state.ga_state.population.length;
       let min_value = this.state.ga_state.population[population_length - 1].value;
-      // 全体の半分になるまで選別する
+      // 全体の半分以上になるまで選別する
       // TODO: ハードコーディングしているのをどうにかする
       let target_length = Math.round(this.state.ga_state.population.length / 2);
-      this.state.ga_state.population.splice((-1 * target_length), target_length);
+      let new_population = this.state.ga_state.population.slice(0, Math.round(target_length / 2));
+      let total_value = 0;
+      this.state.ga_state.population.forEach((v) => { total_value = total_value + v.value; });
+      while (target_length > new_population.length) {
+        this.state.ga_state.population.forEach((v) => {
+          if (Math.random() < (v.value / total_value)) {
+            new_population.push(v);
+          }
+        });
+      }
+      this.state.ga_state.population = new_population;
       this.state.message = "SELECTION:" + String(this.state.ga_state.population.length);
       yield this.state;
     }
@@ -449,7 +461,14 @@ export class GrblFormGAOptimizer {
     this.sort_population();
     yield this.state;
 
-    for (let i = 0; i < 100; i++) {
+    // 永久に回す
+    // 止めるかどうかは呼びだし元次第
+    while (true) {
+      // ループスタート
+      this.state.status == CALC_STATE.LOOP_START;
+      this.state.message == "Loop begin.";
+      yield this.state;
+
       // 選別
       yield* this.select_population();
 
@@ -464,12 +483,13 @@ export class GrblFormGAOptimizer {
       this.sort_population();
       yield this.state;
 
-      // トップの価値をいったんメッセージにする
+      // ループエンド
+      // トップの価値をメッセージにする
+      this.state.status = CALC_STATE.LOOP_END;
       this.state.message = "CURRENT TOP: " + String(this.state.ga_state.population[0].value);
       yield this.state;
     }
 
-    // ここらへんに終了条件判定
   }
 
 }

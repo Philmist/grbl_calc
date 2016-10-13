@@ -16,6 +16,7 @@ import Translate from "react-translate-component";
 let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
+import { WEAPON_CHECKED_MAX } from "./const/number_const.js";
 import {
   enable_weapon_object,
   disable_weapon_object,
@@ -58,7 +59,7 @@ class Weapon extends Component {
 };
 // 色々繋げる
 Weapon = CSSModules(Weapon, styles);
-export default connect((state) => { return { inputlock: state.inputlock ? true : false }; })(Weapon);
+export default connect((state) => { return { inputlock: (state.inputlock > 0) ? true : false }; })(Weapon);
 
 
 // 武器テーブルのヘッダ
@@ -254,8 +255,6 @@ const SKILL_LV = [
   ["14"],
   ["15"]
 ];
-// 武器の最大チェック数
-const WEAPON_CHECKED_MAX = 10;
 // 武器の1行を表わすコンポーネント
 // フォームはControlled Componentsにしているので割と面倒くさい
 class WeaponRow extends Component {
