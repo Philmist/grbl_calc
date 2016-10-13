@@ -9,7 +9,8 @@ export const WORKER_STATE = {
   STOP: "STOP",  // 停止している状態
   INITED: "INITED",  // 初期化された状態
   TERMINATE: "TERMINATE",  // 最適化ルーチンが中断された状態
-  RUNNING: "RUNNING"  // GAによる最適化ルーチンが走っている状態
+  RUNNING: "RUNNING",  // GAによる最適化ルーチンが走っている状態
+  FINISH: "FINISH"  // 最適化ルーチンが走り終わった状態
 };
 
 export const WORKER_COMMAND = {
