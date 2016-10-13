@@ -22,6 +22,7 @@ import {
   set_friend_lock, set_friend_name, set_friend_atk_value, set_friend_skill_percent, set_friend_skill_type
 } from "./actions";
 import ItemTypes from "./const/item_types";
+import { FRIEND_CHECKED_MAX } from "./const/number_const.js";
 
 import styles from "friend.css";
 
@@ -53,7 +54,7 @@ TableHeader = CSSModules(TableHeader, styles);
 function mapStateToTableBodyProps(state) {
   return {
     friend: state.friend,
-    inputlock: state.inputlock ? true : false,
+    inputlock: (state.inputlock > 0) ? true : false,
     checked_length: (state.friend.filter( i => i.selected )).length
   };
 }
@@ -154,7 +155,6 @@ const mapActionCreatorsToRowProps = {
   set_skill_percent: set_friend_skill_percent,
   set_skill_type: set_friend_skill_type
 };
-const FRIEND_CHECKED_MAX = 1;
 // フレンド召喚の行1つを表示させるためのクラス
 // 通常召喚のクラスを再利用する
 class Row_ extends SummonRow_ {

@@ -20,6 +20,8 @@ export const WORKER_COMMAND = {
   SET_WEAPON: "SET_WEAPON",  // 武器の配列を設定する
   SET_SUMMON: "SET_SUMMON",  // 召喚の配列を設定する
   SET_FRIEND: "SET_FRIEND",  // フレンド召喚の配列を設定する
-  INIT_OPTIMIZER: "INIT_OPTIMIZER",  // 最適化計算機を初期化する
-  TERMINATE_OPTIMIZER: "TERMINATE_OPTIMIZER"  // 計算機を中断させる
+  INIT: "INIT_OPTIMIZER",  // 最適化計算機を初期化する
+  RUN: "RUN_OPTIMIZER",  // 最適化計算機を走らせる
+  RESET: "RESET",  // 内部状態をリセットする
+  TERMINATE: "TERMINATE_OPTIMIZER"  // 計算機を中断させる
 };

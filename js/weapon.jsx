@@ -16,6 +16,7 @@ import Translate from "react-translate-component";
 let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
+import { WEAPON_CHECKED_MAX } from "./const/number_const.js";
 import {
   WEAPON_KIND,
   SKILL_SLOT,
@@ -70,7 +71,7 @@ class Weapon extends Component {
 };
 // 色々繋げる
 Weapon = CSSModules(Weapon, styles);
-export default connect((state) => { return { inputlock: state.inputlock ? true : false }; })(Weapon);
+export default connect((state) => { return { inputlock: (state.inputlock > 0) ? true : false }; })(Weapon);
 
 
 // 武器テーブルのヘッダ
