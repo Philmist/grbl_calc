@@ -33,8 +33,8 @@ class Optimizer extends Component {
   constructor() {
     super();
     this.state = {
-      max_gen: 1000,
-      max_pop: 300,
+      max_gen: 10000,
+      max_pop: 200,
       mut_prob: 0.005,
       gen_count: 0
     };
