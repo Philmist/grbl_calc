@@ -357,46 +357,22 @@ export class GrblFormGAOptimizer {
     this.state.message = "START INTERSECTION";
     // 2つの遺伝子を受けとり交叉して新しい2つの遺伝子を返す関数
     // l_gene.length === r_gene.length
-    let intersect_gene = (l_gene, l_ref_ary, r_gene, r_ref_ary, max_gene_number) => {
-      let intersection_point = [
-        get_random_int(0, l_gene.length),
-        get_random_int(0, l_gene.length)
-      ];
-      // もしも分岐点がひとつなら交叉しない
-      if (intersection_point[0] === intersection_point[1]) {
+    let intersect_gene = (l_gene, r_gene) => {
+      let intersection_point = get_random_int(0, l_gene.length);
+      // 特殊な条件だけは別にする
+      if (intersection_point === l_gene.length) {
         return [l_gene, r_gene];
+      } else if (intersection_point === 0) {
+        return [r_gene, l_gene];
       }
-      // [0] < [1] にする
-      if (intersection_point[0] > intersection_point[1]) {
-        [intersection_point[1], intersection_point[0]] =
-        [intersection_point[0], intersection_point[1]];
-      }
-      // 2点交叉を行なうためにいったん元のキー遺伝子に戻す
-      let l_gene_orig = this.conv_orderchromos_to_origchromos(l_gene, l_ref_ary);
-      let r_gene_orig = this.conv_orderchromos_to_origchromos(r_gene, r_ref_ary);
-      // 交叉する対象を取りだして交叉する
-      let l_copy = Array.from(l_gene);
-      let r_copy = Array.from(r_gene);
-      let intersect_length = intersection_point[0] - intersection_point[1];
-      let l_target = l_copy.splice(intersection_point[0], intersect_length);
-      let r_target = r_copy.splice(intersection_point[0], intersect_length);
-      l_copy.splice(intersection_point[0], 0, ...r_target);
-      r_copy.splice(intersection_point[0], 0, ...l_target);
-      // 順序表記に戻す
-      let conv_origchromos_to_orderchromos = (gene, max_number) => {
-        let tmp_indi = [];
-        let gene_numbers = [...Array(max_number).keys()];
-        for (let i of gene) {
-          let index = gene_numbers.indexOf(i);
-          tmp_indi.push(index);
-          gene_numbers.splice(index, 1);
-        }
-        return tmp_indi;
-      };
-      return [
-        conv_origchromos_to_orderchromos(l_copy, max_gene_number),
-        conv_origchromos_to_orderchromos(r_copy, max_gene_number)
-      ];
+      // 配列をカットする
+      let l_gene_cut = l_gene.splice(intersection_point, l_gene.length - intersection_point);
+      let r_gene_cut = r_gene.splice(intersection_point, r_gene.length - intersection_point);
+      // 交叉する
+      l_gene = l_gene.concat(r_gene_cut);
+      r_gene = r_gene.concat(l_gene_cut);
+
+      return [l_gene, r_gene];
     };
     // 必要な分だけ交叉して個体を集団に追加する
     while (this.state.ga_state.population.length < this.state.ga_state.max_population_length) {
@@ -407,25 +383,25 @@ export class GrblFormGAOptimizer {
         target_num[0] = get_random_int(0, this.state.ga_state.population.length - 1);
         target_num[1] = get_random_int(0, this.state.ga_state.population.length - 1);
       }
-      // 実際に交叉する
-      const target_type = ["weapon", "summon", "friend"];
-      let tmp_indi = [{}, {}];
-      for (let type of target_type) {
-        let ga_state = this.state.ga_state;
-        let [i_p1, i_p2] = intersect_gene(
-          ga_state.population[target_num[0]][type],
-          this.ref[type],
-          ga_state.population[target_num[1]][type],
-          this.ref[type],
-          ga_state.param[type].max_gene_number
-        );
-        [tmp_indi[0][type], tmp_indi[1][type]] = [i_p1, i_p2];
-      }
-      this.state.ga_state.population.splice(
-        this.state.ga_state.population.length,
-        0,
-        ...tmp_indi
-      );
+      // 交叉対象となる個体をコピーする
+      // そのまま代入すると元も変更されてしまう
+      let template_gene = {weapon: [], summon: [], friend: []};
+      let l_gene = Object.assign({}, template_gene);
+      let r_gene = Object.assign({}, template_gene);
+      l_gene.weapon = Array.from(this.state.ga_state.population[target_num[0]].weapon);
+      l_gene.summon = Array.from(this.state.ga_state.population[target_num[0]].summon);
+      l_gene.friend = Array.from(this.state.ga_state.population[target_num[0]].friend);
+      r_gene.weapon = Array.from(this.state.ga_state.population[target_num[1]].weapon);
+      r_gene.summon = Array.from(this.state.ga_state.population[target_num[1]].summon);
+      r_gene.friend = Array.from(this.state.ga_state.population[target_num[1]].friend);
+      // 交叉して結果をもらう
+      // intersect_geneは[遺伝子, 遺伝子]を返す
+      // TODO: データ構造が直前と違うのでどうにかしたい
+      let i_result = [Object.assign(template_gene), Object.assign(template_gene)];
+      [i_result[0].weapon, i_result[1].weapon] = intersect_gene(l_gene.weapon, r_gene.weapon);
+      [i_result[0].summon, i_result[1].summon] = intersect_gene(l_gene.summon, r_gene.summon);
+      [i_result[0].friend, i_result[1].friend] = intersect_gene(l_gene.friend, r_gene.friend);
+      this.state.ga_state.population = this.state.ga_state.population.concat(i_result);
       this.state.message = "INTERSECTION: " + Number(this.state.ga_state.population.length);
       yield this.state;
     }
