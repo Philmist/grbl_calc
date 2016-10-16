@@ -33,9 +33,9 @@ class Optimizer extends Component {
   constructor() {
     super();
     this.state = {
-      max_gen: 10000,
-      max_pop: 200,
-      mut_prob: 0.005,
+      max_gen: 5000,
+      max_pop: 500,
+      mut_prob: 0.05,
       gen_count: 0
     };
     this.on_message = ::this.on_message;

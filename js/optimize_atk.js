@@ -358,20 +358,22 @@ export class GrblFormGAOptimizer {
     // 2つの遺伝子を受けとり交叉して新しい2つの遺伝子を返す関数
     // l_gene.length === r_gene.length
     let intersect_gene = (l_gene, r_gene) => {
-      let intersection_point = get_random_int(0, l_gene.length);
-      // 特殊な条件だけは別にする
-      if (intersection_point === l_gene.length) {
-        return [l_gene, r_gene];
-      } else if (intersection_point === 0) {
-        return [r_gene, l_gene];
-      }
-      // 配列をカットする
-      let l_gene_cut = l_gene.splice(intersection_point, l_gene.length - intersection_point);
-      let r_gene_cut = r_gene.splice(intersection_point, r_gene.length - intersection_point);
+      let i_point = [get_random_int(0, l_gene.length), get_random_int(0, l_gene.length)];
       // 交叉する
-      l_gene = l_gene.concat(r_gene_cut);
-      r_gene = r_gene.concat(l_gene_cut);
-
+      if (i_point[0] === i_point[1]) {
+        if (i_point[0] == 0 || i_point[0] == l_gene.length) {
+          return [r_gene, l_gene];
+        } else {
+          if (i_point[0] < i_point[1]) {
+            [i_point[1], i_point[0]] = [i_point[0], i_point[1]];
+          }
+          let i_length = i_point[1] - i_point[0];
+          let l_cut = l_gene.splice(i_point[0], i_length);
+          let r_cut = r_gene.splice(i_point[0], i_length);
+          l_gene.splice(i_point[0], 0, ...r_cut);
+          r_gene.splice(i_point[0], 0, ...l_cut);
+        }
+      }
       return [l_gene, r_gene];
     };
     // 必要な分だけ交叉して個体を集団に追加する
@@ -439,7 +441,11 @@ export class GrblFormGAOptimizer {
               tmp_indi.push(index);
               gene_numbers.splice(index, 1);
             }
-            individual[t] = tmp_indi;
+            let val_indi = Object.assign({}, individual);
+            val_indi[t] = tmp_indi;
+            if (this.evaluate_value(val_indi) > this.evaluate_value(individual)) {
+              individual[t] = tmp_indi;
+            }
           }
         }
       }
