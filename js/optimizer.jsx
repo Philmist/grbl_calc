@@ -33,7 +33,7 @@ class Optimizer extends Component {
   constructor() {
     super();
     this.state = {
-      max_gen: 5000,
+      max_gen: 300,
       max_pop: 500,
       mut_prob: 0.05,
       gen_count: 0,
@@ -106,11 +106,13 @@ class Optimizer extends Component {
       });
       this.props.input_unlock();
       this.setState({ gen_count: 0 });
+      this.setState({ running: false });
     }
   }
 
   optimizer_func() {
     this.props.input_lock();
+    this.setState({ running : true });
     this.optimize_worker.postMessage({
       command: WORKER_COMMAND.SET_BASIC_INFO,
       data: this.props.basicinfo

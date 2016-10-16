@@ -86,7 +86,12 @@ class SummonTableBody extends Component {
         {this.props.summon.map((val,index) => {
           let first_selected = ((selected_index === -1 && val.selected) ? true : false);
           if (first_selected) { selected_index = index; }
-          return <SummonRow key={"sr"+String(index)} index={index} checked_length={this.props.checked_length} first_selected={first_selected} />;
+          return <SummonRow
+            key={"sr"+String(index)}
+            index={index}
+            checked_length={this.props.checked_length}
+            first_selected={first_selected}
+            inputlock={this.props.inputlock} />;
         })}
       </tbody>
     );
