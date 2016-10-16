@@ -36,7 +36,8 @@ class Optimizer extends Component {
       max_gen: 5000,
       max_pop: 500,
       mut_prob: 0.05,
-      gen_count: 0
+      gen_count: 0,
+      running: false
     };
     this.on_message = ::this.on_message;
     this.optimizer_func = ::this.optimizer_func;
@@ -57,7 +58,6 @@ class Optimizer extends Component {
   }
 
   on_message(e) {
-    console.log(e.data);
     if (e.data.state === WORKER_STATE.RUNNING) {
       this.setState({ gen_count: e.data.count });
     }
@@ -144,7 +144,13 @@ class Optimizer extends Component {
         <header styleName="title">編成最適化</header>
         <form name="optimizer">
           <table styleName="base" id="optimizer_table">
-            <Button optimizer_func={this.optimizer_func} value={String(this.state.gen_count)+"/"+String(this.state.max_gen)} />
+            <Button
+              optimizer_func={ this.optimizer_func }
+              value={ this.state.running ? "実行中" : "停止" }
+              disabled={ this.state.running ? false : true }
+              max={ this.state.max_gen }
+              count={ this.state.gen_count }
+              />
           </table>
         </form>
       </section>
@@ -197,6 +203,12 @@ class Button extends Component {
           </th>
           <td>
             <input type="button" value={this.props.value} onClick={this.start_button} />
+            <progress
+              max={this.props.max}
+              value={this.props.count}
+            >
+              進捗
+            </progress>
           </td>
         </tr>
       </tbody>

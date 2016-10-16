@@ -109,24 +109,28 @@ class CalculatorBody extends Component {
     let { job, params } = this.props;  // var job = this.props.job; (略)
     return (
       <div styleName="whole_app">
-        <div styleName="header_box">
+        <div styleName="header">
           <Translate component="header" styleName="whole_title" content="calculator.title" />
         </div>
         <div styleName="calculator_box">
-          <div styleName="left_box">
-            <BasicInformation />
-            <Zenith />
-            <Result job={job} parameter={params} />
-            <Optimizer job={job} />
-            <System />
+          <div styleName="calculator_row">
+            <div styleName="left_box">
+              <BasicInformation />
+              <Zenith />
+              <Result job={job} parameter={params} />
+              <System />
+            </div>
+            <div styleName="right_box">
+              <Weapon />
+              <Summon />
+              <Friend />
+            </div>
           </div>
-          <div styleName="right_box">
-            <Weapon />
-            <Summon />
-            <Friend />
+          <div styleName="footer_box">
+            <Optimizer />
           </div>
         </div>
-        <div styleName="footer_box">
+        <div styleName="footer">
           <ul styleName="nav">
             <li styleName="nav-item"><a href="http://hibin0.web.fc2.com/grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</a></li>
             <li styleName="nav-item"><a href="http://hibin0.web.fc2.com/">トップページ</a></li>
