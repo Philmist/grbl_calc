@@ -27,7 +27,7 @@
 }
 
 /* ヘッダ(タイトル)部分の配置 */
-.header {
+.title_header {
     margin : 5px;
     width : -moz-fit-content;
     width : -webkit-fit-content;

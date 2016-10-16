@@ -109,7 +109,7 @@ class CalculatorBody extends Component {
     let { job, params } = this.props;  // var job = this.props.job; (略)
     return (
       <div styleName="whole_app">
-        <div styleName="header">
+        <div styleName="title_header">
           <Translate component="header" styleName="whole_title" content="calculator.title" />
         </div>
         <div styleName="calculator_box">
