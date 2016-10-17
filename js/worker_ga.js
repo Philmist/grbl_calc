@@ -218,6 +218,7 @@ function run_optimizer(data) {
   // 実際に編成計算機を走らせる
   optimizer_state = WORKER_STATE.RUNNING;
   let next_value = optimizer_generator.next().value;
+  let last_percent = Math.round(0);
   for (let i = 0;
     (i < optimizer_parameter.generation)
     && (optimizer_state === WORKER_STATE.RUNNING);
@@ -225,7 +226,11 @@ function run_optimizer(data) {
     while (next_value && next_value.status != CALC_STATE.LOOP_END) {
       next_value = optimizer_generator.next().value;
     }
-    postMessage({ message: "Optimizer running.", count: i+1, state: optimizer_state });
+    let percent = Math.round(i / optimizer_parameter.generation);
+    if (last_percent != percent) {
+      last_percent = percent;
+      postMessage({ message: "Optimizer running.", percent: percent, state: optimizer_state });
+    }
   }
   optimizer_state = WORKER_STATE.FINISH;
   let top_individual = next_value.ga_state.population[0];

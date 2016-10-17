@@ -35,8 +35,8 @@ class Optimizer extends Component {
     this.state = {
       max_gen: 300,
       max_pop: 500,
-      mut_prob: 0.05,
-      gen_count: 0,
+      mut_prob: 0.08,
+      percent: 0,
       running: false
     };
     this.on_message = ::this.on_message;
@@ -59,11 +59,11 @@ class Optimizer extends Component {
 
   on_message(e) {
     if (e.data.state === WORKER_STATE.RUNNING) {
-      this.setState({ gen_count: e.data.count });
+      this.setState({ percent: e.data.percent });
     }
     if (e.data.state === WORKER_STATE.STOP && e.data.can_run) {
       console.log(e.data);
-      this.setState({ gen_count: 0 });
+      this.setState({ percent: 0 });
       this.optimize_worker.postMessage({
         command: WORKER_COMMAND.INIT
       });
@@ -150,8 +150,8 @@ class Optimizer extends Component {
               optimizer_func={ this.optimizer_func }
               value={ this.state.running ? "実行中" : "停止" }
               disabled={ this.state.running ? false : true }
-              max={ this.state.max_gen }
-              count={ this.state.gen_count }
+              max={ 100 }
+              count={ this.state.percent }
               />
           </table>
         </form>

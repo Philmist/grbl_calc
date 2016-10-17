@@ -419,20 +419,23 @@ export class GrblFormGAOptimizer {
     yield this.state;
     // 変異の開始
     const gene_type = ["weapon", "summon", "friend"];
-    for (let t of gene_type) {
-      this.state.message = "MUTATION: " + String(t);
-      yield this.state;
-      for (let individual of this.state.ga_state.population) {
+    for (let individual of this.state.ga_state.population) {
+      let target = Object.assign({}, individual);
+      for (let t of gene_type) {
         // 変異する確率判定に成功したなら2つの遺伝子を入れかえる
         if (Math.random() < this.state.ga_state.param[t].mutation_probability) {
           let target_num = [0, 0];
+          // そもそも対象の遺伝子の長さが1なら入れかえようがない
           if (individual[t].length != 1) {
+            // ランダムに2つの遺伝子を選択する
             while (target_num[0] === target_num[1]) {
               target_num[0] = get_random_int(0, individual[t].length - 1);
               target_num[1] = get_random_int(0, individual[t].length - 1);
             }
+            // いったんキー(位置)に戻してから入れかえる
             let tmp_orig = this.conv_orderchromos_to_origchromos(individual[t], this.ref[t].length);
             [tmp_orig[target_num[1]], tmp_orig[target_num[0]]] = [tmp_orig[target_num[0]], tmp_orig[target_num[1]]];
+            // キーを順序表記に変換する
             let tmp_indi = [];
             let max_gene_number = this.state.ga_state.param[t].max_gene_number;
             let gene_numbers = [...Array(max_gene_number).keys()];
@@ -441,13 +444,13 @@ export class GrblFormGAOptimizer {
               tmp_indi.push(index);
               gene_numbers.splice(index, 1);
             }
-            let val_indi = Object.assign({}, individual);
-            val_indi[t] = tmp_indi;
-            if (this.evaluate_value(val_indi) > this.evaluate_value(individual)) {
-              individual[t] = tmp_indi;
-            }
+            target[t] = tmp_indi;
           }
         }
+      }
+      // もし変異した結果のほうがよかったのなら入れかえる
+      if (this.evaluate_value(individual) < this.evaluate_value(target)) {
+        individual = target;
       }
     }
     // 変異後の状態変更
@@ -495,7 +498,6 @@ export class GrblFormGAOptimizer {
       this.state.message = "CURRENT TOP: " + String(this.state.ga_state.population[0].value);
       yield this.state;
     }
-
   }
 
 }
