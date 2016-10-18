@@ -16,6 +16,7 @@ import Translate from "react-translate-component";
 let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
+import { WEAPON_KIND, SKILL_TYPE, SKILL_LV } from "./const/weapon_type";
 import {
   enable_weapon_object,
   disable_weapon_object,
@@ -31,6 +32,7 @@ import {
   set_weapon_skill_lv
 } from "./actions";
 
+import WeaponInput from "./weapon_input.jsx";
 import styles from "weapon.css";
 
 
@@ -104,7 +106,12 @@ class WeaponTableBody extends Component {
         {this.props.weapon.map((val, index) => {
           let first_selected = ((selected_index === -1 && val.selected) ? true : false);
           if (first_selected) { selected_index = index; }
-          return <WeaponRow key={"wr_"+String(index)} index={index} inputlock={this.props.inputlock} first_selected={first_selected} />;
+          return <WeaponRow
+            key={"wr_"+String(index)}
+            inputbox_id={"wr_ib_"+String(index)}
+            index={index}
+            inputlock={this.props.inputlock}
+            first_selected={first_selected} />;
         })}
       </tbody>
     );
@@ -194,65 +201,7 @@ var mapActionCreatorsToWeaponRowProps = {
   set_weapon_skill_type,
   set_weapon_skill_lv
 };
-// 表示に使うための変数群
-// TODO: もっとマシな形でどうにかする
-const WEAPON_KIND = [
-  ["sword"],
-  ["dagger"],
-  ["spear"],
-  ["axe"],
-  ["stuff"],
-  ["gun"],
-  ["knuckle"],
-  ["bow"],
-  ["instrument"],
-  ["blade"]
-];
-const SKILL_TYPE = [
-  ["none"],
-  ["kj1"],
-  ["kj2"],
-  ["kj3"],
-  ["kj4"],
-  ["bw1"],
-  ["bw2"],
-  ["bw3"],
-  ["km1"],
-  ["ks"],
-  ["mkj1"],
-  ["mkj2"],
-  ["mbw1"],
-  ["mbw2"],
-  ["mbw3"],
-  ["mkm1"],
-  ["bha"],
-  ["bhah"],
-  ["unk1"],
-  ["unk2"],
-  ["unk3"],
-  ["ubw1"],
-  ["ubw2"],
-  ["ubw3"],
-  ["str"]
-];
-const SKILL_LV = [
-  ["0"],
-  ["1"],
-  ["2"],
-  ["3"],
-  ["4"],
-  ["5"],
-  ["6"],
-  ["7"],
-  ["8"],
-  ["9"],
-  ["10"],
-  ["11"],
-  ["12"],
-  ["13"],
-  ["14"],
-  ["15"]
-];
+
 // 武器の1行を表わすコンポーネント
 // フォームはControlled Componentsにしているので割と面倒くさい
 class WeaponRow extends Component {
@@ -370,7 +319,7 @@ class WeaponRow extends Component {
           <input type="checkbox" styleName="lock" checked={locked} onChange={this.change_locked} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" styleName="name" value={name} onChange={this.change_name} disabled={inputlock} />
+          <WeaponInput inputbox_id={this.props.inputbox_id} />
         </td>
         <td>
           <input type="number" styleName="atk" value={atk} onChange={this.change_atk} disabled={inputlock} />
@@ -414,3 +363,7 @@ WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow
 WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);
 // 次にreduxのstoreと結びつける
 WeaponRow = connect(mapStateToWeaponRowProps, mapActionCreatorsToWeaponRowProps)(WeaponRow);
+
+/*
+<input type="text" styleName="name" value={name} onChange={this.change_name} disabled={inputlock} />
+*/
