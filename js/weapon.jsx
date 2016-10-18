@@ -220,8 +220,9 @@ class WeaponRow extends Component {
   e_skill_lv = SKILL_LV.map(this.create_optfunc.bind(this, "lv"));
 
   // 武器の名前が変更された時に呼ばれる関数
-  change_name(e) {
-    this.props.set_weapon_name(this.props.index, e.target.value);
+  // イベント経由じゃなくて直に変更された値が来る
+  change_name(new_name) {
+    this.props.set_weapon_name(this.props.index, new_name);
   }
 
   // 武器の攻撃力が変更された時に呼ばれる関数
@@ -279,6 +280,20 @@ class WeaponRow extends Component {
     this.props.set_weapon_lock(this.props.index, e.target.checked);
   }
 
+  // 武器名のサジェストでパラメータを一斉変更
+  suggest_selected(suggestion) {
+    console.log(suggestion);
+    if (suggestion.skill && suggestion.skill instanceof Array) {
+      [...Array(2).keys()].forEach((i) => { this.props.set_weapon_skill_type(this.props.index, i, "none"); });
+      suggestion.skill.forEach((v, i) => { this.props.set_weapon_skill_type(this.props.index, i, v); });
+    }
+    if (suggestion.type) {
+      this.props.set_weapon_type(this.props.index, suggestion.type);
+    }
+    this.props.set_weapon_cosmos(this.props.index, suggestion.cosmos);
+    this.props.set_weapon_atk_value(this.props.index, suggestion.atk);
+  }
+
   // コンストラクタ
   constructor(props) {
     super(props);
@@ -293,6 +308,7 @@ class WeaponRow extends Component {
     this.change_skill_lv = ::this.change_skill_lv;
     this.push_insert = ::this.push_insert;
     this.push_delete = ::this.push_delete;
+    this.suggest_selected = ::this.suggest_selected;
   }
 
   // 実際にレンダリングされる要素を返す関数
@@ -319,7 +335,11 @@ class WeaponRow extends Component {
           <input type="checkbox" styleName="lock" checked={locked} onChange={this.change_locked} disabled={inputlock} />
         </td>
         <td>
-          <WeaponInput inputbox_id={this.props.inputbox_id} />
+          <WeaponInput
+            inputbox_id={this.props.inputbox_id}
+            suggest_selected={this.suggest_selected}
+            value={name}
+            on_change={this.change_name} />
         </td>
         <td>
           <input type="number" styleName="atk" value={atk} onChange={this.change_atk} disabled={inputlock} />

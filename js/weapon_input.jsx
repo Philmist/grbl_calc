@@ -76,20 +76,18 @@ class WeaponInput extends Component {
   constructor() {
     super();
     this.state = {
-      value: '',
       suggestions: []
     };
+    this.onChange = ::this.onChange;
   }
 
   // メンバー関数をアロー関数で定義すると
   // thisをbindしておく必要がなくなる
 
   // Inputboxの内容が変更された時に呼ばれる関数
-  onChange = (event, { newValue, method }) => {
-    this.setState({
-      value: newValue
-    })
-  };
+  onChange(event, { newValue, method }) {
+    this.props.on_change(newValue);
+  }
 
   // 入力された内容から候補を更新する関数
   onSuggestionsFetchRequested = ({ value }) => {
@@ -105,11 +103,15 @@ class WeaponInput extends Component {
     });
   };
 
+  onSuggestionSelected = (event, { suggestion, suggestionValue, sectionIndex, method }) => {
+    this.props.suggest_selected(suggestion);
+  }
+
   render() {
-    const { value, suggestions } = this.state;
+    const { suggestions } = this.state;
     const inputProps = {
       placeholder: "武器名",
-      value: value,
+      value: this.props.value,
       onChange: this.onChange
     };
 
@@ -119,6 +121,7 @@ class WeaponInput extends Component {
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+        onSuggestionSelected={this.onSuggestionSelected}
         getSuggestionValue={get_suggestion_value}
         renderSuggestion={render_suggestion}
         renderSectionTitle={render_section_title}

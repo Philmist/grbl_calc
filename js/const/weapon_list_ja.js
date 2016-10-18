@@ -13,13 +13,15 @@ const WEAPON_LIST = [
         name: "ダーインスレイブ",
         skill: ["kj1"],
         atk: 2580,
-        type: "sword"
+        type: "sword",
+        cosmos: false
       },
       {
         name: "[吸血剣]ダーインスレイブ",
         skill: ["kj1"],
         atk: 3010,
-        type: "sword"
+        type: "sword",
+        cosmos: false
       }
     ]
   },
@@ -30,13 +32,15 @@ const WEAPON_LIST = [
         name: "ピラム",
         skill: ["kj1"],
         atk: 2240,
-        type: "spear"
+        type: "spear",
+        cosmos: false
       },
       {
         name: "[烈伐]ピラム",
         skill: ["kj1"],
         atk: 2610,
-        type: "spear"
+        type: "spear",
+        cosmos: false
       }
     ]
   }
