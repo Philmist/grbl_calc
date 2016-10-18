@@ -24,7 +24,7 @@
     "file-loader": "^0.8.5",
     "mocha": "*",
     "mocha-loader": "*",
-    "normalize.css": "^4.1.1",
+    "normalize.css": "^5.0.0",
     "pako": "^1.0.1",
     "react": "^15.0.2",
     "react-addons-update": "^15.0.2",

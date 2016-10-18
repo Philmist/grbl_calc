@@ -7,11 +7,10 @@
 
 import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
-import CSSModules from "react-css-modules";
 
 import weaponlist_ja from "./const/weapon_list_ja.js";
 
-import styles from "weapon.css";
+import styles from "weapon_input.css";
 
 
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
@@ -21,9 +20,11 @@ function escape_regex_characters(str) {
 
 // 入力された値から適合する値群を返す関数
 function get_suggestions(value) {
-  // 正規表現で使われる文字をエスケープして、空だったら空リストを返す
+  // 正規表現で使われる文字をエスケープ
   const escaped_value = escape_regex_characters(value.trim());
-  if (escaped_value == "") {
+
+  // 空白なら空サジェスト
+  if (escaped_value === "") {
     return [];
   }
 
@@ -123,10 +124,11 @@ class WeaponInput extends Component {
         renderSectionTitle={render_section_title}
         getSectionSuggestions={get_section_suggestions}
         inputProps={inputProps}
-        id={this.props.inputbox_id} />
+        id={this.props.inputbox_id}
+        theme={styles} />
     );
   }
 
 }
-WeaponInput = CSSModules(WeaponInput, styles);
+// AutosuggestはCSSModulesでデコレーションする必要がない
 export default WeaponInput;
