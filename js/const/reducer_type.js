@@ -38,6 +38,7 @@ export const weapon = {
   NAME: "WEAPON_SET_NAME",
   ATK: "WEAPON_SET_ATK",
   TYPE: "WEAPON_SET_TYPE",
+  SLOT: "WEAPON_SET_SLOT",
   SKILL: "WEAPON_SET_SKILL",
   LV: "WEAPON_SET_LV"
 };

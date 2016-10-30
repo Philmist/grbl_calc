@@ -19,6 +19,7 @@
           atk: 武器攻撃力(Number),
           type: 武器の種類を表わした文字列(String),
           skill_level: 武器のスキルレベル(Number),
+          skill_slot: [武器のスキル1つ目の枠名の文字列(String), 同2つ目 ],
           skill_type: [武器のスキル1つ目の種別の文字列(String), 同2つ目 ],
           cosmos: コスモス武器か否か(boolean)
         }, ...
@@ -127,7 +128,7 @@ export default function calculate_atkval (param_obj, job_data) {
   // 武器攻撃力の計算
   showed_atk += function () {  // 表示攻撃力に処理で得られた総合武器攻撃力を加算する
     let total_atk = 0;
-    const zenith_bonus = [0, 1, 3, 5, 0, 0, 10];  // 各zenithの星に対応する追加ボーナス%
+    const zenith_bonus = [0, 1, 3, 5, 6, 8, 10];  // 各zenithの星に対応する追加ボーナス%
     param_obj.weapon.forEach(function(weapon) {
       let atk = weapon.atk;  // 基礎攻撃力
       let specialty_basic = 100;  // 得意武器倍率%
@@ -192,33 +193,44 @@ export default function calculate_atkval (param_obj, job_data) {
   /// 変数の初期化
   let total_skill = {
     baha: {percent: 0},
-    koujin: {percent: 0},
-    magna: {percent: 0, backwater: 0},
-    normal: {backwater: 0, konshin: 0},
-    unknown: {percent: 0, backwater: 0},
-    strength: {percent: 0}
+    normal: {percent: 0, backwater: 0, konshin: 0},
+    magna: {percent: 0, backwater: 0, konshin: 0},
+    ex: {percent: 0, backwater: 0, konshin: 0},
+    unknown: {percent: 0, backwater: 0, konshin: 0}
   };
   let hp_p_n = param_obj.hp_percent / 100;  // [0,1]なHP割合
   let hp_coefficient = 2 * hp_p_n * hp_p_n - 5 * hp_p_n + 3; // = 2 * (hp_p_n ** 2) - 5 * hp_p_n + 3
   /// スキルの計算をするための関数を定義
   //// ロジックの異なる部分を引数として受けとり関数として返す
-  //// type_str: "baha" | "koujin" | "magna" | "normal" | "unknown" | "strength"
+  //// type_str: "baha" | "normal" | "magna" | "ex"
   //// lv_check_func: 引数としてskill_levelを受けとり条件を判断する関数
   //// true_func: lv_check_funcで返された結果が真のときskill_levelを受けとり加算する%を返す関数
   //// false_func: ほぼ同上だが偽の場合
-  function pfunc_gen (type_str, lv_check_func, true_func, false_func) {
+  function pfunc_gen (slot_str, lv_check_func, true_func, false_func) {
     return function (level) {
       if (lv_check_func(level)) {
-        total_skill[type_str]["percent"] += true_func(level);
+        total_skill[slot_str]["percent"] += true_func(level);
       } else {
-        total_skill[type_str]["percent"] += false_func(level);
+        total_skill[slot_str]["percent"] += false_func(level);
       }
     };
   }
+  //// この関数は渾身に対応
+  //// ほぼ上の関数と一緒だが加算先が異なる
+  function psfunc_gen (slot_str, lv_check_func, true_func, false_func) {
+    return function (level) {
+      if (lv_check_func(level)) {
+        total_skill[slot_str]["konshin"] += true_func(level);
+      } else {
+        total_skill[slot_str]["konshin"] += false_func(level);
+      }
+    };
+  }
+
   //// この関数は背水に対応
   //// ほぼ上の関数と一緒だが以下の部分が相違
   //// true_func, false_func: skill_levelを受けとりcoefficientを計算する関数
-  function bwfunc_gen (type_str, lv_check_func, true_func, false_func) {
+  function bwfunc_gen (slot_str, lv_check_func, true_func, false_func) {
     return function (level) {
       let bw_coefficient = 0;
       if (lv_check_func(level)) {
@@ -226,7 +238,7 @@ export default function calculate_atkval (param_obj, job_data) {
       } else {
         bw_coefficient = false_func(level);
       }
-      total_skill[type_str]["backwater"] += hp_coefficient * bw_coefficient / 3;
+      total_skill[slot_str]["backwater"] += hp_coefficient * bw_coefficient / 3;
     };
   }
   //// 渡された数値がlevelより下かどうかをチェックする関数を返す関数
@@ -239,128 +251,179 @@ export default function calculate_atkval (param_obj, job_data) {
       return addval + (lv - subval) * mulval;
     };
   }
+  //// addval + (lv - subval) * mulvalを計算し、さらにhp_p_nを掛ける関数
+  function pscalc_gen(addval, subval, mulval) {
+    return function(lv) {
+      return addval + (lv - subval) * mulval * hp_p_n;
+    };
+  }
   /// スキルと関数を対応させる
   const CHECK_LEVEL = 10;
   let skill_calc_dict = {
     // total_skill.koujin.percent = 0 + (lv - 0) * 1  [lv<10]
     // total_skill.koujin.percent = 10 + (lv - 10) * 0.4 [lv>=10]
-    "kj1": pfunc_gen(
-      "koujin", less_than_chklv(CHECK_LEVEL),
+    "normal_kj1": pfunc_gen(
+      "normal", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0.4)
     ),
-    "kj2": pfunc_gen(
-      "koujin", less_than_chklv(CHECK_LEVEL),
+    "normal_kj2": pfunc_gen(
+      "normal", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(2, 0, 1), pcalc_gen(12, CHECK_LEVEL, 0.5)
     ),
-    "kj3": pfunc_gen(
-      "koujin", less_than_chklv(CHECK_LEVEL),
+    "normal_kj3": pfunc_gen(
+      "normal", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
     ),
-    "kj4": pfunc_gen(
-      "koujin", less_than_chklv(CHECK_LEVEL),
+    "normal_kj4": pfunc_gen(
+      "normal", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(6, 0, 1), pcalc_gen(16, CHECK_LEVEL, 0.8)
     ),
-    "km1": pfunc_gen(
-      "koujin", less_than_chklv(CHECK_LEVEL),
+    "normal_km": pfunc_gen(
+      "normal", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0,4)
     ),
-    "mkj1": pfunc_gen(
+    "magna_kj1": pfunc_gen(
+      "magna", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0.4)
+    ),
+    "magna_kj2": pfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(2, 0, 1), pcalc_gen(12, CHECK_LEVEL, 0.5)
     ),
-    "mkj2": pfunc_gen(
+    "magna_kj3": pfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
     ),
-    "mkm1": pfunc_gen(
+    "magna_km": pfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
-      (lv) => (lv), (lv) => (10 + (lv - CHECK_LEVEL) * 0.4)
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0,4)
     ),
-    "unk1": pfunc_gen(
+    "ex_kj1": pfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0.4)
+    ),
+    "ex_kj2": pfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(2, 0, 1), pcalc_gen(12, CHECK_LEVEL, 0.5)
+    ),
+    "ex_kj3": pfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
+    ),
+    "ex_km": pfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0,4)
+    ),
+    "unknown_kj1": pfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(0, 0, 1), pcalc_gen(0, 0, 1)
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0.4)
     ),
-    "unk2": pfunc_gen(
+    "unknown_kj2": pfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(2, 0, 1), pcalc_gen(2, 0, 1)
+      pcalc_gen(2, 0, 1), pcalc_gen(12, CHECK_LEVEL, 0.5)
     ),
-    "unk3": pfunc_gen(
+    "unknown_kj3": pfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(5, 0, 1), pcalc_gen(5, 0, 1)
+      pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
     ),
-    "ubw1": bwfunc_gen(
+    "unknown_km": pfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      (l) => (-0.3 + l * 1.8),
-      (l) => (18)
+      pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0,4)
     ),
-    "ubw2": bwfunc_gen(
-      "unknown", less_than_chklv(CHECK_LEVEL),
-      (l) => (-0.4 + l * 2.4),
-      (l) => (24)
-    ),
-    "ubw3": bwfunc_gen(
-      "unknown", less_than_chklv(CHECK_LEVEL),
-      (l) => (-0.5 + l * 3.0),
-      (l) => (30)
-    ),
-    "str": pfunc_gen(
-      "strength", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(5, 0, 1), pcalc_gen(5, 0, 1)
-    ),
-    "bha": pfunc_gen(
-      "baha", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(19, 0, 1), pcalc_gen(30, CHECK_LEVEL, 0.4)
-    ),
-    "bhah": pfunc_gen(
-      "baha", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(9.5, 0, 0.5), pcalc_gen(15, 0, 0)
-    ),
-    "bw1": bwfunc_gen(
+    "normal_bw1": bwfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.3 + l * 1.8),
       (l) => (18 + (l - CHECK_LEVEL) / 5 * 3)
     ),
-    "bw2": bwfunc_gen(
+    "normal_bw2": bwfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.4 + l * 2.4),
       (l) => (24 + (l - CHECK_LEVEL) / 5 * 6)
     ),
-    "bw3": bwfunc_gen(
+    "normal_bw3": bwfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.5 + l * 3.0),
       (l) => (30 + (l - CHECK_LEVEL) / 5 * 7.5)
     ),
-    "mbw1": bwfunc_gen(
+    "magna_bw1": bwfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.3 + l * 1.8),
       (l) => (18 + (l - CHECK_LEVEL) / 5 * 3)
     ),
-    "mbw2": bwfunc_gen(
+    "magna_bw2": bwfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.4 + l * 2.4),
       (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
     ),
-    "mbw3": bwfunc_gen(
+    "magna_bw3": bwfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.5 + l * 3.0),
       (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
     ),
-    "ks": (lv) => {
-      // hp_p_nは既に100で割られていることに注意
-      if (lv >= 10) {
-        total_skill["normal"]["konshin"] = hp_p_n * (20 + (lv - 10) * 0.6);
-      } else {
-        total_skill["normal"]["konshin"] = hp_p_n * (10 + lv);
-      }
-    }
+    "ex_bw1": bwfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.3 + l * 1.8),
+      (l) => (18 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "ex_bw2": bwfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.4 + l * 2.4),
+      (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "ex_bw3": bwfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.5 + l * 3.0),
+      (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "unknown_bw1": bwfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.3 + l * 1.8),
+      (l) => (18 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "unknown_bw2": bwfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.4 + l * 2.4),
+      (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "unknown_bw3": bwfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.5 + l * 3.0),
+      (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "normal_ks": psfunc_gen(
+      "normal", less_than_chklv(CHECK_LEVEL),
+      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+    ),
+    "magna_ks": psfunc_gen(
+      "magna", less_than_chklv(CHECK_LEVEL),
+      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+    ),
+    "ex_ks": psfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+    ),
+    "unknown_ks": psfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+    ),
+    "baha_atk": pfunc_gen(
+      "baha", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(19, 0, 1), pcalc_gen(30, CHECK_LEVEL, 0.4)
+    ),
+    "baha_hp": pfunc_gen(
+      "baha", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(9.5, 0, 0.5), pcalc_gen(15, 0, 0)
+    ),
   };
   /// スキルとパラメータの集計
   param_obj.weapon.forEach(function(weapon) {
     if (weapon.skill_level === 0) return;  // スキルレベル0はスキル未取得
     // スキルごとの計算
-    weapon.skill_type.forEach(function(skill_type) {
-      if (skill_type != "none") { skill_calc_dict[skill_type](weapon.skill_level); }
-    });
+    let skill_name = "";
+    skill_name = weapon.skill_slot[0] + "_" + weapon.skill_type[0];
+    if (weapon.skill_type[0] != "none") { skill_calc_dict[skill_name](weapon.skill_level); }
+    skill_name = weapon.skill_slot[1] + "_" + weapon.skill_type[1];
+    if (weapon.skill_type[1] != "none") { skill_calc_dict[skill_name](weapon.skill_level); }
   });
 
   // ステータスの上限等補正
@@ -370,17 +433,23 @@ export default function calculate_atkval (param_obj, job_data) {
   // 総合計算
   let total_atk = showed_atk;
   /// 通常攻刃
-  total_atk *= 1 + (divine_percent.character + total_skill.baha.percent + (total_skill.koujin.percent * divine_percent.zeus / 100) ) / 100;
+  total_atk *= 1 + (divine_percent.character + total_skill.baha.percent + (total_skill.normal.percent * divine_percent.zeus / 100) ) / 100;
   /// 通常背水
   total_atk *= 1 + (total_skill.normal.backwater * divine_percent.zeus / 100) / 100;
   /// 通常渾身
-  total_atk *= 1 + total_skill.normal.konshin / 100;
+  total_atk *= 1 + (total_skill.normal.konshin * divine_percent.zeus / 100) / 100;
   /// マグナ攻刃
   total_atk *= 1 + (total_skill.magna.percent * divine_percent.magna / 100) / 100;
   /// マグナ背水
   total_atk *= 1 + (total_skill.magna.backwater * divine_percent.magna / 100) / 100;
+  /// マグナ渾身
+  total_atk *= 1 + (total_skill.magna.konshin * divine_percent.magna / 100) / 100;
   /// EX攻刃
-  total_atk *= 1 + (total_skill.strength.percent + total_skill.unknown.percent * divine_percent.unknown / 100) / 100;
+  total_atk *= 1 + (total_skill.ex.percent + (total_skill.unknown.percent * divine_percent.unknown / 100) ) / 100;
+  /// EX背水
+  total_atk *= 1 + (total_skill.ex.backwater + (total_skill.unknown.backwater * divine_percent.unknown / 100) ) / 100;
+  /// EX渾身
+  total_atk *= 1 + (total_skill.ex.konshin + (total_skill.unknown.konshin * divine_percent.unknown / 100) ) / 100;
   /// 属性
   total_atk *= (divine_percent.attribute + attribute_bonus) / 100;
   /// 騎空艇ボーナス%

@@ -36,6 +36,7 @@ export function job_data(state = {}, action) {
 const weapon_default = {
   atk: 0,
   skill_level: 0,
+  skill_slot: ["normal", "normal"],
   skill_type: ["none", "none"],
   cosmos: false,
   selected: false,
@@ -83,6 +84,10 @@ export function weapon(state, action) {
       ret_state[action.index].type = String(action.value);
     } else if (action.type == RC.weapon.ATK && Number(action.value) >= 0) {  // 武器の攻撃力設定
       ret_state[action.index].atk = Number(action.value);
+    } else if (action.type == RC.weapon.SLOT && (action.target == 0 || action.target == 1)) {  // 武器のスキル枠指定
+      let skills = Array.from(ret_state[action.index].skill_slot);
+      skills[action.target] = String(action.value);
+      ret_state[action.index].skill_slot = skills;
     } else if (action.type == RC.weapon.SKILL && (action.target == 0 || action.target == 1)) {  // 武器のスキル指定
       let skills = Array.from(ret_state[action.index].skill_type);
       skills[action.target] = String(action.value);

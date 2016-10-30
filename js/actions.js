@@ -248,6 +248,15 @@ export function set_weapon_atk_value(index, value) {
 
 // 武器のスキルを指定する
 // target: 0|1
+export function set_weapon_skill_slot(index, target, skill) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.SLOT, index: Number(index), target: Number(target), value: String(skill) });
+    return true;
+  };
+  
+  // 選択したスロットに合った種別選択に変更する処理を入れる
+}
+
 export function set_weapon_skill_type(index, target, skill) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.SKILL, index: Number(index), target: Number(target), value: String(skill) });
