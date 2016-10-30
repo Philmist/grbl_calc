@@ -1,8 +1,16 @@
 // vim: sts=2 sw=2 ts=2 expandtab
 // Webpack2用のコンフィグファイルです。
 // 必ず Webpack@~2.1.0-beta 以上で使ってください。
-var path = require("path");
-var loaders = [
+const path = require("path");
+const webpack = require("webpack");
+
+// 運用環境を調べる
+// 参考: https://github.com/ModusCreateOrg/budgeting-sample-app-webpack2/blob/master/webpack.config.js
+const nodeEnv = process.env.NODE_ENV || "development";
+const isProd = nodeEnv === "production";
+
+// ローダー(ファイル読み込み用のスクリプト)の設定
+let loaders = [
   {
     // CSS Modules(https://github.com/css-modules/css-modules)
     // を使うための設定
@@ -22,7 +30,7 @@ var loaders = [
     query: {
       plugins: ['transform-runtime'],
       // プリセットは順序が大事
-      presets: ['react', 'es2015-webpack', 'stage-0']
+      presets: ['react', ['es2015', { module: false }], 'stage-0'],
     }
   },
   {
@@ -33,10 +41,32 @@ var loaders = [
   }
 ];
 
+
+// プラグイン(webpackで使われてファイルを変換したりする)の設定
+let plugins = [
+  new webpack.DefinePlugin({
+    "process.env": { NODE_ENV: JSON.stringify(nodeEnv) }
+  }),
+  new webpack.LoaderOptionsPlugin({
+    minimize: isProd,
+    debug: isProd
+  })
+];
+if (isProd) {
+  plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false },
+      output: { comments: true },
+      sourceMap: false
+    })
+  );
+}
+
+
 // webpack(1|2)は同時にいくつかのファイルをバンドルできます
 module.exports = [
   {
-    devtool: "cheap-module-source-map",
+    devtool: isProd ? "#hidden-source-map" : "#source-map",
     entry: {
       js: "./js/entry.jsx",
     },
@@ -51,10 +81,11 @@ module.exports = [
       modules: [
         "node_modules", "js", "css"
       ]
-    }
+    },
+    plugins: plugins
   },
   {
-    devtool: "cheap-module-source-map",
+    devtool: isProd ? "#hidden-source-map" : "#source-map",
     entry: "mocha!./js/test/test.js",
     output: {
       filename: "./dist/test_bundle.js",
@@ -67,6 +98,7 @@ module.exports = [
       modules: [
         "node_modules", "js", "css"
       ]
-    }
+    },
+    plugins: plugins
   }
 ];

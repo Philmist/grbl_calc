@@ -4,9 +4,14 @@
  * Zenith Perkの入力モジュール
  */
 
+
 import React, { Component } from "react";
 import CSSModules from "react-css-modules";
 import { connect } from "react-redux";
+
+import counterpart from "counterpart";
+import Translate from "react-translate-component";
+let _t = Translate.translate;
 
 import * as actions from "./actions.js";
 
@@ -35,13 +40,13 @@ export default connect((state) => { return {inputlock: state.inputlock ? true : 
 
 
 // ゼニスの★と数値の対応付け配列
-const zenith_list = [[0,"無し"], [1, "★"], [2, "★★"], [3,"★★★"]];
+const zenith_list = [[0, "zenith.list.zero"], [1, "zenith.list.one"], [2, "zenith.list.two"], [3, "zenith.list.three"]];
 // ゼニスのオプションリスト要素を返す関数
 function renderZenithSelector() {
   var option_list = [];
   for (var i=0; i < zenith_list.length; i++) {
     option_list.push(
-      <option value={zenith_list[i][0]} key={zenith_list[i][0]}>{zenith_list[i][1]}</option>
+      <Translate component="option" value={zenith_list[i][0]} key={zenith_list[i][0]} content={zenith_list[i][1]} />
     );
   }
   return (option_list);
@@ -67,7 +72,7 @@ class ZenithAttack extends Component {
     var elem = renderZenithSelector();
     return (
       <tr styleName="row">
-        <th styleName="header">攻撃力</th>
+        <Translate component="th" styleName="header" content="zenith.header.attack" />
         <td styleName="cell">
           <select
             onChange={this.handleChange}
@@ -114,7 +119,7 @@ class ZenithWeapon1 extends Component {
     var elem = renderZenithSelector();
     return (
       <tr styleName="row">
-        <th styleName="header">得意武器1</th>
+        <Translate component="th" styleName="header" content="zenith.header.weapon1" />
         <td styleName="cell">
           <select styleName="weapon" onChange={this.handleChange} value={this.props.zenith_weapon[0]} disabled={this.props.inputlock} >
             {elem}
@@ -153,7 +158,7 @@ class ZenithWeapon2 extends Component {
     var elem = renderZenithSelector();
     return (
       <tr styleName="row">
-        <th styleName="header">得意武器2</th>
+        <Translate component="th" styleName="header" content="zenith.header.weapon2" />
         <td styleName="cell">
           <select styleName="weapon" onChange={this.handleChange} value={this.props.zenith_weapon[1]} disabled={this.props.inputlock} >
             {elem}
@@ -190,7 +195,7 @@ class ZenithAttribute extends Component {
     var elem = renderZenithSelector();
     return (
       <tr styleName="row">
-        <th styleName="header">属性攻撃力</th>
+        <Translate component="th" styleName="header" content="zenith.header.attribute" />
         <td styleName="cell">
           <select styleName="attribute" onChange={this.handleChange} value={this.props.attr_value} disabled={this.props.inputlock} >
             {elem}

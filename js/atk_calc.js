@@ -9,7 +9,6 @@
     hp_percent: 現在HPの最大HPに対する%(Number),
     job: 別データで表わされたクラス(職業)を示した文字列(String),
     affinity: 'good' | 'bad' | (それ以外) の文字列で示される属性補正(String),
-    cosmos: コスモス武器か否か(Boolean)
     zenith: {
         atk: 星の数(0から3の整数)(Number),
         weapon: [得意武器1つ目の星の数(0-3の整数)(Number), ... ],
@@ -115,6 +114,16 @@ export default function calculate_atkval (param_obj, job_data) {
     }
   }
 
+  // コスモス武器の武器種を確認する
+  // 一番最初のコスモス武器が該当
+  let cosmos_weapon_type = "no_cosmos";  // "none"では該当が出てきてしまう
+  for (let i = 0; i < param_obj.weapon.length; i++) {
+    if (param_obj.weapon[i].cosmos) {
+      cosmos_weapon_type = param_obj.weapon[i].type;
+      break;
+    }
+  }
+
   // 武器攻撃力の計算
   showed_atk += function () {  // 表示攻撃力に処理で得られた総合武器攻撃力を加算する
     let total_atk = 0;
@@ -135,7 +144,11 @@ export default function calculate_atkval (param_obj, job_data) {
           }
         }
       }
-      let specialty_cosmos = weapon.cosmos ? 30 : 0; // コスモス武器の追加%
+      let specialty_cosmos = (weapon.type == cosmos_weapon_type) ? 30 : 0; // コスモス該当武器の追加%
+      // 自身がコスモス武器なら自身の倍率は0
+      if (weapon.cosmos) {
+        specialty_cosmos = 0;
+      }
       // 武器攻撃力に倍率をかける
       atk = atk * (specialty_basic + specialty_bonus + specialty_cosmos) / 100;
       // 全武器攻撃力を更新する
@@ -181,15 +194,15 @@ export default function calculate_atkval (param_obj, job_data) {
     baha: {percent: 0},
     koujin: {percent: 0},
     magna: {percent: 0, backwater: 0},
-    normal: {backwater: 0},
-    unknown: {percent: 0},
-    collabo: {percent: 0}
+    normal: {backwater: 0, konshin: 0},
+    unknown: {percent: 0, backwater: 0},
+    strength: {percent: 0}
   };
-  let hp_p_n = param_obj.hp_percent / 100;
+  let hp_p_n = param_obj.hp_percent / 100;  // [0,1]なHP割合
   let hp_coefficient = 2 * hp_p_n * hp_p_n - 5 * hp_p_n + 3; // = 2 * (hp_p_n ** 2) - 5 * hp_p_n + 3
   /// スキルの計算をするための関数を定義
   //// ロジックの異なる部分を引数として受けとり関数として返す
-  //// type_str: "baha" | "koujin" | "magna" | "normal" | "unknown" | "collabo"
+  //// type_str: "baha" | "koujin" | "magna" | "normal" | "unknown" | "strength"
   //// lv_check_func: 引数としてskill_levelを受けとり条件を判断する関数
   //// true_func: lv_check_funcで返された結果が真のときskill_levelを受けとり加算する%を返す関数
   //// false_func: ほぼ同上だが偽の場合
@@ -229,8 +242,8 @@ export default function calculate_atkval (param_obj, job_data) {
   /// スキルと関数を対応させる
   const CHECK_LEVEL = 10;
   let skill_calc_dict = {
-    // total_skill.kj1.percent = 0 + (lv - 0) * 1  [lv<10]
-    // total_skill.kj1.percent = 10 + (lv - 10) * 0.4 [lv>=10]
+    // total_skill.koujin.percent = 0 + (lv - 0) * 1  [lv<10]
+    // total_skill.koujin.percent = 10 + (lv - 10) * 0.4 [lv>=10]
     "kj1": pfunc_gen(
       "koujin", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0.4)
@@ -265,19 +278,38 @@ export default function calculate_atkval (param_obj, job_data) {
     ),
     "unk1": pfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(2, 0, 1), pcalc_gen(12, 0, 0)  // (12,0,0) -> 12 + (lv - 0) * 0
+      pcalc_gen(0, 0, 1), pcalc_gen(0, 0, 1)
     ),
     "unk2": pfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(5, 0, 1), pcalc_gen(15, 0, 0)
+      pcalc_gen(2, 0, 1), pcalc_gen(2, 0, 1)
+    ),
+    "unk3": pfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(5, 0, 1), pcalc_gen(5, 0, 1)
+    ),
+    "ubw1": bwfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.3 + l * 1.8),
+      (l) => (18)
+    ),
+    "ubw2": bwfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.4 + l * 2.4),
+      (l) => (24)
+    ),
+    "ubw3": bwfunc_gen(
+      "unknown", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.5 + l * 3.0),
+      (l) => (30)
     ),
     "str": pfunc_gen(
-      "collabo", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(5, 0, 1), pcalc_gen(15, 0, 0)
+      "strength", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(5, 0, 1), pcalc_gen(5, 0, 1)
     ),
     "bha": pfunc_gen(
       "baha", less_than_chklv(CHECK_LEVEL),
-      pcalc_gen(19, 0, 1), pcalc_gen(30, 0, 0)
+      pcalc_gen(19, 0, 1), pcalc_gen(30, CHECK_LEVEL, 0.4)
     ),
     "bhah": pfunc_gen(
       "baha", less_than_chklv(CHECK_LEVEL),
@@ -291,12 +323,12 @@ export default function calculate_atkval (param_obj, job_data) {
     "bw2": bwfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.4 + l * 2.4),
-      (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
+      (l) => (24 + (l - CHECK_LEVEL) / 5 * 6)
     ),
     "bw3": bwfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.5 + l * 3.0),
-      (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
+      (l) => (30 + (l - CHECK_LEVEL) / 5 * 7.5)
     ),
     "mbw1": bwfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
@@ -305,9 +337,22 @@ export default function calculate_atkval (param_obj, job_data) {
     ),
     "mbw2": bwfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
+      (l) => (-0.4 + l * 2.4),
+      (l) => (24 + (l - CHECK_LEVEL) / 5 * 3)
+    ),
+    "mbw3": bwfunc_gen(
+      "magna", less_than_chklv(CHECK_LEVEL),
       (l) => (-0.5 + l * 3.0),
       (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
-    )
+    ),
+    "ks": (lv) => {
+      // hp_p_nは既に100で割られていることに注意
+      if (lv >= 10) {
+        total_skill["normal"]["konshin"] = hp_p_n * (20 + (lv - 10) * 0.6);
+      } else {
+        total_skill["normal"]["konshin"] = hp_p_n * (10 + lv);
+      }
+    }
   };
   /// スキルとパラメータの集計
   param_obj.weapon.forEach(function(weapon) {
@@ -318,15 +363,28 @@ export default function calculate_atkval (param_obj, job_data) {
     });
   });
 
+  // ステータスの上限等補正
+  /// バハ攻%は50を超えない
+  total_skill.baha.percent = total_skill.baha.percent > 50 ? 50 : total_skill.baha.percent;
+
   // 総合計算
   let total_atk = showed_atk;
-  total_atk *= (100 + (divine_percent.character + total_skill.baha.percent + (total_skill.koujin.percent * divine_percent.zeus / 100) )) / 100;
-  total_atk *= (100 + total_skill.normal.backwater * divine_percent.zeus / 100) / 100;
-  total_atk *= (100 + total_skill.magna.percent * divine_percent.magna / 100) / 100;
-  total_atk *= (100 + total_skill.magna.backwater * divine_percent.magna / 100) / 100;
-  total_atk *= (100 + (total_skill.collabo.percent + total_skill.unknown.percent * divine_percent.unknown / 100)) / 100;
+  /// 通常攻刃
+  total_atk *= 1 + (divine_percent.character + total_skill.baha.percent + (total_skill.koujin.percent * divine_percent.zeus / 100) ) / 100;
+  /// 通常背水
+  total_atk *= 1 + (total_skill.normal.backwater * divine_percent.zeus / 100) / 100;
+  /// 通常渾身
+  total_atk *= 1 + total_skill.normal.konshin / 100;
+  /// マグナ攻刃
+  total_atk *= 1 + (total_skill.magna.percent * divine_percent.magna / 100) / 100;
+  /// マグナ背水
+  total_atk *= 1 + (total_skill.magna.backwater * divine_percent.magna / 100) / 100;
+  /// EX攻刃
+  total_atk *= 1 + (total_skill.strength.percent + total_skill.unknown.percent * divine_percent.unknown / 100) / 100;
+  /// 属性
   total_atk *= (divine_percent.attribute + attribute_bonus) / 100;
-  total_atk *= (100 + param_obj.ship_bonus) / 100;
+  /// 騎空艇ボーナス%
+  total_atk *= 1 + param_obj.ship_bonus / 100;
 
   total_atk = Math.round(total_atk);
   showed_atk = Math.round(showed_atk);
