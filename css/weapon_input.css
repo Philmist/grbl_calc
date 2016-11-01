@@ -1,0 +1,56 @@
+/* vim:set sts=4 sw=4 ts=4 expandtab: */
+
+/*
+ * 武器の入力欄のスタイル
+ * CSS Modules使用
+ * 以下も参照:
+ * https://github.com/moroshko/react-autosuggest#themeProp
+ * http://codepen.io/moroshko/pen/qbRNjV
+ */
+
+.container {
+    position: relative;
+    text-align: left;
+}
+
+.input {
+    width: 15em;
+}
+
+.input:focus {
+    outline: none;
+}
+
+.suggestionsContainer {
+    display: none;
+}
+
+.containerOpen .suggestionsContainer {
+    display: block;
+    position: absolute;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    z-index: 2;
+}
+
+.suggestionsList {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.suggestion {
+    cursor: pointer;
+    padding: 1px 2px;
+}
+
+.suggestionFocused {
+    background-color: #ddd;
+}
+
+.sectionTitle {
+    font-size: 0.8em;
+    padding: 10px 0 0 10px;
+    border-top: 1px dashed #ccc;
+}
+

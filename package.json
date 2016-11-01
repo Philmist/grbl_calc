@@ -24,10 +24,11 @@
     "file-loader": "^0.8.5",
     "mocha": "*",
     "mocha-loader": "*",
-    "normalize.css": "^4.1.1",
+    "normalize.css": "^5.0.0",
     "pako": "^1.0.1",
     "react": "^15.0.2",
     "react-addons-update": "^15.0.2",
+    "react-autosuggest": "^6.1.0",
     "react-css-modules": "*",
     "react-dnd": "*",
     "react-dnd-html5-backend": "*",
@@ -40,6 +41,6 @@
     "redux-thunk": "*",
     "style-loader": "*",
     "url-loader": "*",
-    "webpack": "^2.1.0-beta.19"
+    "webpack": "^2.1.0-beta.24"
   }
 }
