@@ -21,6 +21,7 @@ import counterpart from "counterpart";
 import Translate from "react-translate-component";
 let _t = Translate.translate;
 
+import { SUMMON_CHECKED_MAX } from "./const/number_const.js";
 import ItemTypes from "const/item_types";
 import styles from "summon.css";
 
@@ -45,7 +46,7 @@ class SummonTable extends Component {
   }
 }
 SummonTable = CSSModules(SummonTable, styles);
-SummonTable = connect((state) => { return { inputlock: state.inputlock ? true : false }; })(SummonTable);
+SummonTable = connect((state) => { return { inputlock: (state.inputlock > 0) ? true : false }; })(SummonTable);
 
 // 召喚表のヘッダ
 class SummonTableHeader extends Component {
@@ -85,7 +86,12 @@ class SummonTableBody extends Component {
         {this.props.summon.map((val,index) => {
           let first_selected = ((selected_index === -1 && val.selected) ? true : false);
           if (first_selected) { selected_index = index; }
-          return <SummonRow key={"sr"+String(index)} index={index} checked_length={this.props.checked_length} first_selected={first_selected} />;
+          return <SummonRow
+            key={"sr"+String(index)}
+            index={index}
+            checked_length={this.props.checked_length}
+            first_selected={first_selected}
+            inputlock={this.props.inputlock} />;
         })}
       </tbody>
     );
@@ -170,7 +176,6 @@ const mapActionCreatorsToSummonRowProps = {
   set_skill_percent: set_summon_skill_percent,
   set_skill_type: set_summon_skill_type
 };
-const SUMMON_CHECKED_MAX = 5;
 // 召喚の行1つを表示させるためのクラス
 export class SummonRow_ extends Component {
   // オプション要素を作るための関数

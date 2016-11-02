@@ -16,6 +16,7 @@ import Translate from "react-translate-component";
 let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
+import { WEAPON_CHECKED_MAX } from "./const/number_const.js";
 import { WEAPON_KIND, SKILL_TYPE, SKILL_LV } from "./const/weapon_type";
 import {
   enable_weapon_object,
@@ -60,7 +61,7 @@ class Weapon extends Component {
 };
 // 色々繋げる
 Weapon = CSSModules(Weapon, styles);
-export default connect((state) => { return { inputlock: state.inputlock ? true : false }; })(Weapon);
+export default connect((state) => { return { inputlock: (state.inputlock > 0) ? true : false }; })(Weapon);
 
 
 // 武器テーブルのヘッダ
@@ -90,8 +91,9 @@ WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 // 武器並び全体にプロパティを注入する関数
 // reduxのstoreからstateを取りだす
 function mapStateToWeaponTableBodyProps(state) {
-  // どれが最初のenabledな武器かをチェックする
+  // どれが最初のenabledな武器かをチェックし、チェックされている武器の数を数える
   return {
+    checked_length: (state.weapon.filter( i => i.selected )).length,
     weapon: state.weapon  // indexを使うために必要
   }
 }
@@ -254,7 +256,9 @@ class WeaponRow extends Component {
   // 武器の選択状態が変更された時に呼ばれる関数
   change_select(e) {
     if (e.target.checked) {
-      this.props.enable_weapon_object(this.props.index);
+      if (this.props.checked_length < WEAPON_CHECKED_MAX) {
+        this.props.enable_weapon_object(this.props.index);
+      }
     } else {
       this.props.disable_weapon_object(this.props.index);
     }
