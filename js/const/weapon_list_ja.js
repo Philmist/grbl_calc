@@ -1,4 +1,4 @@
-[
+const WEAPON_LIST = [
   {
     "weapons": [
       {
@@ -8631,7 +8631,7 @@
     "weapons": [
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[嵐杖]クラブ",
         "min_atk": 55,
         "skill": [],
@@ -8643,7 +8643,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[地杖]スタッフ",
         "min_atk": 57,
         "skill": [],
@@ -8655,7 +8655,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[嵐杖]オークワンド",
         "min_atk": 60,
         "skill": [],
@@ -8667,7 +8667,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[炎杖]アイアンスタッフ",
         "min_atk": 52,
         "skill": [],
@@ -8679,7 +8679,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[地杖]メープルスタッフ",
         "min_atk": 59,
         "skill": [],
@@ -8691,7 +8691,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[炎杖]ブロンズロッド",
         "min_atk": 54,
         "skill": [],
@@ -8703,7 +8703,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[清杖]ブロンズメイス",
         "min_atk": 58,
         "skill": [],
@@ -8715,7 +8715,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[嵐杖]メープルワンド",
         "min_atk": 57,
         "skill": [],
@@ -8727,7 +8727,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[炎杖]アイアンロッド",
         "min_atk": 57,
         "skill": [],
@@ -8739,7 +8739,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[清杖]アイアンメイス",
         "min_atk": 61,
         "skill": [],
@@ -8751,7 +8751,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[地杖]アッシュスタッフ",
         "min_atk": 60,
         "skill": [],
@@ -8763,7 +8763,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[嵐杖]アッシュワンド",
         "min_atk": 58,
         "skill": [],
@@ -8775,7 +8775,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[清杖]アイアンワンド",
         "min_atk": 60,
         "skill": [],
@@ -8787,7 +8787,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[炎杖]スチールロッド",
         "min_atk": 59,
         "skill": [],
@@ -8799,7 +8799,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[清杖]スチールメイス",
         "min_atk": 63,
         "skill": [],
@@ -8811,7 +8811,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[地杖]オークスタッフ",
         "min_atk": 62,
         "skill": [],
@@ -8823,7 +8823,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[炎杖]棍",
         "min_atk": 60,
         "skill": [],
@@ -8835,7 +8835,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[嵐杖]ヤントック",
         "min_atk": 61,
         "skill": [],
@@ -8847,7 +8847,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[淨響]タイアハ",
         "min_atk": 130,
         "skill": [
@@ -8864,7 +8864,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[魔香]シャレラバディ",
         "min_atk": 135,
         "skill": [
@@ -8881,7 +8881,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[蒼玉]ケーン",
         "min_atk": 128,
         "skill": [
@@ -8898,7 +8898,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[蒼銀杖]ミスリルロッド",
         "min_atk": 86,
         "skill": [
@@ -8915,7 +8915,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[翼空]フェザースタッフ",
         "min_atk": 127,
         "skill": [
@@ -8932,7 +8932,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[蒼銀杖]ミスリルメイス",
         "min_atk": 90,
         "skill": [
@@ -8949,7 +8949,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[至術]フェザーワンド",
         "min_atk": 128,
         "skill": [
@@ -8966,7 +8966,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[震棍]アースメイス",
         "min_atk": 133,
         "skill": [
@@ -8983,7 +8983,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[秘水]ウォーターロッド",
         "min_atk": 134,
         "skill": [
@@ -9000,7 +9000,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[針鋲]スパイククラブ",
         "min_atk": 91,
         "skill": [
@@ -9017,7 +9017,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[打棍]メイス",
         "min_atk": 87,
         "skill": [
@@ -9034,7 +9034,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[清流]水精の牧杖",
         "min_atk": 94,
         "skill": [
@@ -9051,7 +9051,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[紅蓮]火精の権杖",
         "min_atk": 90,
         "skill": [
@@ -9068,7 +9068,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[凶装]シャドウワンド",
         "min_atk": 88,
         "skill": [
@@ -9085,7 +9085,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[聖十字]ザ・クロス",
         "min_atk": 124,
         "skill": [
@@ -9102,7 +9102,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[風祷]緑淡樹の杖",
         "min_atk": 125,
         "skill": [
@@ -9119,7 +9119,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[翠嵐]ウィンドロッド",
         "min_atk": 131,
         "skill": [
@@ -9136,7 +9136,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[奸邪]イヴィルワンド",
         "min_atk": 130,
         "skill": [
@@ -9153,7 +9153,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[緑鉱杖]エメラルドケーン",
         "min_atk": 137,
         "skill": [
@@ -9170,7 +9170,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[蒼洋]オーシャンロッド",
         "min_atk": 137,
         "skill": [
@@ -9187,7 +9187,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[魂火]呪炎の燭台",
         "min_atk": 130,
         "skill": [
@@ -9204,7 +9204,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[聖木]ツリーワンド",
         "min_atk": 135,
         "skill": [
@@ -9221,7 +9221,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[淡雪]スノウマンロッド",
         "min_atk": 140,
         "skill": [
@@ -9238,7 +9238,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[燭台]松明",
         "min_atk": 132,
         "skill": [
@@ -9255,7 +9255,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[歪岩杖]ストーンポール",
         "min_atk": 139,
         "skill": [
@@ -9272,7 +9272,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[光灯杖]ライトスタッフ",
         "min_atk": 138,
         "skill": [
@@ -9289,7 +9289,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[樹杖]宿樹の仙杖",
         "min_atk": 136,
         "skill": [
@@ -9306,7 +9306,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[懐秋]アカネロッド",
         "min_atk": 138,
         "skill": [
@@ -9323,7 +9323,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[叡典]ステューデントノート",
         "min_atk": 142,
         "skill": [
@@ -9340,7 +9340,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[天使]エンジェルワンド",
         "min_atk": 40,
         "skill": [
@@ -9357,7 +9357,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[鍛極]金剛杖",
         "min_atk": 210,
         "skill": [
@@ -9378,7 +9378,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[双蛇癒]ジェズル",
         "min_atk": 175,
         "skill": [
@@ -9399,7 +9399,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[導命]パストラルスタッフ",
         "min_atk": 245,
         "skill": [
@@ -9420,7 +9420,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[麗美華]ジャカランダ",
         "min_atk": 205,
         "skill": [
@@ -9441,7 +9441,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[羅象杖]世界樹の雫枝",
         "min_atk": 185,
         "skill": [
@@ -9462,7 +9462,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[鳳凰杖]不死鳥の尾飾",
         "min_atk": 200,
         "skill": [
@@ -9483,7 +9483,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[魔樹理]森精の杖",
         "min_atk": 250,
         "skill": [
@@ -9504,7 +9504,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[酒精杖]ツォンペリ",
         "min_atk": 250,
         "skill": [
@@ -9525,7 +9525,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[焔祷]転生の祈杖",
         "min_atk": 195,
         "skill": [
@@ -9546,7 +9546,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[密智杖]ネフティスポール",
         "min_atk": 195,
         "skill": [
@@ -9567,7 +9567,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[裁考杖]裁きの天秤",
         "min_atk": 180,
         "skill": [
@@ -9588,7 +9588,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[逐雷棍]ヤグルシ",
         "min_atk": 250,
         "skill": [
@@ -9609,7 +9609,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[炎従]アーソン",
         "min_atk": 260,
         "skill": [
@@ -9630,7 +9630,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[光宿]ホーリーケーン",
         "min_atk": 250,
         "skill": [
@@ -9651,7 +9651,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[幽霧杖]セレストケーン",
         "min_atk": 210,
         "skill": [
@@ -9672,7 +9672,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[遊獣杖]ヘルウォードセプター",
         "min_atk": 205,
         "skill": [
@@ -9693,7 +9693,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[風雅]エアリアルケーン",
         "min_atk": 255,
         "skill": [
@@ -9714,7 +9714,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[嘆骸]スカルワンド",
         "min_atk": 230,
         "skill": [
@@ -9735,7 +9735,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[征風]風詠みの杖",
         "min_atk": 265,
         "skill": [
@@ -9756,7 +9756,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[虚叡]朽ち果てた杖",
         "min_atk": 1,
         "skill": [
@@ -9777,7 +9777,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[勝炎]サルヴトーチ",
         "min_atk": 265,
         "skill": [
@@ -9798,7 +9798,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[禍雷杖]雷司の杖",
         "min_atk": 185,
         "skill": [
@@ -9819,7 +9819,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[邪絶杖]ディアボロスセプター",
         "min_atk": 210,
         "skill": [
@@ -9840,7 +9840,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[祖龍杖]バハムートスタッフ",
         "min_atk": 230,
         "skill": [
@@ -9861,7 +9861,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[蒼心]リトルウィッチセプター",
         "min_atk": 200,
         "skill": [
@@ -9882,7 +9882,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]アーソン・デス",
         "min_atk": 270,
         "skill": [
@@ -9903,7 +9903,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]サンシェードパラソル",
         "min_atk": 245,
         "skill": [
@@ -9924,7 +9924,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]カースドケーン",
         "min_atk": 270,
         "skill": [
@@ -9945,7 +9945,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[魔箒]魔女の箒",
         "min_atk": 275,
         "skill": [
@@ -9966,7 +9966,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[獣杖]アンライトセプター",
         "min_atk": 275,
         "skill": [
@@ -9987,7 +9987,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]フラワークラウン",
         "min_atk": 260,
         "skill": [
@@ -10008,7 +10008,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[オイラは]アスクレビィオスの杖",
         "min_atk": 180,
         "skill": [
@@ -10029,7 +10029,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[哭司]ショロトルケーン",
         "min_atk": 195,
         "skill": [
@@ -10050,7 +10050,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[覇翼]ファルコンメイス",
         "min_atk": 180,
         "skill": [
@@ -10071,7 +10071,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]ホーリーインデックス",
         "min_atk": 255,
         "skill": [
@@ -10092,7 +10092,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]神秘の仙杖",
         "min_atk": 265,
         "skill": [
@@ -10113,7 +10113,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]氷枝杖",
         "min_atk": 230,
         "skill": [
@@ -10134,7 +10134,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[大天使]アークエンジェルワンド",
         "min_atk": 10,
         "skill": [
@@ -10155,7 +10155,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "ケーリュケイオン",
         "min_atk": 350,
         "skill": [
@@ -10176,7 +10176,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[遊翼]ケーリュケイオン",
         "min_atk": 350,
         "skill": [
@@ -10197,7 +10197,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "アスクレピオスの杖",
         "min_atk": 365,
         "skill": [
@@ -10218,7 +10218,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[極癒]アスクレピオスの杖",
         "min_atk": 365,
         "skill": [
@@ -10239,7 +10239,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[輝杖]稜鏡の鎚杖",
         "min_atk": 370,
         "skill": [
@@ -10260,7 +10260,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "氷晶杖",
         "min_atk": 340,
         "skill": [
@@ -10281,7 +10281,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[春呼杖]氷晶杖",
         "min_atk": 340,
         "skill": [
@@ -10302,7 +10302,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "封鍵クラウストルム",
         "min_atk": 365,
         "skill": [
@@ -10323,7 +10323,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[禁呪]封鍵クラウストルム",
         "min_atk": 365,
         "skill": [
@@ -10344,7 +10344,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "ウロボロス",
         "min_atk": 355,
         "skill": [
@@ -10365,7 +10365,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[蛇創杖]ウロボロス",
         "min_atk": 355,
         "skill": [
@@ -10386,7 +10386,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "イリュージョンセプター",
         "min_atk": 370,
         "skill": [
@@ -10407,7 +10407,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[万魔杖]イリュージョンセプター",
         "min_atk": 370,
         "skill": [
@@ -10428,7 +10428,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[陽花]サンフラワーワンド",
         "min_atk": 360,
         "skill": [
@@ -10449,7 +10449,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "レヴィアンセプター・マグナ",
         "min_atk": 305,
         "skill": [
@@ -10470,7 +10470,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[海叫杖]レヴィアンセプター・マグナ",
         "min_atk": 305,
         "skill": [
@@ -10491,7 +10491,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "コロッサスケーン・マグナ",
         "min_atk": 325,
         "skill": [
@@ -10512,7 +10512,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[烈殻杖]コロッサスケーン・マグナ",
         "min_atk": 325,
         "skill": [
@@ -10533,7 +10533,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "アンノウンワンド",
         "min_atk": 275,
         "skill": [
@@ -10554,7 +10554,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[怪緑杖]アンノウンワンド",
         "min_atk": 275,
         "skill": [
@@ -10575,7 +10575,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[守約]プロミス",
         "min_atk": 325,
         "skill": [
@@ -10596,7 +10596,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[極叡]五神杖",
         "min_atk": 330,
         "skill": [
@@ -10617,7 +10617,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[古尊杖]バビロンの導杖",
         "min_atk": 275,
         "skill": [
@@ -10638,7 +10638,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[極叡]五神杖・真",
         "min_atk": 360,
         "skill": [
@@ -10659,7 +10659,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[極愛杖]バレンタインワンド",
         "min_atk": 300,
         "skill": [
@@ -10680,7 +10680,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[真聖紋]ニルヴァーナ",
         "min_atk": 332,
         "skill": [
@@ -10701,7 +10701,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[真頴悟]ケラウノス",
         "min_atk": 336,
         "skill": [
@@ -10722,7 +10722,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[狂輝杖]マギ・リアリジスセプター",
         "min_atk": 280,
         "skill": [
@@ -10743,7 +10743,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[祖龍杖]バハムートスタッフ・ノヴム",
         "min_atk": 360,
         "skill": [
@@ -10764,7 +10764,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[不叶夢]カーラウロプス",
         "min_atk": 380,
         "skill": [
@@ -10785,7 +10785,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[福鸚鵡]ゴトルベルケーン",
         "min_atk": 240,
         "skill": [
@@ -10806,7 +10806,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[灼劫]セプティアンバーナー",
         "min_atk": 315,
         "skill": [
@@ -10827,7 +10827,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[青緑導]ハイロイヤルポール",
         "min_atk": 290,
         "skill": [
@@ -10848,7 +10848,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]トリート・ウロボロス",
         "min_atk": 385,
         "skill": [
@@ -10869,7 +10869,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[魔封杖]ガンバンテイン",
         "min_atk": 395,
         "skill": [
@@ -10890,7 +10890,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[聖祝杖]クリスマスワンド",
         "min_atk": 285,
         "skill": [
@@ -10911,7 +10911,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "世界樹の雫枝・マグナ",
         "min_atk": 310,
         "skill": [
@@ -10932,7 +10932,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[万創杖]世界樹の雫枝・マグナ",
         "min_atk": 310,
         "skill": [
@@ -10953,7 +10953,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "カピラヴァストゥ",
         "min_atk": 320,
         "skill": [
@@ -10974,7 +10974,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]リング・オブ・サン",
         "min_atk": 375,
         "skill": [
@@ -10995,7 +10995,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[祖龍杖]バハムートスタッフ・フツルス",
         "min_atk": 360,
         "skill": [
@@ -11016,7 +11016,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[律導杖]ロッド・オブ・コスモス",
         "min_atk": 341,
         "skill": [
@@ -11037,7 +11037,7 @@
       },
       {
         "attribute": "火",
-        "type": "rod",
+        "type": "stuff",
         "name": "[熱源]マグマストリーム",
         "min_atk": 295,
         "skill": [
@@ -11058,7 +11058,7 @@
       },
       {
         "attribute": "風",
-        "type": "rod",
+        "type": "stuff",
         "name": "[聖白]ホワイトウイング",
         "min_atk": 375,
         "skill": [
@@ -11079,7 +11079,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[夜雫典]夢見の書",
         "min_atk": 280,
         "skill": [
@@ -11100,7 +11100,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[譜奏律]フォニックロッド",
         "min_atk": 280,
         "skill": [
@@ -11121,7 +11121,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "[遥竜杖]ウィーブルロッド",
         "min_atk": 300,
         "skill": [
@@ -11142,7 +11142,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "白虎牙杖",
         "min_atk": 265,
         "skill": [
@@ -11163,7 +11163,7 @@
       },
       {
         "attribute": "土",
-        "type": "rod",
+        "type": "stuff",
         "name": "[猛咬喰]白虎牙杖",
         "min_atk": 265,
         "skill": [
@@ -11184,7 +11184,7 @@
       },
       {
         "attribute": "闇",
-        "type": "rod",
+        "type": "stuff",
         "name": "ブラック・アンド・ダークネス",
         "min_atk": 343,
         "skill": [
@@ -11205,7 +11205,7 @@
       },
       {
         "attribute": "光",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]キャピュレティオウス",
         "min_atk": 370,
         "skill": [
@@ -11226,7 +11226,7 @@
       },
       {
         "attribute": "水",
-        "type": "rod",
+        "type": "stuff",
         "name": "[]モンタギュオウス",
         "min_atk": 380,
         "skill": [
@@ -18441,7 +18441,7 @@
     "weapons": [
       {
         "attribute": "土",
-        "type": "katana",
+        "type": "blade",
         "name": "[暗針]苦無",
         "min_atk": 38,
         "skill": [],
@@ -18453,7 +18453,7 @@
       },
       {
         "attribute": "水",
-        "type": "katana",
+        "type": "blade",
         "name": "[始刀]太刀",
         "min_atk": 41,
         "skill": [],
@@ -18465,7 +18465,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "[豪刀]野太刀",
         "min_atk": 78,
         "skill": [
@@ -18482,7 +18482,7 @@
       },
       {
         "attribute": "水",
-        "type": "katana",
+        "type": "blade",
         "name": "[蒼銀刀]霊銀刀",
         "min_atk": 86,
         "skill": [
@@ -18499,7 +18499,7 @@
       },
       {
         "attribute": "土",
-        "type": "katana",
+        "type": "blade",
         "name": "[蒼銀針]霊銀針",
         "min_atk": 58,
         "skill": [
@@ -18516,7 +18516,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[天使]天使刀",
         "min_atk": 40,
         "skill": [
@@ -18533,7 +18533,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "[伊達刀]虎鉄",
         "min_atk": 320,
         "skill": [
@@ -18554,7 +18554,7 @@
       },
       {
         "attribute": "水",
-        "type": "katana",
+        "type": "blade",
         "name": "[無穢刀]蛍丸",
         "min_atk": 295,
         "skill": [
@@ -18575,7 +18575,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[瞑塗]蜥蜴丸",
         "min_atk": 325,
         "skill": [
@@ -18596,7 +18596,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[]模造刀",
         "min_atk": 259,
         "skill": [
@@ -18617,7 +18617,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[]贋作刀",
         "min_atk": 279,
         "skill": [
@@ -18638,7 +18638,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[祖龍刀]バハムートブレイド",
         "min_atk": 300,
         "skill": [
@@ -18659,7 +18659,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[壊転]朽ち果てた太刀",
         "min_atk": 1,
         "skill": [
@@ -18680,7 +18680,7 @@
       },
       {
         "attribute": "土",
-        "type": "katana",
+        "type": "blade",
         "name": "[蒐索刀]アワリティアブレード",
         "min_atk": 225,
         "skill": [
@@ -18701,7 +18701,7 @@
       },
       {
         "attribute": "風",
-        "type": "katana",
+        "type": "blade",
         "name": "[怪桃刀]アンノウンリッパー",
         "min_atk": 235,
         "skill": [
@@ -18722,7 +18722,7 @@
       },
       {
         "attribute": "土",
-        "type": "katana",
+        "type": "blade",
         "name": "[修刀]木刀",
         "min_atk": 230,
         "skill": [
@@ -18743,7 +18743,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[刺貫]つらぬき丸",
         "min_atk": 245,
         "skill": [
@@ -18764,7 +18764,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[斬甲]蟹鋏",
         "min_atk": 250,
         "skill": [
@@ -18785,7 +18785,7 @@
       },
       {
         "attribute": "風",
-        "type": "katana",
+        "type": "blade",
         "name": "[莫鉄]斬馬刀",
         "min_atk": 310,
         "skill": [
@@ -18806,7 +18806,7 @@
       },
       {
         "attribute": "風",
-        "type": "katana",
+        "type": "blade",
         "name": "[古樹刀]エントリッパー",
         "min_atk": 235,
         "skill": [
@@ -18827,7 +18827,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[大天使]大天使刀",
         "min_atk": 100,
         "skill": [
@@ -18848,7 +18848,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "阿修羅",
         "min_atk": 455,
         "skill": [
@@ -18869,7 +18869,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "[羅鬼]阿修羅",
         "min_atk": 455,
         "skill": [
@@ -18890,7 +18890,7 @@
       },
       {
         "attribute": "土",
-        "type": "katana",
+        "type": "blade",
         "name": "[神宝]丙子椒林剣",
         "min_atk": 440,
         "skill": [
@@ -18911,7 +18911,7 @@
       },
       {
         "attribute": "水",
-        "type": "katana",
+        "type": "blade",
         "name": "鬼丸国綱",
         "min_atk": 435,
         "skill": [
@@ -18932,7 +18932,7 @@
       },
       {
         "attribute": "水",
-        "type": "katana",
+        "type": "blade",
         "name": "[邪滅]鬼丸国綱",
         "min_atk": 435,
         "skill": [
@@ -18953,7 +18953,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[真鍛心]天叢雲剣",
         "min_atk": 411,
         "skill": [
@@ -18974,7 +18974,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[真悪呪]千子村正",
         "min_atk": 431,
         "skill": [
@@ -18995,7 +18995,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[巡転]八命切",
         "min_atk": 410,
         "skill": [
@@ -19016,7 +19016,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[巡転]八命切・真",
         "min_atk": 413,
         "skill": [
@@ -19037,7 +19037,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[祖龍刀]バハムートブレイド・ノヴム",
         "min_atk": 440,
         "skill": [
@@ -19058,7 +19058,7 @@
       },
       {
         "attribute": "風",
-        "type": "katana",
+        "type": "blade",
         "name": "薄緑",
         "min_atk": 450,
         "skill": [
@@ -19079,7 +19079,7 @@
       },
       {
         "attribute": "風",
-        "type": "katana",
+        "type": "blade",
         "name": "[桜閃]薄緑",
         "min_atk": 450,
         "skill": [
@@ -19100,7 +19100,7 @@
       },
       {
         "attribute": "風",
-        "type": "katana",
+        "type": "blade",
         "name": "[屠竜]ドラゴンスレイヤー",
         "min_atk": 460,
         "skill": [
@@ -19121,7 +19121,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[黒閃導]ニバンボシ",
         "min_atk": 360,
         "skill": [
@@ -19142,7 +19142,7 @@
       },
       {
         "attribute": "水",
-        "type": "katana",
+        "type": "blade",
         "name": "[直鋭種]太刀魚",
         "min_atk": 335,
         "skill": [
@@ -19163,7 +19163,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[初魄]三日月",
         "min_atk": 465,
         "skill": [
@@ -19184,7 +19184,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "朱雀光剣",
         "min_atk": 345,
         "skill": [
@@ -19205,7 +19205,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "[永炎]朱雀光剣",
         "min_atk": 345,
         "skill": [
@@ -19226,7 +19226,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[妖紅刀]不動国行",
         "min_atk": 475,
         "skill": [
@@ -19247,7 +19247,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "コロッサスブレード・マグナ",
         "min_atk": 400,
         "skill": [
@@ -19268,7 +19268,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "[烈殻刀]コロッサスブレード・マグナ",
         "min_atk": 400,
         "skill": [
@@ -19289,7 +19289,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[申之刻]天干地支刀・申之飾",
         "min_atk": 465,
         "skill": [
@@ -19310,7 +19310,7 @@
       },
       {
         "attribute": "闇",
-        "type": "katana",
+        "type": "blade",
         "name": "[]バハムートブレイド・フツルス",
         "min_atk": 440,
         "skill": [
@@ -19331,7 +19331,7 @@
       },
       {
         "attribute": "光",
-        "type": "katana",
+        "type": "blade",
         "name": "[律導刀]ブレイド・オブ・コスモス",
         "min_atk": 423,
         "skill": [
@@ -19352,7 +19352,7 @@
       },
       {
         "attribute": "土",
-        "type": "katana",
+        "type": "blade",
         "name": "[]剣聖の袋竹刀",
         "min_atk": 345,
         "skill": [
@@ -19373,7 +19373,7 @@
       },
       {
         "attribute": "火",
-        "type": "katana",
+        "type": "blade",
         "name": "[火輪]レッド・サン",
         "min_atk": 355,
         "skill": [
@@ -19394,7 +19394,7 @@
       },
       {
         "attribute": "水",
-        "type": "katana",
+        "type": "blade",
         "name": "[爽爽然]雷切",
         "min_atk": 440,
         "skill": [
@@ -19415,7 +19415,7 @@
       },
       {
         "attribute": "土",
-        "type": "katana",
+        "type": "blade",
         "name": "[無人刀]木太刀",
         "min_atk": 345,
         "skill": [
@@ -19437,4 +19437,6 @@
     ],
     "type": "刀"
   }
-]
+];
+
+export default WEAPON_LIST;

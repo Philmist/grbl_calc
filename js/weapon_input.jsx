@@ -29,7 +29,7 @@ function get_suggestions(value) {
   }
 
   // リストから選び出すための正規表現
-  const test_regex = new RegExp("^(\\[.+\\])?" + escaped_value, "i");
+  const test_regex = new RegExp("^(\\[.+\\])?.*" + escaped_value + ".*", "i");
 
   let result_array = weaponlist_ja.map((section) => {
     return {

@@ -13,10 +13,10 @@ WEAPON_DICT = {
     '槍': 'spear',
     '楽器': 'instrument',
     '格闘': 'knuckle',
-    '杖': 'rod',
+    '杖': 'stuff',
     '斧': 'axe',
     '弓': 'bow',
-    '刀': 'katana',
+    '刀': 'blade',
 }
 
 

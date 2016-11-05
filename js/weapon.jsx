@@ -306,14 +306,26 @@ class WeaponRow extends Component {
   suggest_selected(suggestion) {
     console.log(suggestion);
     if (suggestion.skill && suggestion.skill instanceof Array) {
-      [...Array(2).keys()].forEach((i) => { this.props.set_weapon_skill_type(this.props.index, i, "none"); });
-      suggestion.skill.forEach((v, i) => { this.props.set_weapon_skill_type(this.props.index, i, v); });
+      [...Array(2).keys()].forEach((i) => {
+        this.props.set_weapon_skill_type(this.props.index, i, "none");
+        this.props.set_weapon_skill_slot(this.props.index, i, "none");
+      });
+      suggestion.skill.forEach((v, i) => {
+        this.props.set_weapon_skill_type(this.props.index, i, v.type);
+        this.props.set_weapon_skill_slot(this.props.index, i, v.slot);
+      });
     }
     if (suggestion.type) {
       this.props.set_weapon_type(this.props.index, suggestion.type);
     }
-    this.props.set_weapon_cosmos(this.props.index, suggestion.cosmos);
-    this.props.set_weapon_atk_value(this.props.index, suggestion.atk);
+    let tmp_weapon_name = String(suggestion.name);
+    // TODO: ハードコーディングなのをどうにかする
+    if (tmp_weapon_name.includes("コスモス") || tmp_weapon_name.includes("cosmos")) {
+      this.props.set_weapon_cosmos(this.props.index, true);
+    } else {
+      this.props.set_weapon_cosmos(this.props.index, false);
+    }
+    this.props.set_weapon_atk_value(this.props.index, suggestion.max_atk);
   }
 
   // コンストラクタ
