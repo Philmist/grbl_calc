@@ -390,19 +390,19 @@ export default function calculate_atkval (param_obj, job_data) {
       (l) => (-0.5 + l * 3.0),
       (l) => (30 + (l - CHECK_LEVEL) / 5 * 3)
     ),
-    "normal_ks": psfunc_gen(
+    "normal_ks3": psfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
       pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
     ),
-    "magna_ks": psfunc_gen(
+    "magna_ks3": psfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
     ),
-    "ex_ks": psfunc_gen(
+    "ex_ks3": psfunc_gen(
       "ex", less_than_chklv(CHECK_LEVEL),
       pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
     ),
-    "unknown_ks": psfunc_gen(
+    "unknown_ks3": psfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
       pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
     ),

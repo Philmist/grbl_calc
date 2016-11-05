@@ -37,7 +37,7 @@ export const SKILL_TYPE = [
   ["km"],
   ["ks"],
   ["atk"],
-  ["hp"]
+  ["hpatk"]
 ];
 
 
