@@ -3,9 +3,39 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+import csv
+
+
+def csvreader_to_list(csvreader):
+    return list([data for data in csvreader])
+
+
+# スキル一覧を読みこむ
+skill_list = dict()
+
+with open(r'skill_list_normal.csv') as f:
+    skill_list['normal'] = csvreader_to_list(csv.reader(f))
+with open(r'skill_list_magna.csv') as f:
+    skill_list['magna'] = csvreader_to_list(csv.reader(f))
+with open(r'skill_list_ex.csv') as f:
+    skill_list['ex'] = csvreader_to_list(csv.reader(f))
+
+
+# スキル辞書を構築する
+skill_dict = dict()
+
+for k, v in skill_list.items():
+    for l in v:
+        res_dict = {
+            'attribute': l[1],
+            'slot': l[2],
+            'type': l[3]
+        }
+        skill_dict[l[0]] = res_dict
+
 
 # SSR武器ページを読みこむ
-request_ssr = requests.get(r'http://mirror.gbf-wiki.com/index.php?%C9%F0%B4%EFSSR') # SSRはスキル2つの可能性あり
+request_ssr = requests.get(r'http://mirror.gbf-wiki.com/index.php?%C9%F0%B4%EFSSR')  # SSRはスキル2つの可能性あり
 request_sr = requests.get(r'http://mirror.gbf-wiki.com/index.php?%C9%F0%B4%EFSR')  # SRはスキル2つの可能性あり\
 request_r = requests.get(r'http://mirror.gbf-wiki.com/index.php?%C9%F0%B4%EFR')  # Rはスキル1つ
 request_n = requests.get(r'http://mirror.gbf-wiki.com/index.php?%C9%F0%B4%EFN')  # Nはスキル無し
@@ -15,7 +45,7 @@ soup = {
     'SR': BeautifulSoup(request_sr.text, 'html.parser'),
     'R': BeautifulSoup(request_r.text, 'html.parser'),
     'N': BeautifulSoup(request_n.text, 'html.parser')
-    }
+}
 
 # 通常武器一覧を抜きだす
 items = {k: v.find('h2', id='content_1_1').find_next('table').find_all('tr') for k, v in soup.items()}
@@ -63,7 +93,19 @@ for rarelity, rows in items.items():
                 s_type.append(''.join(s.contents))
             except TypeError:
                 s_type.append('')
-        weapon['skill'] = s_type
+        skill_temp = [
+            skill_dict.get(
+                skill,
+                {'attribute': 'none', 'slot': 'none', 'type': 'none'}
+            )
+            for skill in s_type
+        ]
+        weapon['skill'] = [
+            {'slot': skill['slot'], 'type': skill['type']}
+            if (weapon['attribute'] == skill['attribute'])
+            else {'slot': 'none', 'type': 'none'}
+            for skill in skill_temp
+        ]
         # MinHPの抽出
         if (rarelity == 'N' or rarelity == 'R'):
             min_hp = tds[7]
@@ -75,7 +117,7 @@ for rarelity, rows in items.items():
         weapon['min_atk'] = int(''.join(min_atk.contents))
         # maxHPの抽出
         if (rarelity == 'N' or rarelity == 'R'):
-            mas_hp = tds[9]
+            max_hp = tds[9]
         else:
             max_hp = tds[10]
         try:
