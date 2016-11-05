@@ -242,8 +242,7 @@ export const SKILL_TYPE_MAGNA = [
   ["bw1"],
   ["bw2"],
   ["bw3"],
-  ["km"],
-  ["ks"]
+  ["ks3"]
 ];
 
 export const SKILL_TYPE_EX = [
@@ -254,14 +253,13 @@ export const SKILL_TYPE_EX = [
   ["bw1"],
   ["bw2"],
   ["bw3"],
-  ["km"],
-  ["ks"]
+  ["ks3"]
 ];
 
 export const SKILL_TYPE_BAHA = [
   ["none"],
   ["atk"],
-  ["hp"]
+  ["hpatk"]
 ];
 
 export const SKILL_TYPE_COSMOS = [
