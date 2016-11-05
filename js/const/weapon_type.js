@@ -24,7 +24,6 @@ export const SKILL_SLOT = [
   ["baha"]
 ];
 
-
 export const SKILL_TYPE = [
   ["none"],
   ["kj1"],
@@ -38,6 +37,54 @@ export const SKILL_TYPE = [
   ["ks"],
   ["atk"],
   ["hp"]
+];
+
+// スキル種別は、スキルスロットによって変わる
+export const SKILL_TYPE_NORMAL = [
+  ["none"],
+  ["kj1"],
+  ["kj2"],
+  ["kj3"],
+  ["kj4"],
+  ["bw1"],
+  ["bw2"],
+  ["bw3"],
+  ["km"],
+  ["ks"]
+];
+
+export const SKILL_TYPE_MAGNA = [
+  ["none"],
+  ["kj1"],
+  ["kj2"],
+  ["kj3"],
+  ["bw1"],
+  ["bw2"],
+  ["bw3"],
+  ["km"],
+  ["ks"]
+];
+
+export const SKILL_TYPE_EX = [
+  ["none"],
+  ["kj1"],
+  ["kj2"],
+  ["kj3"],
+  ["bw1"],
+  ["bw2"],
+  ["bw3"],
+  ["km"],
+  ["ks"]
+];
+
+export const SKILL_TYPE_BAHA = [
+  ["none"],
+  ["atk"],
+  ["hp"]
+];
+
+export const SKILL_TYPE_COSMOS = [
+  ["none"]
 ];
 
 
