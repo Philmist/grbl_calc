@@ -6,6 +6,20 @@ import json
 import csv
 
 
+WEAPON_DICT = {
+    '剣': 'sword',
+    '銃': 'gun',
+    '短剣': 'dagger',
+    '槍': 'spear',
+    '楽器': 'instrument',
+    '格闘': 'knuckle',
+    '杖': 'rod',
+    '斧': 'axe',
+    '弓': 'bow',
+    '刀': 'katana',
+}
+
+
 def csvreader_to_list(csvreader):
     return list([data for data in csvreader])
 
@@ -52,7 +66,7 @@ items = {k: v.find('h2', id='content_1_1').find_next('table').find_all('tr') for
 items = {k: v[1:] for k, v in items.items()}  # タイトルはいらない
 
 # 武器一覧を格納するリストを作る
-weapons = list()
+weapons = dict()
 
 # 武器一覧を一行ずつなめていく
 for rarelity, rows in items.items():
@@ -75,7 +89,8 @@ for rarelity, rows in items.items():
         weapon['attribute'] = ''.join(attr.contents)
         # 武器種別の抽出
         w_type = tds[3]
-        weapon['type'] = ''.join(w_type.contents)
+        weapon['type_name'] = ''.join(w_type.contents)
+        weapon['type'] = WEAPON_DICT[weapon['type_name']] if weapon['type_name'] in WEAPON_DICT else 'none'
         # スキル文字列の抽出
         if (rarelity == 'R'):
             s_type_tmp = [tds[6]]
@@ -136,9 +151,14 @@ for rarelity, rows in items.items():
         # レアリティを格納
         weapon['rarelity'] = rarelity
         # 武器一覧に格納
-        weapons.append(weapon)
+        if weapon['type_name'] in weapons:
+            weapons[weapon['type_name']].append(weapon)
+        else:
+            weapons[weapon['type_name']] = [weapon]
 
-json_data = {'WEAPONS': weapons}
+
+weapons_converted = [{'type': k, 'weapons': v} for k, v in weapons.items()]
+json_data = {'WEAPONS': weapons_converted}
 
 with open('temp_weapons.json', 'w', encoding='utf-8') as f:
     json.dump(json_data, f, ensure_ascii=False, indent=2)
