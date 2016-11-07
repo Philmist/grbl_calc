@@ -34,6 +34,7 @@ counterpart.registerTranslations("ja", locale_ja);
 // デフォルトの言語を設定する
 counterpart.setLocale("ja");
 
+
 // 適用するミドルウェアを設定する
 const middlewares = [thunkMiddleware];
 if (process.env.NODE_ENV === "development") {
