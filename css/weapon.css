@@ -58,7 +58,8 @@
     composes: input;
 }
 
-.cosmos {
+.plus {
+    composes: plus from "./app.css";
     composes: input;
 }
 

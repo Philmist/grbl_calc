@@ -272,10 +272,10 @@ export function set_weapon_skill_lv(index, lv) {
   };
 }
 
-// cosmosを(booleanで)セットする
-export function set_weapon_cosmos(index, value) {
+// 武器の＋数値をセットする
+export function set_weapon_plus(index, value) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.COSMOS, index: Number(index), value: Boolean(value) });
+    dispatch({ type: RC.weapon.PLUS, index: Number(index), value: Number(value) });
     return true;
   };
 }

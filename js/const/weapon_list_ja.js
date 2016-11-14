@@ -14,14 +14,12 @@ const WEAPON_LIST = [  // 配列で表記する
         skill: ["kj1"],  // スキル名(内部表記-ここでは攻刃小)
         atk: 2580,  // 最大攻撃力(この数値が自動的に入力される)
         type: "sword",  // 武器種別の内部表記
-        cosmos: false  // この武器がコスモス武器か否か
       },
       {
         name: "[吸血剣]ダーインスレイブ",
         skill: ["kj1"],
         atk: 3010,
         type: "sword",
-        cosmos: false
       }
     ]
   },
@@ -33,14 +31,12 @@ const WEAPON_LIST = [  // 配列で表記する
         skill: ["kj1"],
         atk: 2240,
         type: "spear",
-        cosmos: false
       },
       {
         name: "[烈伐]ピラム",
         skill: ["kj1"],
         atk: 2610,
         type: "spear",
-        cosmos: false
       }
     ]
   }
