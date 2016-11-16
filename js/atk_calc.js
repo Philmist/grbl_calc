@@ -17,11 +17,11 @@
     weapon: [ // 武器1つを配列の要素1つで表わす
         {
           atk: 武器攻撃力(Number),
+          plus: 武器の＋数値(Number),
           type: 武器の種類を表わした文字列(String),
           skill_level: 武器のスキルレベル(Number),
           skill_slot: [武器のスキル1つ目の枠名の文字列(String), 同2つ目 ],
           skill_type: [武器のスキル1つ目の種別の文字列(String), 同2つ目 ],
-          cosmos: コスモス武器か否か(boolean)
         }, ...
       ],
     summon: [ // 召喚1つを配列の(ry 最初のものがメイン召喚石として計算される
@@ -119,7 +119,7 @@ export function calculate_atkval (param_obj, job_data) {
   // 一番最初のコスモス武器が該当
   let cosmos_weapon_type = "no_cosmos";  // "none"では該当が出てきてしまう
   for (let i = 0; i < param_obj.weapon.length; i++) {
-    if (param_obj.weapon[i].cosmos) {
+    if (param_obj.weapon[i].skill_slot[0] == "cosmos" || param_obj.weapon[i].skill_slot[1] == "cosmos") {
       cosmos_weapon_type = param_obj.weapon[i].type;
       break;
     }
@@ -130,7 +130,7 @@ export function calculate_atkval (param_obj, job_data) {
     let total_atk = 0;
     const zenith_bonus = [0, 1, 3, 5, 6, 8, 10];  // 各zenithの星に対応する追加ボーナス%
     param_obj.weapon.forEach(function(weapon) {
-      let atk = weapon.atk;  // 基礎攻撃力
+      let atk = weapon.atk + weapon.plus * 5;  // 基礎攻撃力
       let specialty_basic = 100;  // 得意武器倍率%
       let specialty_bonus = 0;  // Zenith追加%
       let job = job_data[param_obj.job];  // 該当ジョブのデータを取得
@@ -147,7 +147,7 @@ export function calculate_atkval (param_obj, job_data) {
       }
       let specialty_cosmos = (weapon.type == cosmos_weapon_type) ? 30 : 0; // コスモス該当武器の追加%
       // 自身がコスモス武器なら自身の倍率は0
-      if (weapon.cosmos) {
+      if (weapon.skill_slot[0] == "cosmos") {
         specialty_cosmos = 0;
       }
       // 武器攻撃力に倍率をかける

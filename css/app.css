@@ -31,6 +31,10 @@
     composes: number;
 }
 
+.plus {
+    width: 2.5em;
+}
+
 .name {
     width: 10em;
 }

@@ -38,7 +38,7 @@ const weapon_default = {
   skill_level: 0,
   skill_slot: ["normal", "normal"],
   skill_type: ["none", "none"],
-  cosmos: false,
+  plus: 0,
   selected: false,
   locked: false,
   type: "sword",
@@ -72,9 +72,8 @@ export function weapon(state, action) {
     } else if (action.type == RC.weapon.APPEND && state.length < WEAPON_MAX) {  // 武器の追加
       let insert_state = Object.assign({}, weapon_default);
       ret_state.splice(action.index+1, 0, insert_state);
-    } else if (action.type == RC.weapon.COSMOS) {  // 武器コスモス属性の設定
-      let cosmos = action.value ? action.value : false;
-      ret_state[action.index] = Object.assign({}, ret_state[action.index], { cosmos: cosmos });
+    } else if (action.type == RC.weapon.PLUS) {  // 武器の＋数値設定
+      ret_state[action.index].plus = Number(action.value);
     } else if (action.type == RC.weapon.LOCK) {  // 武器のロック設定
       let value = action.value ? action.value : false;
       ret_state[action.index] = Object.assign({}, ret_state[action.index], { locked: value });

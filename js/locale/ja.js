@@ -23,7 +23,7 @@ let text = {
       lock: "鍵",
       name: "名前",
       value: "攻撃力",
-      cosmos: "コ",
+      plus: "＋",
       type: "種別",
       skill1: "スキル1",
       skill2: "スキル2",
@@ -47,7 +47,8 @@ let text = {
       magna: "方陣",
       ex: "ＥＸ",
       unknown: "ｱﾝﾉｳﾝ",
-      baha: "バハ"
+      baha: "バハ",
+      cosmos: "ｺｽﾓｽ"
     },
     skill: {
       none: "無し",
