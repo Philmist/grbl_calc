@@ -322,13 +322,6 @@ class WeaponRow extends Component {
     if (suggestion.type) {
       this.props.set_weapon_type(this.props.index, suggestion.type);
     }
-    let tmp_weapon_name = String(suggestion.name);
-    // TODO: ハードコーディングなのをどうにかする
-    if (tmp_weapon_name.includes("コスモス") || tmp_weapon_name.includes("cosmos")) {
-      this.props.set_weapon_cosmos(this.props.index, true);
-    } else {
-      this.props.set_weapon_cosmos(this.props.index, false);
-    }
     this.props.set_weapon_atk_value(this.props.index, suggestion.max_atk);
   }
 
