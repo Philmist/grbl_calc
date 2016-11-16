@@ -40,11 +40,11 @@ export default connect((state) => { return {inputlock: state.inputlock ? true : 
 
 
 // ゼニスの★と数値の対応付け配列
-const zenith_list = [[0, "zenith.list.zero"], [1, "zenith.list.one"], [2, "zenith.list.two"], [3, "zenith.list.three"]];
+const zenith_list = [[0, "zenith.list.zero"], [1, "zenith.list.one"], [2, "zenith.list.two"], [3, "zenith.list.three"], [4, "zenith.list.four"], [5, "zenith.list.five"], [6, "zenith.list.six"]];
 // ゼニスのオプションリスト要素を返す関数
-function renderZenithSelector() {
+function renderZenithSelector(max) {
   var option_list = [];
-  for (var i=0; i < zenith_list.length; i++) {
+  for (var i=0; i < max+1; i++) {
     option_list.push(
       <Translate component="option" value={zenith_list[i][0]} key={zenith_list[i][0]} content={zenith_list[i][1]} />
     );
@@ -69,7 +69,7 @@ class ZenithAttack extends Component {
 
   // 実際に要素を作成して返す
   render() {
-    var elem = renderZenithSelector();
+    var elem = renderZenithSelector(3);
     return (
       <tr styleName="row">
         <Translate component="th" styleName="header" content="zenith.header.attack" />
@@ -116,7 +116,7 @@ class ZenithWeapon1 extends Component {
 
   // 実際の要素を作成して返す
   render() {
-    var elem = renderZenithSelector();
+    var elem = renderZenithSelector(6);
     return (
       <tr styleName="row">
         <Translate component="th" styleName="header" content="zenith.header.weapon1" />
@@ -155,7 +155,7 @@ class ZenithWeapon2 extends Component {
 
   // 実際の要素を作って返す関数
   render() {
-    var elem = renderZenithSelector();
+    var elem = renderZenithSelector(6);
     return (
       <tr styleName="row">
         <Translate component="th" styleName="header" content="zenith.header.weapon2" />
@@ -192,7 +192,7 @@ class ZenithAttribute extends Component {
 
   // 実際に要素を作って返す
   render() {
-    var elem = renderZenithSelector();
+    var elem = renderZenithSelector(3);
     return (
       <tr styleName="row">
         <Translate component="th" styleName="header" content="zenith.header.attribute" />

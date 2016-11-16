@@ -12,7 +12,10 @@ let text = {
       zero: "無し",
       one: "★",
       two: "★★",
-      three: "★★★"
+      three: "★★★",
+      four: "★★★★",
+      five: "★★★★★",
+      six: "★★★★★★"
     }
   },
   weapon: {
