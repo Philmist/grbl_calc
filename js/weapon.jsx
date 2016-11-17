@@ -322,14 +322,16 @@ class WeaponRow extends Component {
   // 武器名のサジェストでパラメータを一斉変更
   suggest_selected(suggestion) {
     console.log(suggestion);
+    // スキルをセットする
+    // slot -> type という順番でセットしないと悲しい目に合う
     if (suggestion.skill && suggestion.skill instanceof Array) {
       [...Array(2).keys()].forEach((i) => {
-        this.props.set_weapon_skill_type(this.props.index, i, "none");
         this.props.set_weapon_skill_slot(this.props.index, i, "none");
+        this.props.set_weapon_skill_type(this.props.index, i, "none");
       });
       suggestion.skill.forEach((v, i) => {
-        this.props.set_weapon_skill_type(this.props.index, i, v.type);
         this.props.set_weapon_skill_slot(this.props.index, i, v.slot);
+        this.props.set_weapon_skill_type(this.props.index, i, v.type);
       });
     }
     if (suggestion.type) {
