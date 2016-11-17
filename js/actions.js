@@ -200,7 +200,7 @@ export function set_zenith_weapon(param) {
       let w1 = Number(param[1]);
       if (isNaN(w0) || isNaN(w1)) {
         console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
-      } else if ((w0 >= 0 && w0 <= 3) && (w1 >= 0 && w1 <= 3)) {
+      } else if ((w0 >= 0 && w0 <= 6) && (w1 >= 0 && w1 <= 6)) {
         dispatch({ type: RC.basic.ZENITH_WEAPON, value: [w0, w1] });
       } else {
         console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
