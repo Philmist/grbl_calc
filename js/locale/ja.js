@@ -50,7 +50,7 @@ let text = {
       baha: "バハ",
       cosmos: "ｺｽﾓｽ"
     },
-    skill: {
+    skill_normal: {
       none: "無し",
       kj1: "攻刃(小)",
       kj2: "攻刃(中)",
@@ -63,6 +63,39 @@ let text = {
       ks: "渾身",
       atk: "攻",
       hp: "攻HP"
+    },
+    skill_magna: {
+      none: "無し",
+      kj1: "攻刃(小)",
+      kj2: "攻刃(中)",
+      kj3: "攻刃(大)",
+      kj4: "攻刃II",
+      bw1: "背水(小)",
+      bw2: "背水(中)",
+      bw3: "背水(大)",
+      km: "神威",
+      ks: "渾身",
+    },
+    skill_ex: {
+      none: "無し",
+      kj1: "攻刃(小)",
+      kj2: "攻刃(中)",
+      kj3: "攻刃(大)",
+      kj4: "攻刃II",
+      bw1: "背水(小)",
+      bw2: "背水(中)",
+      bw3: "背水(大)",
+      km: "神威",
+      ks: "渾身",
+    },
+    skill_baha: {
+      none: "無し",
+      atk: "攻",
+      hp: "攻HP"
+    },
+    skill_cosmos: {
+      normal: "通常",
+      at: "AT"
     },
     lv: {
       0: "無",
