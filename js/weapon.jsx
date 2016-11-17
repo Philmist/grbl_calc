@@ -237,11 +237,11 @@ class WeaponRow extends Component {
   e_skill_type_baha = SKILL_TYPE_BAHA.map(this.create_optfunc.bind(this, "skill_baha"));
   e_skill_type_cosmos = SKILL_TYPE_COSMOS.map(this.create_optfunc.bind(this, "skill_cosmos"));
   // スキルスロットとの対応を記憶しておくオブジェクト
-  // TODO: アンノウンの扱い
   e_skill_type_obj = {
     [SKILL_SLOT[0]]: this.e_skill_type_normal,  // 通常
     [SKILL_SLOT[1]]: this.e_skill_type_magna,  // マグナ
     [SKILL_SLOT[2]]: this.e_skill_type_ex,  // EX
+    [SKILL_SLOT[3]]: this.e_skill_type_ex,  // アンノウン
     [SKILL_SLOT[4]]: this.e_skill_type_baha,  // バハ
     [SKILL_SLOT[5]]: this.e_skill_type_cosmos  // コスモス
   }
