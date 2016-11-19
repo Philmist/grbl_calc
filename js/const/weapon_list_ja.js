@@ -2102,8 +2102,8 @@ const WEAPON_LIST = [
         "min_atk": 364,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -3296,8 +3296,8 @@ const WEAPON_LIST = [
         "min_atk": 351,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -4717,8 +4717,8 @@ const WEAPON_LIST = [
         "min_atk": 396,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -6440,8 +6440,8 @@ const WEAPON_LIST = [
         "min_atk": 426,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -8421,8 +8421,8 @@ const WEAPON_LIST = [
         "min_atk": 371,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -11021,8 +11021,8 @@ const WEAPON_LIST = [
         "min_atk": 341,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -13907,8 +13907,8 @@ const WEAPON_LIST = [
         "min_atk": 398,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -15974,8 +15974,8 @@ const WEAPON_LIST = [
         "min_atk": 417,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
@@ -18315,8 +18315,8 @@ const WEAPON_LIST = [
         "min_atk": 379,
         "skill": [
           {
-            "type": "cosmos",
-            "slot": "normal"
+            "type": "normal",
+            "slot": "cosmos"
           },
           {
             "type": "none",
