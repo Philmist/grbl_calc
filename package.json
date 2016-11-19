@@ -2,12 +2,15 @@
   "name": "granblue_calc",
   "main": "bundle.js",
   "directories": {
-    "doc": "docs"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grbl-calculator-project/grbl_calc.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "babel-core": "^6.7.6",
     "babel-loader": "^6.2.4",
