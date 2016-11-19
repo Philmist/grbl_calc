@@ -126,8 +126,8 @@ class CalculatorBody extends Component {
         </div>
         <div styleName="footer_box">
           <ul styleName="nav">
-            <li styleName="nav-item"><a href="../grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</a></li>
-            <li styleName="nav-item"><a href="../">トップページ</a></li>
+            <li styleName="nav-item"><a href="http://hibin0.web.fc2.com/grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</a></li>
+            <li styleName="nav-item"><a href="http://hibin0.web.fc2.com/">トップページ</a></li>
           </ul>
           <dl styleName="comment">
             <dt>開発中</dt>
@@ -137,6 +137,8 @@ class CalculatorBody extends Component {
                 <li styleName="copyright-list-item">グラブルID: 39097 (日比野)</li>
               </ul>
             </dd>
+            <dt>ライセンス</dt>
+            <dd>MIT(詳細は <a href="https://github.com/grbl-calculator-project/grbl_calc">GitHub</a> )</dd>
           </dl>
         </div>
       </div>
