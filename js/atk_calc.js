@@ -495,9 +495,15 @@ export function is_valid_weapon_obj(weapon_obj) {
       }
     }
   }
-  // コスモスか否か
-  if (!(weapon_keys.includes("cosmos"))) {
+  // スキル種別
+  if (!(weapon_keys.includes("skill_slot") && weapon_obj.skill_type instanceof Array)) {
     return false;
+  } else {
+    for (let i = 0; i < weapon_obj.skill_type.length; i++) {
+      if (!(typeof weapon_obj.skill_type[i] == "string")) {
+        return false;
+      }
+    }
   }
   // チェックを全部パスした
   return true;

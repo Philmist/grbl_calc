@@ -58,6 +58,7 @@ class Optimizer extends Component {
   }
 
   on_message(e) {
+    console.info(e.data);
     if (e.data.state === WORKER_STATE.RUNNING) {
       this.setState({ percent: e.data.percent });
     }
