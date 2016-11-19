@@ -238,6 +238,7 @@ class WeaponRow extends Component {
   e_skill_type_cosmos = SKILL_TYPE_COSMOS.map(this.create_optfunc.bind(this, "skill_cosmos"));
   // スキルスロットとの対応を記憶しておくオブジェクト
   e_skill_type_obj = {
+    "none": this.e_skill_type_normal,
     [SKILL_SLOT[0]]: this.e_skill_type_normal,  // 通常
     [SKILL_SLOT[1]]: this.e_skill_type_magna,  // マグナ
     [SKILL_SLOT[2]]: this.e_skill_type_ex,  // EX
@@ -268,7 +269,9 @@ class WeaponRow extends Component {
   // 配列を変更するので泥臭いことをしている
   change_skill_slot1(e) {
     this.props.set_weapon_skill_slot(this.props.index, 0, e.target.value);
-    this.setState({ skill_slot_1: e.target.value });  // stateは必ずsetStateを通して変更する
+    let tmp_skill = Array.from(this.state.skill_slot);
+    tmp_skill[0] = e.target.value;
+    this.setState({ skill_slot: tmp_skill });  // stateは必ずsetStateを通して変更する
   }
 
   change_skill_type1(e) {
@@ -278,7 +281,9 @@ class WeaponRow extends Component {
   // 武器のスキル(2つ目)が変更された時に呼ばれる関数
   change_skill_slot2(e) {
     this.props.set_weapon_skill_slot(this.props.index, 1, e.target.value);
-    this.setState({ skill_slot_2: e.target.value });  // stateは必ずsetStateを通して変更する
+    let tmp_skill = Array.from(this.state.skill_slot);
+    tmp_skill[1] = e.target.value;
+    this.setState({ skill_slot: tmp_skill });  // stateは必ずsetStateを通して変更する
   }
 
   change_skill_type2(e) {
@@ -326,11 +331,20 @@ class WeaponRow extends Component {
     // slot -> type という順番でセットしないと悲しい目に合う
     if (suggestion.skill && suggestion.skill instanceof Array) {
       [...Array(2).keys()].forEach((i) => {
-        this.props.set_weapon_skill_slot(this.props.index, i, "none");
+        this.props.set_weapon_skill_slot(this.props.index, i, "normal");
+        let tmp_skill = Array.from(this.state.skill_slot);
+        tmp_skill[i] = "normal";
+        this.setState({ skill_slot: tmp_skill });
         this.props.set_weapon_skill_type(this.props.index, i, "none");
       });
       suggestion.skill.forEach((v, i) => {
-        this.props.set_weapon_skill_slot(this.props.index, i, v.slot);
+        if (v.slot != "none") {
+          this.props.set_weapon_skill_slot(this.props.index, i, v.slot);
+          let tmp_skill = Array.from(this.state.skill_slot);
+          tmp_skill[i] = v.slot;
+          this.setState({ skill_slot: tmp_skill });
+          console.log(this.state);
+        }
         this.props.set_weapon_skill_type(this.props.index, i, v.type);
       });
     }
@@ -359,8 +373,7 @@ class WeaponRow extends Component {
     this.suggest_selected = ::this.suggest_selected;
     // スロットの選択を保存するstate
     this.state = {
-      skill_slot_1: SKILL_SLOT[0],
-      skill_slot_2: SKILL_SLOT[1]
+      skill_slot: [SKILL_SLOT[0], SKILL_SLOT[0]]
     };
   }
 
@@ -412,7 +425,7 @@ class WeaponRow extends Component {
         </td>
         <td>
           <select styleName="type" value={skill_type[0]} onChange={this.change_skill_type1} disabled={inputlock} >
-            {this.e_skill_type_obj[this.state.skill_slot_1]}
+            {this.e_skill_type_obj[this.state.skill_slot[0]]}
           </select>
         </td>
         <td>
@@ -422,7 +435,7 @@ class WeaponRow extends Component {
         </td>
         <td>
           <select styleName="type" value={skill_type[1]} onChange={this.change_skill_type2} disabled={inputlock} >
-            {this.e_skill_type_obj[this.state.skill_slot_2]}
+            {this.e_skill_type_obj[this.state.skill_slot[1]]}
           </select>
         </td>
         <td>
