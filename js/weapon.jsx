@@ -269,9 +269,6 @@ class WeaponRow extends Component {
   // 配列を変更するので泥臭いことをしている
   change_skill_slot1(e) {
     this.props.set_weapon_skill_slot(this.props.index, 0, e.target.value);
-    let tmp_skill = Array.from(this.state.skill_slot);
-    tmp_skill[0] = e.target.value;
-    this.setState({ skill_slot: tmp_skill });  // stateは必ずsetStateを通して変更する
   }
 
   change_skill_type1(e) {
@@ -281,9 +278,6 @@ class WeaponRow extends Component {
   // 武器のスキル(2つ目)が変更された時に呼ばれる関数
   change_skill_slot2(e) {
     this.props.set_weapon_skill_slot(this.props.index, 1, e.target.value);
-    let tmp_skill = Array.from(this.state.skill_slot);
-    tmp_skill[1] = e.target.value;
-    this.setState({ skill_slot: tmp_skill });  // stateは必ずsetStateを通して変更する
   }
 
   change_skill_type2(e) {
@@ -326,24 +320,17 @@ class WeaponRow extends Component {
 
   // 武器名のサジェストでパラメータを一斉変更
   suggest_selected(suggestion) {
-    console.log(suggestion);
     // スキルをセットする
     // slot -> type という順番でセットしないと悲しい目に合う
     if (suggestion.skill && suggestion.skill instanceof Array) {
       [...Array(2).keys()].forEach((i) => {
         this.props.set_weapon_skill_slot(this.props.index, i, "normal");
         let tmp_skill = Array.from(this.state.skill_slot);
-        tmp_skill[i] = "normal";
-        this.setState({ skill_slot: tmp_skill });
         this.props.set_weapon_skill_type(this.props.index, i, "none");
       });
       suggestion.skill.forEach((v, i) => {
         if (v.slot != "none") {
           this.props.set_weapon_skill_slot(this.props.index, i, v.slot);
-          let tmp_skill = Array.from(this.state.skill_slot);
-          tmp_skill[i] = v.slot;
-          this.setState({ skill_slot: tmp_skill });
-          console.log(this.state);
         }
         this.props.set_weapon_skill_type(this.props.index, i, v.type);
       });
@@ -425,7 +412,7 @@ class WeaponRow extends Component {
         </td>
         <td>
           <select styleName="type" value={skill_type[0]} onChange={this.change_skill_type1} disabled={inputlock} >
-            {this.e_skill_type_obj[this.state.skill_slot[0]]}
+            {this.e_skill_type_obj[skill_slot[0]]}
           </select>
         </td>
         <td>
@@ -435,7 +422,7 @@ class WeaponRow extends Component {
         </td>
         <td>
           <select styleName="type" value={skill_type[1]} onChange={this.change_skill_type2} disabled={inputlock} >
-            {this.e_skill_type_obj[this.state.skill_slot[1]]}
+            {this.e_skill_type_obj[skill_slot[1]]}
           </select>
         </td>
         <td>
