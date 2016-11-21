@@ -53,7 +53,8 @@
   {
     "(職業の英語名)": {
       specialty: ["(得意武器の英語名)", ... ],
-      atk_bonus: 攻撃力ボーナス(Number)
+      atk_value: 攻撃力ボーナス値(Number)
+      atk_rate:  攻撃力ボーナス％(Number)
     }, ...
   }
 */
@@ -61,6 +62,9 @@ export function calculate_atkval (param_obj, job_data) {
   // 攻撃力の定義
   let showed_atk = 0;
   let basic_atk = 0;
+  
+  let job_atk_value = 0;
+  let job_atk_rate = 0;
 
   // 基本攻撃力の算出
   {
@@ -129,11 +133,16 @@ export function calculate_atkval (param_obj, job_data) {
   showed_atk += function () {  // 表示攻撃力に処理で得られた総合武器攻撃力を加算する
     let total_atk = 0;
     const zenith_bonus = [0, 1, 3, 5, 6, 8, 10];  // 各zenithの星に対応する追加ボーナス%
+    let job = job_data[param_obj.job];  // 該当ジョブのデータを取得
+    if (job) {  // もし該当ジョブが存在するのなら
+      // ジョブ攻撃力ボーナス
+      job_atk_value = job.atk_value;
+      job_atk_rate = job.atk_rate;
+    }
     param_obj.weapon.forEach(function(weapon) {
       let atk = weapon.atk + weapon.plus * 5;  // 基礎攻撃力
       let specialty_basic = 100;  // 得意武器倍率%
       let specialty_bonus = 0;  // Zenith追加%
-      let job = job_data[param_obj.job];  // 該当ジョブのデータを取得
       if (job) {  // もし該当ジョブが存在するのなら
         // 得意武器の一覧を見て...
         for (var i = 0; i < job.specialty.length; i++) {
@@ -146,10 +155,7 @@ export function calculate_atkval (param_obj, job_data) {
         }
       }
       let specialty_cosmos = (weapon.type == cosmos_weapon_type) ? 30 : 0; // コスモス該当武器の追加%
-      // 自身がコスモス武器なら自身の倍率は0
-      if (weapon.skill_slot[0] == "cosmos") {
-        specialty_cosmos = 0;
-      }
+      // 自身にもコスモス武器の倍率はかかる
       // 武器攻撃力に倍率をかける
       atk = atk * (specialty_basic + specialty_bonus + specialty_cosmos) / 100;
       // 全武器攻撃力を更新する
@@ -169,8 +175,8 @@ export function calculate_atkval (param_obj, job_data) {
 
   // ジョブボーナス
   // TODO: 外部ファイルから読みこみも考えるべき
-  showed_atk += param_obj.atk_bonus.value;
-  showed_atk = showed_atk * (100 + param_obj.atk_bonus.percent) / 100;
+  showed_atk += param_obj.atk_bonus.value + job_atk_value;
+  showed_atk = showed_atk * (100 + param_obj.atk_bonus.percent + job_atk_rate) / 100;
 
 
   /* スキル */
