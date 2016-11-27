@@ -17,20 +17,32 @@ let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
 import {
+  WEAPON_KIND,
+  SKILL_SLOT,
+  SKILL_TYPE_NORMAL,
+  SKILL_TYPE_MAGNA,
+  SKILL_TYPE_EX,
+  SKILL_TYPE_BAHA,
+  SKILL_TYPE_COSMOS,
+  SKILL_LV
+} from "./const/weapon_type";
+import {
   enable_weapon_object,
   disable_weapon_object,
   move_weapon_object,
   insert_weapon_object,
   delete_weapon_object,
-  set_weapon_cosmos,
+  set_weapon_plus,
   set_weapon_lock,
   set_weapon_name,
   set_weapon_type,
   set_weapon_atk_value,
+  set_weapon_skill_slot,
   set_weapon_skill_type,
   set_weapon_skill_lv
 } from "./actions";
 
+import WeaponInput from "./weapon_input.jsx";
 import styles from "weapon.css";
 
 
@@ -72,10 +84,10 @@ class WeaponTableHeader extends Component {
         <Translate component="th" content={ t_header+"lock" } />
         <Translate component="th" content={ t_header+"name" } />
         <Translate component="th" content={ t_header+"value" } />
-        <Translate component="th" content={ t_header+"cosmos" } />
+        <Translate component="th" content={ t_header+"plus" } />
         <Translate component="th" content={ t_header+"type" } />
-        <Translate component="th" content={ t_header+"skill1" } />
-        <Translate component="th" content={ t_header+"skill2" } />
+        <Translate component="th" content={ t_header+"skill1" } colSpan="2" />
+        <Translate component="th" content={ t_header+"skill2" } colSpan="2" />
         <Translate component="th" content={ t_header+"lv" } />
         <Translate component="th" content={ t_header+"add_del" } />
       </tr>
@@ -104,7 +116,12 @@ class WeaponTableBody extends Component {
         {this.props.weapon.map((val, index) => {
           let first_selected = ((selected_index === -1 && val.selected) ? true : false);
           if (first_selected) { selected_index = index; }
-          return <WeaponRow key={"wr_"+String(index)} index={index} inputlock={this.props.inputlock} first_selected={first_selected} />;
+          return <WeaponRow
+            key={"wr_"+String(index)}
+            inputbox_id={"wr_ib_"+String(index)}
+            index={index}
+            inputlock={this.props.inputlock}
+            first_selected={first_selected} />;
         })}
       </tbody>
     );
@@ -174,10 +191,11 @@ function mapStateToWeaponRowProps(state, props) {
   let name = (target_state.name === undefined) ? "" : target_state.name;
   let atk = (target_state.atk === undefined) ? 0 : target_state.atk;
   let skill_level = (target_state.skill_level === undefined) ? 0 : target_state.skill_level;
+  let skill_slot = (target_state.skill_slot === undefined) ? ["normal", "normal"] : target_state.skill_slot;
   let skill_type = (target_state.skill_type === undefined) ? ["none", "none"] : target_state.skill_type;
-  let cosmos = (target_state.cosmos === undefined) ? false : target_state.cosmos;
+  let plus = (target_state.plus === undefined) ? 0 : target_state.plus;
   let type = (target_state.type === undefined) ? "sword" : target_state.type;
-  return { selected, name, atk, skill_level, skill_type, cosmos, type, locked };
+  return { selected, name, atk, skill_level, skill_slot, skill_type, plus, type, locked };
 }
 // reduxのaction creatorをpropsに注入するためのobject
 var mapActionCreatorsToWeaponRowProps = {
@@ -187,72 +205,16 @@ var mapActionCreatorsToWeaponRowProps = {
   insert_weapon_object,
   delete_weapon_object,
   set_weapon_name,
-  set_weapon_cosmos,
+  set_weapon_plus,
   set_weapon_lock,
   set_weapon_atk_value,
   set_weapon_type,
+  set_weapon_skill_slot,
   set_weapon_skill_type,
   set_weapon_skill_lv
 };
-// 表示に使うための変数群
-// TODO: もっとマシな形でどうにかする
-const WEAPON_KIND = [
-  ["sword"],
-  ["dagger"],
-  ["spear"],
-  ["axe"],
-  ["stuff"],
-  ["gun"],
-  ["knuckle"],
-  ["bow"],
-  ["instrument"],
-  ["blade"]
-];
-const SKILL_TYPE = [
-  ["none"],
-  ["kj1"],
-  ["kj2"],
-  ["kj3"],
-  ["kj4"],
-  ["bw1"],
-  ["bw2"],
-  ["bw3"],
-  ["km1"],
-  ["ks"],
-  ["mkj1"],
-  ["mkj2"],
-  ["mbw1"],
-  ["mbw2"],
-  ["mbw3"],
-  ["mkm1"],
-  ["bha"],
-  ["bhah"],
-  ["unk1"],
-  ["unk2"],
-  ["unk3"],
-  ["ubw1"],
-  ["ubw2"],
-  ["ubw3"],
-  ["str"]
-];
-const SKILL_LV = [
-  ["0"],
-  ["1"],
-  ["2"],
-  ["3"],
-  ["4"],
-  ["5"],
-  ["6"],
-  ["7"],
-  ["8"],
-  ["9"],
-  ["10"],
-  ["11"],
-  ["12"],
-  ["13"],
-  ["14"],
-  ["15"]
-];
+
+
 // 武器の1行を表わすコンポーネント
 // フォームはControlled Componentsにしているので割と面倒くさい
 class WeaponRow extends Component {
@@ -266,13 +228,31 @@ class WeaponRow extends Component {
   // 武器種別
   e_kind = WEAPON_KIND.map(this.create_optfunc.bind(this, "kind"));
   // スキル種別
-  e_skill_type = SKILL_TYPE.map(this.create_optfunc.bind(this, "skill"));
+  /// スロット
+  e_skill_slot = SKILL_SLOT.map(this.create_optfunc.bind(this, "slot"));
+  /// スキル
+  e_skill_type_normal = SKILL_TYPE_NORMAL.map(this.create_optfunc.bind(this, "skill_normal"));
+  e_skill_type_magna = SKILL_TYPE_MAGNA.map(this.create_optfunc.bind(this, "skill_magna"));
+  e_skill_type_ex = SKILL_TYPE_EX.map(this.create_optfunc.bind(this, "skill_ex"));
+  e_skill_type_baha = SKILL_TYPE_BAHA.map(this.create_optfunc.bind(this, "skill_baha"));
+  e_skill_type_cosmos = SKILL_TYPE_COSMOS.map(this.create_optfunc.bind(this, "skill_cosmos"));
+  // スキルスロットとの対応を記憶しておくオブジェクト
+  e_skill_type_obj = {
+    "none": this.e_skill_type_normal,
+    [SKILL_SLOT[0]]: this.e_skill_type_normal,  // 通常
+    [SKILL_SLOT[1]]: this.e_skill_type_magna,  // マグナ
+    [SKILL_SLOT[2]]: this.e_skill_type_ex,  // EX
+    [SKILL_SLOT[3]]: this.e_skill_type_ex,  // アンノウン
+    [SKILL_SLOT[4]]: this.e_skill_type_baha,  // バハ
+    [SKILL_SLOT[5]]: this.e_skill_type_cosmos  // コスモス
+  }
   // スキルレベル
   e_skill_lv = SKILL_LV.map(this.create_optfunc.bind(this, "lv"));
 
   // 武器の名前が変更された時に呼ばれる関数
-  change_name(e) {
-    this.props.set_weapon_name(this.props.index, e.target.value);
+  // イベント経由じゃなくて直に変更された値が来る
+  change_name(new_name) {
+    this.props.set_weapon_name(this.props.index, new_name);
   }
 
   // 武器の攻撃力が変更された時に呼ばれる関数
@@ -285,13 +265,21 @@ class WeaponRow extends Component {
     this.props.set_weapon_type(this.props.index, e.target.value);
   }
 
-  // 武器のスキルタイプ(1つ目)が変更された時に呼ばれる関数
+  // 武器のスキル(1つ目)が変更された時に呼ばれる関数
   // 配列を変更するので泥臭いことをしている
+  change_skill_slot1(e) {
+    this.props.set_weapon_skill_slot(this.props.index, 0, e.target.value);
+  }
+
   change_skill_type1(e) {
     this.props.set_weapon_skill_type(this.props.index, 0, e.target.value);
   }
 
-  // 武器のスキルタイプ(2つ目)が変更された時に呼ばれる関数
+  // 武器のスキル(2つ目)が変更された時に呼ばれる関数
+  change_skill_slot2(e) {
+    this.props.set_weapon_skill_slot(this.props.index, 1, e.target.value);
+  }
+
   change_skill_type2(e) {
     this.props.set_weapon_skill_type(this.props.index, 1, e.target.value);
   }
@@ -320,14 +308,37 @@ class WeaponRow extends Component {
     this.props.insert_weapon_object(this.props.index);
   }
 
-  // コスモスの変化
-  change_cosmos(e) {
-    this.props.set_weapon_cosmos(this.props.index, e.target.checked);
+  // ＋数値の変化
+  change_plus(e) {
+    this.props.set_weapon_plus(this.props.index, e.target.value);
   }
 
   // 鍵チェックボックスの変化
   change_locked(e) {
     this.props.set_weapon_lock(this.props.index, e.target.checked);
+  }
+
+  // 武器名のサジェストでパラメータを一斉変更
+  suggest_selected(suggestion) {
+    // スキルをセットする
+    // slot -> type という順番でセットしないと悲しい目に合う
+    if (suggestion.skill && suggestion.skill instanceof Array) {
+      [...Array(2).keys()].forEach((i) => {
+        this.props.set_weapon_skill_slot(this.props.index, i, "normal");
+        let tmp_skill = Array.from(this.state.skill_slot);
+        this.props.set_weapon_skill_type(this.props.index, i, "none");
+      });
+      suggestion.skill.forEach((v, i) => {
+        if (v.slot != "none") {
+          this.props.set_weapon_skill_slot(this.props.index, i, v.slot);
+        }
+        this.props.set_weapon_skill_type(this.props.index, i, v.type);
+      });
+    }
+    if (suggestion.type) {
+      this.props.set_weapon_type(this.props.index, suggestion.type);
+    }
+    this.props.set_weapon_atk_value(this.props.index, suggestion.max_atk);
   }
 
   // コンストラクタ
@@ -337,13 +348,20 @@ class WeaponRow extends Component {
     this.change_locked = ::this.change_locked;
     this.change_name = ::this.change_name;
     this.change_atk = ::this.change_atk;
-    this.change_cosmos = ::this.change_cosmos;
+    this.change_plus = ::this.change_plus;
     this.change_kind = ::this.change_kind;
+    this.change_skill_slot1 = ::this.change_skill_slot1;
     this.change_skill_type1 = ::this.change_skill_type1;
+    this.change_skill_slot2 = ::this.change_skill_slot2;
     this.change_skill_type2 = ::this.change_skill_type2;
     this.change_skill_lv = ::this.change_skill_lv;
     this.push_insert = ::this.push_insert;
     this.push_delete = ::this.push_delete;
+    this.suggest_selected = ::this.suggest_selected;
+    // スロットの選択を保存するstate
+    this.state = {
+      skill_slot: [SKILL_SLOT[0], SKILL_SLOT[0]]
+    };
   }
 
   // 実際にレンダリングされる要素を返す関数
@@ -351,7 +369,7 @@ class WeaponRow extends Component {
   render() {
     // 必要な要素をpropsから変数に取りだす
     const { isDragging, isOver, connectDragSource, connectDragPreview, connectDropTarget, index, inputlock } = this.props;
-    const { selected, name, atk, skill_level, skill_type, cosmos, type, locked, first_selected } = this.props;
+    const { selected, name, atk, skill_level, skill_slot, skill_type, plus, type, locked, first_selected } = this.props;
     // つかむところに適用されるスタイルを作る
     let style_hundle = "hundle";
     style_hundle = isOver ? "hundle_on_over" : style_hundle;
@@ -370,13 +388,17 @@ class WeaponRow extends Component {
           <input type="checkbox" styleName="lock" checked={locked} onChange={this.change_locked} disabled={inputlock} />
         </td>
         <td>
-          <input type="text" styleName="name" value={name} onChange={this.change_name} disabled={inputlock} />
+          <WeaponInput
+            inputbox_id={this.props.inputbox_id}
+            suggest_selected={this.suggest_selected}
+            value={name}
+            on_change={this.change_name} />
         </td>
         <td>
           <input type="number" styleName="atk" value={atk} onChange={this.change_atk} disabled={inputlock} />
         </td>
         <td>
-          <input type="checkbox" styleName="cosmos" checked={cosmos} onChange={this.change_cosmos} disabled={inputlock} />
+          <input type="number" styleName="plus" value={plus} onChange={this.change_plus} disabled={inputlock} />
         </td>
         <td>
           <select styleName="kind" value={type} onChange={this.change_kind} disabled={inputlock} >
@@ -384,13 +406,23 @@ class WeaponRow extends Component {
           </select>
         </td>
         <td>
+          <select styleName="type" value={skill_slot[0]} onChange={this.change_skill_slot1} disabled={inputlock} >
+            {this.e_skill_slot}
+          </select>
+        </td>
+        <td>
           <select styleName="type" value={skill_type[0]} onChange={this.change_skill_type1} disabled={inputlock} >
-            {this.e_skill_type}
+            {this.e_skill_type_obj[skill_slot[0]]}
+          </select>
+        </td>
+        <td>
+          <select styleName="type" value={skill_slot[1]} onChange={this.change_skill_slot2} disabled={inputlock} >
+            {this.e_skill_slot}
           </select>
         </td>
         <td>
           <select styleName="type" value={skill_type[1]} onChange={this.change_skill_type2} disabled={inputlock} >
-            {this.e_skill_type}
+            {this.e_skill_type_obj[skill_slot[1]]}
           </select>
         </td>
         <td>
@@ -414,3 +446,7 @@ WeaponRow = DropTarget(ItemTypes.WEAPON, WeaponRowTarget, collectTargetWeaponRow
 WeaponRow = DragSource(ItemTypes.WEAPON, WeaponRowSource, collectSourceWeaponRow)(WeaponRow);
 // 次にreduxのstoreと結びつける
 WeaponRow = connect(mapStateToWeaponRowProps, mapActionCreatorsToWeaponRowProps)(WeaponRow);
+
+/*
+<input type="text" styleName="name" value={name} onChange={this.change_name} disabled={inputlock} />
+*/

@@ -200,7 +200,7 @@ export function set_zenith_weapon(param) {
       let w1 = Number(param[1]);
       if (isNaN(w0) || isNaN(w1)) {
         console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
-      } else if ((w0 >= 0 && w0 <= 3) && (w1 >= 0 && w1 <= 3)) {
+      } else if ((w0 >= 0 && w0 <= 6) && (w1 >= 0 && w1 <= 6)) {
         dispatch({ type: RC.basic.ZENITH_WEAPON, value: [w0, w1] });
       } else {
         console.warn("Parameter doesn't fit to " + RC.basic.ZENITH_WEAPON);
@@ -248,6 +248,15 @@ export function set_weapon_atk_value(index, value) {
 
 // 武器のスキルを指定する
 // target: 0|1
+export function set_weapon_skill_slot(index, target, skill) {
+  return function (dispatch) {
+    dispatch({ type: RC.weapon.SLOT, index: Number(index), target: Number(target), value: String(skill) });
+    return true;
+  };
+  
+  // 選択したスロットに合った種別選択に変更する処理を入れる
+}
+
 export function set_weapon_skill_type(index, target, skill) {
   return function (dispatch) {
     dispatch({ type: RC.weapon.SKILL, index: Number(index), target: Number(target), value: String(skill) });
@@ -263,10 +272,10 @@ export function set_weapon_skill_lv(index, lv) {
   };
 }
 
-// cosmosを(booleanで)セットする
-export function set_weapon_cosmos(index, value) {
+// 武器の＋数値をセットする
+export function set_weapon_plus(index, value) {
   return function (dispatch) {
-    dispatch({ type: RC.weapon.COSMOS, index: Number(index), value: Boolean(value) });
+    dispatch({ type: RC.weapon.PLUS, index: Number(index), value: Number(value) });
     return true;
   };
 }
