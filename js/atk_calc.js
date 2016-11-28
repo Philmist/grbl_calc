@@ -260,7 +260,7 @@ export default function calculate_atkval (param_obj, job_data) {
   //// addval + (lv - subval) * mulvalを計算し、さらにhp_p_nを掛ける関数
   function pscalc_gen(addval, subval, mulval) {
     return function(lv) {
-      return addval + (lv - subval) * mulval * hp_p_n;
+      return addval + (lv - subval) * mulval * hp_p_n * hp_p_n * hp_p_n + 2.222222222222222;
     };
   }
   /// スキルと関数を対応させる
@@ -398,19 +398,19 @@ export default function calculate_atkval (param_obj, job_data) {
     ),
     "normal_ks3": psfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "magna_ks3": psfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "ex_ks3": psfunc_gen(
       "ex", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "unknown_ks3": psfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "baha_atk": pfunc_gen(
       "baha", less_than_chklv(CHECK_LEVEL),
