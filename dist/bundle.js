@@ -4568,9 +4568,9 @@ var N=function(e){function t(e){(0,u.default)(this,t);var n=(0,_.default)(this,(
 return(0,d.default)(t,e),(0,c.default)(t,[{key:"handleChange",
 // 値が変更された時に呼びだされる関数
 // 処理はpropsで渡された関数に委託
-value:function(e){this.props.set_zenith_attr(e.target.value)}}]),(0,c.default)(t,[{key:"render",value:function(){var e=o(3);return y.default.createElement("tr",{styleName:"row"},y.default.createElement(A.default,{component:"th",styleName:"header",content:"zenith.header.attribute"}),y.default.createElement("td",{styleName:"cell"},y.default.createElement("select",{styleName:"attribute",onChange:this.handleChange,value:this.props.attr_value,disabled:this.props.inputlock},e)))}}]),t}(h.Component);N=(0,g.default)(N,R.default),
+value:function(e){this.props.set_zenith_attr(e.target.value)}}]),(0,c.default)(t,[{key:"render",value:function(){var e=o(3);return console.log(this.props),y.default.createElement("tr",{styleName:"row"},y.default.createElement(A.default,{component:"th",styleName:"header",content:"zenith.header.attribute"}),y.default.createElement("td",{styleName:"cell"},y.default.createElement("select",{styleName:"attribute",onChange:this.handleChange,value:this.props.attr_value,disabled:this.props.inputlock},e)))}}]),t}(h.Component);N=(0,g.default)(N,R.default),
 // コンポーネントにpropsを注入する
-N=(0,v.connect)(function(e){return{attr_value:e.basicinfo.zenith.attr}},{set_zenith_attr:w.set_zenith_attr})(N)},/* 287 */
+N=(0,v.connect)(function(e){return{attr_value:e.basicinfo.zenith.attribute}},{set_zenith_attr:w.set_zenith_attr})(N)},/* 287 */
 /***/
 function(e,t,n){e.exports={default:n(296),__esModule:!0}},/* 288 */
 /***/
@@ -11419,7 +11419,7 @@ e.exports=function(e,t){e.super_=t;var n=function(){};n.prototype=t.prototype,e.
 /***/
 function(e,t){e.exports=function(e){return e&&"object"==typeof e&&"function"==typeof e.copy&&"function"==typeof e.fill&&"function"==typeof e.readUInt8}},/* 657 */
 /***/
-function(e,t,n){"use strict";function a(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var n in e)Object.prototype.hasOwnProperty.call(e,n)&&(t[n]=e[n]);return t.default=e,t}function r(e){return e&&e.__esModule?e:{default:e}}var o=n(20),i=r(o),l=n(21),s=r(l),u=n(22),p=r(u),c=n(24),m=r(c),_=n(23),f=r(_);n(273),n(272),n(271),n(270);var d=n(5),h=r(d),y=n(267),k=r(y),g=n(97),v=n(268),b=r(v),x=n(269),A=r(x),S=n(26),w=n(25),E=r(w),R=n(32),C=(r(R),n(264)),j=r(C),I=n(266),T=a(I),O=n(265),N=r(O);E.default.registerTranslations("ja",N.default),
+function(e,t,n){"use strict";function a(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var n in e)Object.prototype.hasOwnProperty.call(e,n)&&(t[n]=e[n]);return t.default=e,t}function r(e){return e&&e.__esModule?e:{default:e}}var o=n(20),i=r(o),l=n(21),s=r(l),u=n(22),p=r(u),c=n(24),m=r(c),_=n(23),f=r(_);n(273),n(272),n(271),n(270);var d=n(5),h=r(d),y=n(267),k=r(y),g=n(97),v=n(268),b=(r(v),n(269)),x=r(b),A=n(26),S=n(25),w=r(S),E=n(32),R=(r(E),n(264)),C=r(R),j=n(266),I=a(j),T=n(265),O=r(T);w.default.registerTranslations("ja",O.default),
 // デフォルトの言語を設定する
 // 使用する言語がどこにあるかを指定する
 // 必要なユーザースクリプトを読みこむ
@@ -11431,9 +11431,8 @@ function(e,t,n){"use strict";function a(e){if(e&&e.__esModule)return e;var t={};
  * このファイルから全ての要素が実行される
  */
 // 必要なスタイルシートを読みこむ
-E.default.setLocale("ja");
-// reduxのためのロギングミドルウェア
-// これを使うことで開発コンソールにstateの変移が吐きだされる
-var M=(0,b.default)(),D=(0,g.combineReducers)({job:T.job_data,weapon:T.weapon,summon:T.summon,basicinfo:T.basicinfo,component_state:T.component_state,inputlock:T.inputlock_counter,friend:T.friend}),P=(0,g.createStore)(D,(0,g.applyMiddleware)(A.default,M)),B=function(e){function t(){return(0,s.default)(this,t),(0,m.default)(this,(t.__proto__||(0,i.default)(t)).apply(this,arguments))}return(0,f.default)(t,e),(0,p.default)(t,[{key:"render",value:function(){return h.default.createElement(S.Provider,{store:P},h.default.createElement(j.default,null))}}]),t}(d.Component);
+w.default.setLocale("ja");
+// 適用するミドルウェアを設定する
+var N=[x.default],M=(0,g.combineReducers)({job:I.job_data,weapon:I.weapon,summon:I.summon,basicinfo:I.basicinfo,component_state:I.component_state,inputlock:I.inputlock_counter,friend:I.friend}),D=(0,g.createStore)(M,g.applyMiddleware.apply(void 0,N)),P=function(e){function t(){return(0,s.default)(this,t),(0,m.default)(this,(t.__proto__||(0,i.default)(t)).apply(this,arguments))}return(0,f.default)(t,e),(0,p.default)(t,[{key:"render",value:function(){return h.default.createElement(A.Provider,{store:D},h.default.createElement(C.default,null))}}]),t}(d.Component);
 // 最終的なレンダリング結果をDOMを探して注入する
-k.default.render(h.default.createElement(B,null),document.getElementById("react_content"))}]);
+k.default.render(h.default.createElement(P,null),document.getElementById("react_content"))}]);
