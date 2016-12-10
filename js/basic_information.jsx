@@ -44,13 +44,17 @@ class JobSelector extends Component {
     }
     // select要素を作って返す
     return (
-      <select styleName="job" onChange={this.handle_job_change} >
+      <select styleName="job" onChange={this.handle_job_change} value={this.props.job_value} >
         {values}
       </select>
     );
   }
 }
 JobSelector = CSSModules(JobSelector, styles);
+JobSelector = connect(
+  (state) => { return { job_value: state.basicinfo.job }; },
+    { set_job_type: actions.set_job_type }
+)(JobSelector);
 
 
 // ジョブ選択部分のコンポーネント
