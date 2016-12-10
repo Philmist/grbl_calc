@@ -4231,7 +4231,7 @@ value:function(e){this.props.set_job_type(e.target.value)}}]),(0,_.default)(t,[{
 // ジョブ一覧をoption要素として展開する
 var e=new Array;for(var t in this.props.job)e.push(y.default.createElement(A.default,{component:"option",value:t,key:t,content:"basic_information.job.type."+t}));
 // select要素を作って返す
-return y.default.createElement("select",{styleName:"job",onChange:this.handle_job_change},e)}}]),t}(h.Component));C=(0,g.default)(C,R.default);
+return y.default.createElement("select",{styleName:"job",onChange:this.handle_job_change,value:this.props.job_value},e)}}]),t}(h.Component));C=(0,g.default)(C,R.default),C=(0,v.connect)(function(e){return{job_value:e.basicinfo.job}},{set_job_type:w.set_job_type})(C);
 // ジョブ選択部分のコンポーネント
 // {...this.props}は渡されたprops全部を渡す
 var j=function(e){function t(){return(0,u.default)(this,t),(0,c.default)(this,(t.__proto__||(0,l.default)(t)).apply(this,arguments))}return(0,d.default)(t,e),(0,_.default)(t,[{key:"render",value:function(){return y.default.createElement("table",{styleName:"base"},y.default.createElement("tbody",null,y.default.createElement("tr",{styleName:"row"},y.default.createElement(A.default,{component:"th",styleName:"header",content:"basic_information.job.title"}),y.default.createElement("td",{styleName:"cell"},y.default.createElement(C,this.props)))))}}]),t}(h.Component);j=(0,g.default)(j,R.default);
