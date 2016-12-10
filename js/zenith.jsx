@@ -193,6 +193,7 @@ class ZenithAttribute extends Component {
   // 実際に要素を作って返す
   render() {
     var elem = renderZenithSelector(3);
+    console.log(this.props);
     return (
       <tr styleName="row">
         <Translate component="th" styleName="header" content="zenith.header.attribute" />
@@ -208,6 +209,6 @@ class ZenithAttribute extends Component {
 ZenithAttribute = CSSModules(ZenithAttribute, styles);
 // コンポーネントにpropsを注入する
 ZenithAttribute = connect(
-  (state) => ({ attr_value: state.basicinfo.zenith.attribute }),
+  (state) => { return { attr_value: state.basicinfo.zenith.attribute }; },
     { set_zenith_attr: actions.set_zenith_attr }
 )(ZenithAttribute);
