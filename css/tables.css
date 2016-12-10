@@ -44,9 +44,14 @@
     min-width: 20px;
 }
 
+.is_main {
+    composes: row;
+    background-color: #FF8888;
+}
+
 .selected {
     composes: row;
-    background-color: #FFAAAA;
+    background-color: #FFDDDD;
 }
 
 .unselected {
