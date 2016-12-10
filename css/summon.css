@@ -25,6 +25,10 @@
     composes: header from "./tables.css";
 }
 
+.is_main {
+    composes: is_main from "./tables.css";
+}
+
 .selected {
     composes: selected from "./tables.css";
 }

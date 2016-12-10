@@ -34,9 +34,14 @@ counterpart.registerTranslations("ja", locale_ja);
 // デフォルトの言語を設定する
 counterpart.setLocale("ja");
 
-// reduxのためのロギングミドルウェア
-// これを使うことで開発コンソールにstateの変移が吐きだされる
-const loggerMiddleware = createLogger();
+// 適用するミドルウェアを設定する
+const middlewares = [thunkMiddleware];
+if (process.env.NODE_ENV === "development") {
+  // reduxのためのロギングミドルウェア
+  // これを使うことで開発コンソールにstateの変移が吐きだされる
+  const loggerMiddleware = createLogger();
+  middlewares.push(loggerMiddleware);
+}
 
 // reducerを組みあわせて新しいreducerを作る
 // このオブジェクトがstateの骨格になるので**うかつに変更しない**
@@ -54,10 +59,7 @@ const reducer = combineReducers(
 // 組みあわせたreducerを使って新しいredux storeを作る
 const store = createStore(
   reducer,
-  applyMiddleware(
-    thunkMiddleware,
-    loggerMiddleware
-  )
+  applyMiddleware(...middlewares)
 );
 
 

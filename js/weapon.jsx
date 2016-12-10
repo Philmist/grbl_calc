@@ -102,7 +102,8 @@ WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 function mapStateToWeaponTableBodyProps(state) {
   // どれが最初のenabledな武器かをチェックする
   return {
-    weapon: state.weapon  // indexを使うために必要
+    weapon: state.weapon,  // indexを使うために必要
+    checked_length: (state.weapon.filter( i => i.selected )).length
   }
 }
 // 武器の並び全体を表わすクラス
@@ -120,6 +121,7 @@ class WeaponTableBody extends Component {
             key={"wr_"+String(index)}
             inputbox_id={"wr_ib_"+String(index)}
             index={index}
+            checked_length={this.props.checked_length}
             inputlock={this.props.inputlock}
             first_selected={first_selected} />;
         })}
@@ -213,6 +215,7 @@ var mapActionCreatorsToWeaponRowProps = {
   set_weapon_skill_type,
   set_weapon_skill_lv
 };
+const WEAPON_CHECKED_MAX = 10;
 
 
 // 武器の1行を表わすコンポーネント
@@ -292,7 +295,9 @@ class WeaponRow extends Component {
   // 武器の選択状態が変更された時に呼ばれる関数
   change_select(e) {
     if (e.target.checked) {
-      this.props.enable_weapon_object(this.props.index);
+      if (this.props.checked_length < WEAPON_CHECKED_MAX) {
+        this.props.enable_weapon_object(this.props.index);
+      }
     } else {
       this.props.disable_weapon_object(this.props.index);
     }
@@ -374,8 +379,8 @@ class WeaponRow extends Component {
     let style_hundle = "hundle";
     style_hundle = isOver ? "hundle_on_over" : style_hundle;
     style_hundle = isDragging ? "hundle_dragging" : style_hundle;
-    // 最初に選択されている武器なら背景を赤にする
-    let row_style = first_selected ? "selected" : "unselected";
+    // 最初に選択されている武器なら背景を赤、選択されているものは薄い赤にする
+    let row_style = first_selected ? "is_main" : selected ? "selected" : "unselected";
     // レンダリングされる要素を返す
     // その際、どれがドラッグ&ドロップの対象になるかを指定している
     return connectDragPreview(connectDropTarget(
