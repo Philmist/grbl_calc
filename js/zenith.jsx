@@ -208,6 +208,6 @@ class ZenithAttribute extends Component {
 ZenithAttribute = CSSModules(ZenithAttribute, styles);
 // コンポーネントにpropsを注入する
 ZenithAttribute = connect(
-  (state) => ({ attr_value: state.basicinfo.zenith.attr }),
+  (state) => ({ attr_value: state.basicinfo.zenith.attribute }),
     { set_zenith_attr: actions.set_zenith_attr }
 )(ZenithAttribute);
