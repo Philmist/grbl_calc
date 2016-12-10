@@ -102,7 +102,8 @@ WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 function mapStateToWeaponTableBodyProps(state) {
   // どれが最初のenabledな武器かをチェックする
   return {
-    weapon: state.weapon  // indexを使うために必要
+    weapon: state.weapon,  // indexを使うために必要
+    checked_length: (state.weapon.filter( i => i.selected )).length
   }
 }
 // 武器の並び全体を表わすクラス
@@ -120,6 +121,7 @@ class WeaponTableBody extends Component {
             key={"wr_"+String(index)}
             inputbox_id={"wr_ib_"+String(index)}
             index={index}
+            checked_length={this.props.checked_length}
             inputlock={this.props.inputlock}
             first_selected={first_selected} />;
         })}
