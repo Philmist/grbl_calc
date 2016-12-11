@@ -122,9 +122,11 @@ export default function calculate_atkval (param_obj, job_data) {
   // コスモス武器の武器種を確認する
   // 一番最初のコスモス武器が該当
   let cosmos_weapon_type = "no_cosmos";  // "none"では該当が出てきてしまう
+  let cosmos_skill_type = "normal";  // コスモスのスキルタイプ
   for (let i = 0; i < param_obj.weapon.length; i++) {
     if (param_obj.weapon[i].skill_slot[0] == "cosmos" || param_obj.weapon[i].skill_slot[1] == "cosmos") {
       cosmos_weapon_type = param_obj.weapon[i].type;
+      cosmos_skill_type = param_obj.weapon[i].skill_type;
       break;
     }
   }
