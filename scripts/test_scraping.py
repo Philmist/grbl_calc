@@ -124,6 +124,7 @@ for rarelity, rows in items.items():
                 s_type.append(''.join(s.contents))
             except TypeError:
                 s_type.append('')
+        print(s_type)
         skill_temp = [
             skill_dict.get(
                 skill,
@@ -133,7 +134,7 @@ for rarelity, rows in items.items():
         ]
         weapon['skill'] = [
             {'slot': skill['slot'], 'type': skill['type']}
-            if (weapon['attribute'] == skill['attribute'])
+            if (weapon['attribute'] == skill['attribute'] or skill['attribute'] == '')
             else {'slot': 'none', 'type': 'none'}
             for skill in skill_temp
         ]

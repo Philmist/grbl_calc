@@ -157,7 +157,7 @@ let text = {
       showed_atk: "表示攻撃力",
       total_atk: "総合攻撃力"
     },
-    title: "グランブルーファンタジー攻撃力計算機（新）"
+    title: "グランブルーファンタジー攻撃力計算機（新） α版（開発中）"
   },
   basic_information: {
     job: {
@@ -198,6 +198,7 @@ let text = {
         "Warlock":  "ウォーロック",
         "Gizoku":  "義賊",
         "ChaosRuler":  "カオスルーダー",
+        "Wrestler":  "レスラー",
         "Alchemist":  "アルケミスト",
         "Ninja":  "忍者",
         "Samurai":  "侍",
