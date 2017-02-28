@@ -144,7 +144,7 @@ class Optimizer extends Component {
   render() {
     return (
       <section>
-        <header styleName="title">編成最適化</header>
+        <header styleName="title">編成最適ヒント算出</header>
         <form name="optimizer">
           <table styleName="base" id="optimizer_table">
             <Button

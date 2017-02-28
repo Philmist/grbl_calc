@@ -57,7 +57,7 @@ export function weapon(state, action) {
       {}, {}, {}, {}, {},
       {}, {}, {}, {}, {}
     ];
-    ret_state = initial_val.map((val) => { return Object.assign(val, weapon_default); });
+    ret_state = initial_val.map((val) => { return Object.assign(val, weapon_default, {selected: true}); });
   }
   // actionによって動作を分岐する
   // Array.from: 配列をコピーする関数
@@ -138,7 +138,7 @@ export function summon(state, action) {
     let initial_val = [
       {}, {}, {}, {}, {}
     ];
-    state = initial_val.map((val) => { return Object.assign(val, summon_default); });
+    state = initial_val.map((val) => { return Object.assign(val, summon_default, {selected: true}); });
   }
   // actionによる分岐
   if (action.index < state.length && action.index >= 0) {
@@ -207,6 +207,7 @@ export function friend(state, action) {
       {}, {}
     ];
     state = initial_val.map((val) => { return Object.assign(val, summon_default); });  // 定数を通常召喚と共有している
+    state[0].selected = true;
   }
   // actionによる分岐
   if (action.index < state.length && action.index >= 0) {

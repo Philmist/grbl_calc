@@ -186,6 +186,11 @@ let job_data = {
     "atk_value" : 0,
     "atk_rate"  : 0,
   },
+  "Wrestler": {
+    "specialty" : ["knuckle", "knuckle"],
+    "atk_value" : 2000,
+    "atk_rate"  : 0,
+  },
   "Alchemist": {
     "specialty" : ["dagger", "gun"],
     "atk_value" : 0,

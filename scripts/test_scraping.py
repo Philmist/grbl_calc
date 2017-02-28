@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import csv
+import re
 
 
 WEAPON_DICT = {
@@ -67,6 +68,10 @@ items = {k: v[1:] for k, v in items.items()}  # タイトルはいらない
 
 # 武器一覧を格納するリストを作る
 weapons = dict()
+known_weapons = set()
+
+# 武器に適用する正規表現を作る
+WEAPON_NAME_REGEX = re.compile(r"\[(.*)\](.+)")
 
 # 武器一覧を一行ずつなめていく
 for rarelity, rows in items.items():
@@ -81,8 +86,18 @@ for rarelity, rows in items.items():
             name.br.decompose()
         while (name.a):
             name.a.decompose()
-        print(name.contents)
-        weapon['name'] = ''.join(name.contents)
+        weapon_name = ''.join(name.contents)
+        re_result = WEAPON_NAME_REGEX.search(weapon_name)
+        if re_result:
+            if re_result.group(2) in known_weapons:
+                weapon['name'] = re_result.group(2) + r'(4凸)'
+            else:
+                weapon_name = WEAPON_NAME_REGEX.sub(r'\2', weapon_name)
+                known_weapons.add(weapon_name)
+                weapon['name'] = weapon_name
+        else:
+            known_weapons.add(weapon_name)
+            weapon['name'] = weapon_name
         # 属性の抽出
         attr = tds[2]
         attr.span.unwrap()
@@ -117,10 +132,12 @@ for rarelity, rows in items.items():
         ]
         weapon['skill'] = [
             {'slot': skill['slot'], 'type': skill['type']}
-            if (weapon['attribute'] == skill['attribute'])
+            if (weapon['attribute'] == skill['attribute'] or skill['attribute'] == '')
             else {'slot': 'none', 'type': 'none'}
             for skill in skill_temp
         ]
+        if 'コスモス' in weapon['name']:
+            weapon['skill'][0] = {'slot': 'cosmos', 'type': 'normal'}
         # MinHPの抽出
         if (rarelity == 'N' or rarelity == 'R'):
             min_hp = tds[7]
@@ -150,6 +167,7 @@ for rarelity, rows in items.items():
             weapon['max_atk'] = weapon['min_atk']
         # レアリティを格納
         weapon['rarelity'] = rarelity
+        print('name:{}, skill:{}'.format(weapon['name'], weapon['skill']))
         # 武器一覧に格納
         if weapon['type_name'] in weapons:
             weapons[weapon['type_name']].append(weapon)
@@ -158,7 +176,10 @@ for rarelity, rows in items.items():
 
 
 weapons_converted = [{'type': k, 'weapons': v} for k, v in weapons.items()]
-json_data = {'WEAPONS': weapons_converted}
+json_data = weapons_converted
+js_string = json.dumps(json_data, ensure_ascii=False, indent=2)
+js_string = 'const WEAPON_LIST =\n' + js_string + ';'
+js_string = js_string + '\nexport default WEAPON_LIST;\n'
 
-with open('temp_weapons.json', 'w', encoding='utf-8') as f:
-    json.dump(json_data, f, ensure_ascii=False, indent=2)
+with open('temp_weapons.js', 'w', encoding='utf-8') as f:
+    f.write(js_string)

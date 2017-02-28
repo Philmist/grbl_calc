@@ -122,9 +122,11 @@ export function calculate_atkval (param_obj, job_data) {
   // コスモス武器の武器種を確認する
   // 一番最初のコスモス武器が該当
   let cosmos_weapon_type = "no_cosmos";  // "none"では該当が出てきてしまう
+  let cosmos_skill_type = "normal";  // コスモスのスキルタイプ
   for (let i = 0; i < param_obj.weapon.length; i++) {
     if (param_obj.weapon[i].skill_slot[0] == "cosmos" || param_obj.weapon[i].skill_slot[1] == "cosmos") {
       cosmos_weapon_type = param_obj.weapon[i].type;
+      cosmos_skill_type = param_obj.weapon[i].skill_type;
       break;
     }
   }
@@ -260,7 +262,7 @@ export function calculate_atkval (param_obj, job_data) {
   //// addval + (lv - subval) * mulvalを計算し、さらにhp_p_nを掛ける関数
   function pscalc_gen(addval, subval, mulval) {
     return function(lv) {
-      return addval + (lv - subval) * mulval * hp_p_n;
+      return addval + (lv - subval) * mulval * hp_p_n * hp_p_n * hp_p_n + 2.222222222222222;
     };
   }
   /// スキルと関数を対応させる
@@ -398,19 +400,19 @@ export function calculate_atkval (param_obj, job_data) {
     ),
     "normal_ks3": psfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "magna_ks3": psfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "ex_ks3": psfunc_gen(
       "ex", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "unknown_ks3": psfunc_gen(
       "unknown", less_than_chklv(CHECK_LEVEL),
-      pscalc_gen(10, 0, 1), pscalc_gen(20, CHECK_LEVEL, 0.6)
+      pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
     "baha_atk": pfunc_gen(
       "baha", less_than_chklv(CHECK_LEVEL),

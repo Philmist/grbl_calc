@@ -24,7 +24,7 @@ let loaders = [
     // JSXとJSを使うための設定 (Babel6で変換します)
     // 正規表現なので.jsと.jsxの両方がひっかかります
     test: /\.jsx?$/,
-    loader: "babel",
+    loader: "babel-loader",
     // node_modulesとかの中を変換されてもちょっと困る
     exclude: /(node_modules|bower_components)/,
     query: {
@@ -99,23 +99,6 @@ module.exports = [
       extensions: [".js"],
       modules: [
         "node_modules", "js"
-      ]
-    },
-    plugins: plugins
-  },
-  {  // 計算機部分単体のテストスイート
-    devtool: isProd ? "#hidden-source-map" : "#source-map",
-    entry: "mocha!./js/test/test.js",
-    output: {
-      filename: "./dist/test_bundle.js",
-    },
-    module: {
-      loaders: loaders,
-    },
-    resolve: {
-      extensions: [".js", ".jsx", ".css"],
-      modules: [
-        "node_modules", "js", "css"
       ]
     },
     plugins: plugins

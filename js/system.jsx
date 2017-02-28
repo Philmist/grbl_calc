@@ -169,11 +169,16 @@ class SaveLoad extends Component {
   }
 
   option_list = [
-    ["SLOT 1",0],
-    ["SLOT 2",1],
-    ["SLOT 3",2],
-    ["SLOT 4",3],
-    ["SLOT 5",4]
+    ["SLOT 1", 0],
+    ["SLOT 2", 1],
+    ["SLOT 3", 2],
+    ["SLOT 4", 3],
+    ["SLOT 5", 4],
+    ["SLOT 6", 5],
+    ["SLOT 7", 6],
+    ["SLOT 8", 7],
+    ["SLOT 9", 8],
+    ["SLOT 10",9]
   ];
 
   render() {

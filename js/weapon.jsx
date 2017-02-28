@@ -103,8 +103,8 @@ WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 function mapStateToWeaponTableBodyProps(state) {
   // どれが最初のenabledな武器かをチェックし、チェックされている武器の数を数える
   return {
-    checked_length: (state.weapon.filter( i => i.selected )).length,
-    weapon: state.weapon  // indexを使うために必要
+    weapon: state.weapon,  // indexを使うために必要
+    checked_length: (state.weapon.filter( i => i.selected )).length
   }
 }
 // 武器の並び全体を表わすクラス
@@ -122,6 +122,7 @@ class WeaponTableBody extends Component {
             key={"wr_"+String(index)}
             inputbox_id={"wr_ib_"+String(index)}
             index={index}
+            checked_length={this.props.checked_length}
             inputlock={this.props.inputlock}
             first_selected={first_selected} />;
         })}
@@ -378,8 +379,8 @@ class WeaponRow extends Component {
     let style_hundle = "hundle";
     style_hundle = isOver ? "hundle_on_over" : style_hundle;
     style_hundle = isDragging ? "hundle_dragging" : style_hundle;
-    // 最初に選択されている武器なら背景を赤にする
-    let row_style = first_selected ? "selected" : "unselected";
+    // 最初に選択されている武器なら背景を赤、選択されているものは薄い赤にする
+    let row_style = first_selected ? "is_main" : selected ? "selected" : "unselected";
     // レンダリングされる要素を返す
     // その際、どれがドラッグ&ドロップの対象になるかを指定している
     return connectDragPreview(connectDropTarget(

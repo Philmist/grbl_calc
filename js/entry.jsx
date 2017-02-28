@@ -62,10 +62,7 @@ const reducer = combineReducers(
 /*
 const store = createStore(
   reducer,
-  applyMiddleware(
-    thunkMiddleware,
-    loggerMiddleware
-  )
+  applyMiddleware(...middlewares)
 );
 */
 const store = createStore(reducer, applyMiddleware(...middlewares));

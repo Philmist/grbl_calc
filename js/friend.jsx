@@ -205,8 +205,8 @@ class Row_ extends SummonRow_ {
     let style_hundle = "hundle";
     style_hundle = isOver ? "hundle_on_over" : style_hundle;
     style_hundle = isDragging ? "hundle_dragging" : style_hundle;
-    // 最初に選択されている武器なら背景を赤にする
-    let row_style = first_selected ? "selected" : "unselected";
+    // 最初に選択されている武器なら背景を赤、選択されているものは薄い赤にする
+    let row_style = first_selected ? "is_main" : selected ? "selected" : "unselected";
     // 描画する要素を返す
     return connectDragPreview(connectDropTarget(
       <tr styleName={ row_style }>
