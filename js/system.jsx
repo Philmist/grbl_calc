@@ -80,7 +80,7 @@ class CannotSave extends Component {
 CannotSave = CSSModules(CannotSave, styles);
 
 
-// セーブロード部分
+// localStorageからのセーブロード部分
 class SaveLoad extends Component {
 
   storage = window.localStorage;
@@ -234,3 +234,55 @@ const mapActionCreatorsToSaveLoadProps = {
   set_state_saved
 };
 SaveLoad = connect(mapStateToSaveLoadProps, mapActionCreatorsToSaveLoadProps)(SaveLoad);
+
+
+// 文字列からのセーブロード部分
+class SaveLoadFromTextbox extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data_str: ""
+    };
+  }
+
+  serialize_and_set() {
+    let save_obj = {
+      weapon: this.props.weapon,
+      summon: this.props.summon,
+      basicinfo: this.props.basicinfo,
+      friend: this.props.friend,
+    };
+    let json_str = JSON.stringify(save_obj);
+    let deflate_data_bytearray = pako.deflate(json_str);
+    let base64ed_str = base64.fromByteArray(deflate_data_bytearray);
+    this.setState({ data_str: base64ed_str });
+  }
+
+  render() {
+    return (
+      <div>
+      </div>
+    );
+  }
+
+}
+const mapStateToSaveLoadFromTextboxProps = (state) => {
+  return {
+    weapon: state.weapon,
+    summon: state.summon,
+    friend: state.friend,
+    basicinfo: state.basicinfo
+  };
+};
+const mapActionCreatorsToSaveLoadFromTextboxProps = {
+  set_weapon_object: dangerously_replace_weapon_object,
+  set_summon_object: dangerously_replace_summon_object,
+  set_basicinfo_object: dangerously_replace_basicinfo_object,
+  set_friend_object: dangerously_replace_friend_object,
+  set_state_loading,
+  set_state_loaded,
+  set_state_saving,
+  set_state_saved
+};
+SaveLoadFromTextbox = connect(mapStateToSaveLoadFromTextboxProps, mapActionCreatorsToSaveLoadFromTextboxProps)(SaveLoadFromTextbox);
