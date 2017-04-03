@@ -83,12 +83,14 @@ module.exports = [
       ]
     },
     plugins: plugins
-  }/*,
+  },
   {
     devtool: isProd ? "#hidden-source-map" : "#source-map",
-    entry: "mocha!./js/test/test.js",
+    entry: {
+      js: "./js/worker_entry.js",
+    },
     output: {
-      filename: "./dist/test_bundle.js",
+      filename: "./dist/web_worker.js",
     },
     module: {
       loaders: loaders,
@@ -100,5 +102,5 @@ module.exports = [
       ]
     },
     plugins: plugins
-  }*/
+  }
 ];
