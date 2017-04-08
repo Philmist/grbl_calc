@@ -259,6 +259,17 @@ class SaveLoadFromTextbox extends Component {
     this.setState({ data_str: base64ed_str });
   }
 
+  deserialize_and_load() {
+    let serialized_str = this.state.data_str;
+    let compressed_data_bytearray = base64.toByteArray(serialized_str);
+    let inflated_str = pako.inflate(compressed_data_bytearray);
+    let json_data = JSON.parse(inflated_str);
+    set_weapon_object(json_data.weapon);
+    set_summon_object(json_data.summon);
+    set_basicinfo_object(json_data.basicinfo);
+    set_friend_object(json_data.friend);
+  }
+
   render() {
     return (
       <div>
