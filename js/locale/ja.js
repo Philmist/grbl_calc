@@ -207,9 +207,7 @@ let text = {
         "Wrestler":  "レスラー",
         "HoundDog":  "ハウンドドッグ",
         "Elysian":  "エリュシオン",
-        "Apsaras":  "アプサラス"
-  },
-  "Apsaras": {
+        "Apsaras":  "アプサラス",
         "Alchemist":  "アルケミスト",
         "Ninja":  "忍者",
         "Samurai":  "侍",
