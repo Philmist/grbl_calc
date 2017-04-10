@@ -57,6 +57,9 @@ class System extends Component {
           <table styleName="base" id="system">
             { this.state.saveload_available ?  <SaveLoad /> : <CannotSave /> }
           </table>
+          <table>
+            <SaveLoadFromTextbox />
+          </table>
         </form>
       </section>
     );
@@ -244,6 +247,8 @@ class SaveLoadFromTextbox extends Component {
     this.state = {
       data_str: ""
     };
+    this.on_change_box = this.on_change_box.bind(this);
+    this.on_push_serialize = this.on_push_serialize.bind(this);
   }
 
   serialize_and_set() {
@@ -260,24 +265,54 @@ class SaveLoadFromTextbox extends Component {
   }
 
   deserialize_and_load() {
-    let serialized_str = this.state.data_str;
-    let compressed_data_bytearray = base64.toByteArray(serialized_str);
-    let inflated_str = pako.inflate(compressed_data_bytearray);
-    let json_data = JSON.parse(inflated_str);
+    try {
+      let serialized_str = this.state.data_str;
+      let compressed_data_bytearray = base64.toByteArray(serialized_str);
+      let inflated_str = pako.inflate(compressed_data_bytearray);
+      let json_data = JSON.parse(inflated_str);
+    } catch (e) {
+      return;
+    }
     set_weapon_object(json_data.weapon);
     set_summon_object(json_data.summon);
     set_basicinfo_object(json_data.basicinfo);
     set_friend_object(json_data.friend);
   }
 
+  on_change_box(event) {
+    return;
+  }
+
+  on_push_serialize(event) {
+    this.serialize_and_set();
+  }
+
   render() {
     return (
-      <div>
-      </div>
+      <tbody>
+        <tr styleName="row">
+          <td styleName="cell">
+            <input
+              value={this.state.data_str}
+            />
+          </td>
+        </tr>
+        <tr styleName="row">
+          <td styleName="cell">
+            <input
+              type="button"
+              name="Serialize"
+              value="Serialize"
+              onClick={this.on_push_serialize}
+             />
+          </td>
+        </tr>
+      </tbody>
     );
   }
 
 }
+SaveLoadFromTextbox = CSSModules(SaveLoadFromTextbox, styles);
 const mapStateToSaveLoadFromTextboxProps = (state) => {
   return {
     weapon: state.weapon,
