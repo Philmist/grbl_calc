@@ -27,7 +27,7 @@
 }
 
 /* ヘッダ(タイトル)部分の配置 */
-.header_box {
+.title_header {
     margin : 5px;
     width : -moz-fit-content;
     width : -webkit-fit-content;
@@ -36,6 +36,13 @@
 
 /* 計算機本体部分の配置 */
 .calculator_box {
+  width: available;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+}
+
+.calculator_row {
     width: available;
     display: flex;
     flex-direction: row;
@@ -45,13 +52,13 @@
 }
 
 /* 計算機内左側の配置 */
-.left_box {
+.calculator_row .left_box {
     margin: 5px;
     width: auto;
 }
 
 /* 計算機内右側の配置 */
-.right_box {
+.calculator_row .right_box {
     margin : 5px;
     width : -moz-fit-content;
     width : -webkit-fit-content;
@@ -59,9 +66,12 @@
     flex: 1;
 }
 
+.calculator_box .footer_box {
+}
+
 
 /* フッタ(著作権表示等) */
-.footer_box {
+.footer {
     clear : both;
     margin : 5px;
     width : auto;

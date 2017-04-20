@@ -50,6 +50,7 @@ let text = {
       magna: "方陣",
       ex: "ＥＸ",
       unknown: "ｱﾝﾉｳﾝ",
+      angel: "天司",
       baha: "バハ",
       cosmos: "ｺｽﾓｽ"
     },
@@ -90,6 +91,11 @@ let text = {
       bw3: "背水(大)",
       km: "神威",
       ks: "渾身",
+    },
+    skill_angel: {
+      none: "無し",
+      bless1: "祝福",
+      bless2: "祝福II",
     },
     skill_baha: {
       none: "無し",
@@ -199,6 +205,9 @@ let text = {
         "Gizoku":  "義賊",
         "ChaosRuler":  "カオスルーダー",
         "Wrestler":  "レスラー",
+        "HoundDog":  "ハウンドドッグ",
+        "Elysian":  "エリュシオン",
+        "Apsaras":  "アプサラス",
         "Alchemist":  "アルケミスト",
         "Ninja":  "忍者",
         "Samurai":  "侍",

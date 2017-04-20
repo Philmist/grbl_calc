@@ -16,12 +16,14 @@ import Translate from "react-translate-component";
 let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
+import { WEAPON_CHECKED_MAX } from "./const/number_const.js";
 import {
   WEAPON_KIND,
   SKILL_SLOT,
   SKILL_TYPE_NORMAL,
   SKILL_TYPE_MAGNA,
   SKILL_TYPE_EX,
+  SKILL_TYPE_ANGEL,
   SKILL_TYPE_BAHA,
   SKILL_TYPE_COSMOS,
   SKILL_LV
@@ -70,7 +72,7 @@ class Weapon extends Component {
 };
 // 色々繋げる
 Weapon = CSSModules(Weapon, styles);
-export default connect((state) => { return { inputlock: state.inputlock ? true : false }; })(Weapon);
+export default connect((state) => { return { inputlock: (state.inputlock > 0) ? true : false }; })(Weapon);
 
 
 // 武器テーブルのヘッダ
@@ -100,7 +102,7 @@ WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 // 武器並び全体にプロパティを注入する関数
 // reduxのstoreからstateを取りだす
 function mapStateToWeaponTableBodyProps(state) {
-  // どれが最初のenabledな武器かをチェックする
+  // どれが最初のenabledな武器かをチェックし、チェックされている武器の数を数える
   return {
     weapon: state.weapon,  // indexを使うために必要
     checked_length: (state.weapon.filter( i => i.selected )).length
@@ -215,7 +217,6 @@ var mapActionCreatorsToWeaponRowProps = {
   set_weapon_skill_type,
   set_weapon_skill_lv
 };
-const WEAPON_CHECKED_MAX = 10;
 
 
 // 武器の1行を表わすコンポーネント
@@ -237,6 +238,7 @@ class WeaponRow extends Component {
   e_skill_type_normal = SKILL_TYPE_NORMAL.map(this.create_optfunc.bind(this, "skill_normal"));
   e_skill_type_magna = SKILL_TYPE_MAGNA.map(this.create_optfunc.bind(this, "skill_magna"));
   e_skill_type_ex = SKILL_TYPE_EX.map(this.create_optfunc.bind(this, "skill_ex"));
+  e_skill_type_angel = SKILL_TYPE_ANGEL.map(this.create_optfunc.bind(this, "skill_angel"));
   e_skill_type_baha = SKILL_TYPE_BAHA.map(this.create_optfunc.bind(this, "skill_baha"));
   e_skill_type_cosmos = SKILL_TYPE_COSMOS.map(this.create_optfunc.bind(this, "skill_cosmos"));
   // スキルスロットとの対応を記憶しておくオブジェクト
@@ -246,8 +248,9 @@ class WeaponRow extends Component {
     [SKILL_SLOT[1]]: this.e_skill_type_magna,  // マグナ
     [SKILL_SLOT[2]]: this.e_skill_type_ex,  // EX
     [SKILL_SLOT[3]]: this.e_skill_type_ex,  // アンノウン
-    [SKILL_SLOT[4]]: this.e_skill_type_baha,  // バハ
-    [SKILL_SLOT[5]]: this.e_skill_type_cosmos  // コスモス
+    [SKILL_SLOT[4]]: this.e_skill_type_angel,  // 天司
+    [SKILL_SLOT[5]]: this.e_skill_type_baha,  // バハ
+    [SKILL_SLOT[6]]: this.e_skill_type_cosmos  // コスモス
   }
   // スキルレベル
   e_skill_lv = SKILL_LV.map(this.create_optfunc.bind(this, "lv"));

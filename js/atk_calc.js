@@ -58,7 +58,7 @@
     }, ...
   }
 */
-export default function calculate_atkval (param_obj, job_data) {
+export function calculate_atkval (param_obj, job_data) {
   // 攻撃力の定義
   let showed_atk = 0;
   let basic_atk = 0;
@@ -204,6 +204,7 @@ export default function calculate_atkval (param_obj, job_data) {
     normal: {percent: 0, backwater: 0, konshin: 0},
     magna: {percent: 0, backwater: 0, konshin: 0},
     ex: {percent: 0, backwater: 0, konshin: 0},
+    angel: {percent: 0, backwater: 0, konshin: 0},
     unknown: {percent: 0, backwater: 0, konshin: 0}
   };
   let hp_p_n = param_obj.hp_percent / 100;  // [0,1]なHP割合
@@ -222,6 +223,13 @@ export default function calculate_atkval (param_obj, job_data) {
         total_skill[slot_str]["percent"] += false_func(level);
       }
     };
+  }
+  //// この関数は天司に対応
+  //// ほぼ上の関数と一緒だが加算先が異なる
+  function pafunc_gen (slot_str, bless_add) {
+    return function (level) {
+      total_skill[slot_str]["percent"] += bless_add;
+    }
   }
   //// この関数は渾身に対応
   //// ほぼ上の関数と一緒だが加算先が異なる
@@ -284,6 +292,10 @@ export default function calculate_atkval (param_obj, job_data) {
     ),
     "normal_kj4": pfunc_gen(
       "normal", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(8, 0, 1), pcalc_gen(18, CHECK_LEVEL, 1)
+    ),
+    "normal_kjt": pfunc_gen(
+      "normal", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(6, 0, 1), pcalc_gen(16, CHECK_LEVEL, 0.8)
     ),
     "normal_km": pfunc_gen(
@@ -302,6 +314,10 @@ export default function calculate_atkval (param_obj, job_data) {
       "magna", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
     ),
+    "magna_kj4": pfunc_gen(
+      "magna", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(8, 0, 1), pcalc_gen(18, CHECK_LEVEL, 1)
+    ),
     "magna_km": pfunc_gen(
       "magna", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(0, 0, 1), pcalc_gen(10, CHECK_LEVEL, 0,4)
@@ -317,6 +333,10 @@ export default function calculate_atkval (param_obj, job_data) {
     "ex_kj3": pfunc_gen(
       "ex", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(5, 0, 1), pcalc_gen(15, CHECK_LEVEL, 0.6)
+    ),
+    "ex_kj4": pfunc_gen(
+      "ex", less_than_chklv(CHECK_LEVEL),
+      pcalc_gen(8, 0, 1), pcalc_gen(18, CHECK_LEVEL, 1)
     ),
     "ex_km": pfunc_gen(
       "ex", less_than_chklv(CHECK_LEVEL),
@@ -414,6 +434,8 @@ export default function calculate_atkval (param_obj, job_data) {
       "unknown", less_than_chklv(CHECK_LEVEL),
       pscalc_gen(1.923633604, 0, 0.7236096116), pscalc_gen(1.923633604, 0, 0.7236096116)
     ),
+    "angel_bless1": pafunc_gen("angel", 10),
+    "angel_bless2": pafunc_gen("angel", 20),
     "baha_atk": pfunc_gen(
       "baha", less_than_chklv(CHECK_LEVEL),
       pcalc_gen(19, 0, 1), pcalc_gen(30, CHECK_LEVEL, 0.4)
@@ -425,13 +447,16 @@ export default function calculate_atkval (param_obj, job_data) {
   };
   /// スキルとパラメータの集計
   param_obj.weapon.forEach(function(weapon) {
-    if (weapon.skill_level === 0) return;  // スキルレベル0はスキル未取得
     // スキルごとの計算
     let skill_name = "";
     skill_name = weapon.skill_slot[0] + "_" + weapon.skill_type[0];
-    if (weapon.skill_type[0] != "none") { skill_calc_dict[skill_name](weapon.skill_level); }
+    if (weapon.skill_level > 0 || weapon.skill_slot[0] == "angel") { // angelの場合のみスキル0でも効果アリ
+        if (weapon.skill_type[0] != "none") { skill_calc_dict[skill_name](weapon.skill_level); }
+    }
     skill_name = weapon.skill_slot[1] + "_" + weapon.skill_type[1];
-    if (weapon.skill_type[1] != "none") { skill_calc_dict[skill_name](weapon.skill_level); }
+    if (weapon.skill_level > 0 || weapon.skill_slot[1] == "angel") { // angelの場合のみスキル0でも効果アリ
+        if (weapon.skill_type[1] != "none") { skill_calc_dict[skill_name](weapon.skill_level); }
+    }
   });
 
   // ステータスの上限等補正
@@ -458,6 +483,8 @@ export default function calculate_atkval (param_obj, job_data) {
   total_atk *= 1 + (total_skill.ex.backwater + (total_skill.unknown.backwater * divine_percent.unknown / 100) ) / 100;
   /// EX渾身
   total_atk *= 1 + (total_skill.ex.konshin + (total_skill.unknown.konshin * divine_percent.unknown / 100) ) / 100;
+  /// 天司
+  total_atk *= 1 + (total_skill.angel.percent / 100);
   /// 属性
   total_atk *= (divine_percent.attribute + attribute_bonus) / 100;
   /// 騎空艇ボーナス%
@@ -472,4 +499,76 @@ export default function calculate_atkval (param_obj, job_data) {
     "showed_atk": showed_atk,
     "total_atk": total_atk
   };
+}
+
+
+// 武器1つのオブジェクトが妥当な形式かチェックする
+export function is_valid_weapon_obj(weapon_obj) {
+  if (!(weapon_obj instanceof Object)) {
+    return false;
+  }
+  let weapon_keys = Object.keys(weapon_obj);
+  // 攻撃力
+  if (!(weapon_keys.includes("atk") && weapon_obj.atk >= 0)) {
+    return false;
+  }
+  // 武器種別
+  if (!(weapon_keys.includes("type") && typeof weapon_obj.type == "string")) {
+    return false;
+  }
+  // スキルレベル
+  if (!(weapon_keys.includes("skill_level") && weapon_obj.skill_level >= 0)) {
+    return false;
+  }
+  // スキル種別
+  if (!(weapon_keys.includes("skill_type") && weapon_obj.skill_type instanceof Array)) {
+    return false;
+  } else {
+    for (let i = 0; i < weapon_obj.skill_type.length; i++) {
+      if (!(typeof weapon_obj.skill_type[i] == "string")) {
+        return false;
+      }
+    }
+  }
+  // スキル種別
+  if (!(weapon_keys.includes("skill_slot") && weapon_obj.skill_type instanceof Array)) {
+    return false;
+  } else {
+    for (let i = 0; i < weapon_obj.skill_type.length; i++) {
+      if (!(typeof weapon_obj.skill_type[i] == "string")) {
+        return false;
+      }
+    }
+  }
+  // チェックを全部パスした
+  return true;
+}
+
+
+// 召喚1つのオブジェクトが妥当な形式かをチェックする
+export function is_valid_summon_obj(summon_obj) {
+  // 攻撃力
+  if (!(summon_obj.atk >= 0)) {
+    return false;
+  }
+
+  // 加護
+  if (!(summon_obj.skill instanceof Array)) {
+    return false;
+  }
+  for (let i = 0; i < summon_obj.skill.length; i++) {
+    let chk_val = summon_obj.skill[i];
+    if (!(chk_val instanceof Object)) {
+      return false;
+    }
+    if (!(chk_val.hasOwnProperty("type") && typeof chk_val.type == "string")) {
+      return false;
+    }
+    if (!(chk_val.hasOwnProperty("percent") && chk_val.percent >= 0)) {
+      return false;
+    }
+  }
+
+  // チェックを全て通った
+  return true;
 }
