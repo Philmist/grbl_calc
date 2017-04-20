@@ -137,7 +137,7 @@ class SaveLoad extends Component {
     let slot_names = this.state.slot_names;
     slot_names[this.state.current_slot_number] = this.state.current_slot_name;
     this.storage.setItem("slot_names", JSON.stringify(slot_names));
-    console.log("SAVE: " + base64.fromByteArray(pako.deflate(JSON.stringify(slot_names))));
+    console.log("SAVE: " + base64.fromByteArray(pako.deflate(JSON.stringify(save_obj))));
     // セーブ終了に状態を変更
     this.props.set_state_saved();
     // スロット名も変更
@@ -249,6 +249,7 @@ class SaveLoadFromTextbox extends Component {
     };
     this.on_change_box = this.on_change_box.bind(this);
     this.on_push_serialize = this.on_push_serialize.bind(this);
+    this.on_push_deserialize = this.on_push_deserialize.bind(this);
   }
 
   serialize_and_set() {
@@ -266,25 +267,32 @@ class SaveLoadFromTextbox extends Component {
 
   deserialize_and_load() {
     try {
-      let serialized_str = this.state.data_str;
+      let serialized_str = String(this.state.data_str);
       let compressed_data_bytearray = base64.toByteArray(serialized_str);
-      let inflated_str = pako.inflate(compressed_data_bytearray);
+      let inflated_str = pako.inflate(compressed_data_bytearray, { to: "string" });
       let json_data = JSON.parse(inflated_str);
+      console.info(json_data);
+      this.props.set_weapon_object(json_data.weapon);
+      this.props.set_summon_object(json_data.summon);
+      this.props.set_basicinfo_object(json_data.basicinfo);
+      this.props.set_friend_object(json_data.friend);
     } catch (e) {
+      console.warn(e);
+      this.setState({ data_str: "Can't load!" });
       return;
     }
-    set_weapon_object(json_data.weapon);
-    set_summon_object(json_data.summon);
-    set_basicinfo_object(json_data.basicinfo);
-    set_friend_object(json_data.friend);
   }
 
   on_change_box(event) {
-    return;
+    this.setState({ data_str: event.value });
   }
 
   on_push_serialize(event) {
     this.serialize_and_set();
+  }
+
+  on_push_deserialize(event) {
+    this.deserialize_and_load();
   }
 
   render() {
@@ -292,8 +300,9 @@ class SaveLoadFromTextbox extends Component {
       <tbody>
         <tr styleName="row">
           <td styleName="cell">
-            <input
+            <textarea
               value={this.state.data_str}
+              onChange={this.on_change_box}
             />
           </td>
         </tr>
@@ -304,6 +313,12 @@ class SaveLoadFromTextbox extends Component {
               name="Serialize"
               value="Serialize"
               onClick={this.on_push_serialize}
+             />
+            <input
+              type="button"
+              name="Deserialize"
+              value="Deserialize"
+              onClick={this.on_push_deserialize}
              />
           </td>
         </tr>
