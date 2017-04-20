@@ -226,7 +226,7 @@ function run_optimizer(data) {
     while (next_value && next_value.status != CALC_STATE.LOOP_END) {
       next_value = optimizer_generator.next().value;
     }
-    let percent = Math.round(i / optimizer_parameter.generation);
+    let percent = Math.round(i / optimizer_parameter.generation * 100);
     if (last_percent != percent) {
       last_percent = percent;
       postMessage({ message: "Optimizer running.", percent: percent, state: optimizer_state });
