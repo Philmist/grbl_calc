@@ -34,6 +34,8 @@ with open(r'skill_list_magna.csv') as f:
     skill_list['magna'] = csvreader_to_list(csv.reader(f))
 with open(r'skill_list_ex.csv') as f:
     skill_list['ex'] = csvreader_to_list(csv.reader(f))
+with open(r'skill_list_etc.csv') as f:
+    skill_list['etc'] = csvreader_to_list(csv.reader(f))
 
 
 # スキル辞書を構築する

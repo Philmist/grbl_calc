@@ -191,6 +191,21 @@ let job_data = {
     "atk_value" : 2000,
     "atk_rate"  : 0,
   },
+  "HoundDog": {
+    "specialty" : ["bow", "gun"],
+    "atk_value" : 1800,
+    "atk_rate"  : 0,
+  },
+  "Elysian": {
+    "specialty" : ["instrument", "dagger"],
+    "atk_value" : 0,
+    "atk_rate"  : 0,
+  },
+  "Apsaras": {
+    "specialty" : ["spear", "axe"],
+    "atk_value" : 2000,
+    "atk_rate"  : 0,
+  },
   "Alchemist": {
     "specialty" : ["dagger", "gun"],
     "atk_value" : 0,

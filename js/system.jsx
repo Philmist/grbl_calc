@@ -57,6 +57,9 @@ class System extends Component {
           <table styleName="base" id="system">
             { this.state.saveload_available ?  <SaveLoad /> : <CannotSave /> }
           </table>
+          <table>
+            <SaveLoadFromTextbox />
+          </table>
         </form>
       </section>
     );
@@ -80,7 +83,7 @@ class CannotSave extends Component {
 CannotSave = CSSModules(CannotSave, styles);
 
 
-// セーブロード部分
+// localStorageからのセーブロード部分
 class SaveLoad extends Component {
 
   storage = window.localStorage;
@@ -234,3 +237,98 @@ const mapActionCreatorsToSaveLoadProps = {
   set_state_saved
 };
 SaveLoad = connect(mapStateToSaveLoadProps, mapActionCreatorsToSaveLoadProps)(SaveLoad);
+
+
+// 文字列からのセーブロード部分
+class SaveLoadFromTextbox extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      data_str: ""
+    };
+    this.on_change_box = this.on_change_box.bind(this);
+    this.on_push_serialize = this.on_push_serialize.bind(this);
+  }
+
+  serialize_and_set() {
+    let save_obj = {
+      weapon: this.props.weapon,
+      summon: this.props.summon,
+      basicinfo: this.props.basicinfo,
+      friend: this.props.friend,
+    };
+    let json_str = JSON.stringify(save_obj);
+    let deflate_data_bytearray = pako.deflate(json_str);
+    let base64ed_str = base64.fromByteArray(deflate_data_bytearray);
+    this.setState({ data_str: base64ed_str });
+  }
+
+  deserialize_and_load() {
+    try {
+      let serialized_str = this.state.data_str;
+      let compressed_data_bytearray = base64.toByteArray(serialized_str);
+      let inflated_str = pako.inflate(compressed_data_bytearray);
+      let json_data = JSON.parse(inflated_str);
+    } catch (e) {
+      return;
+    }
+    set_weapon_object(json_data.weapon);
+    set_summon_object(json_data.summon);
+    set_basicinfo_object(json_data.basicinfo);
+    set_friend_object(json_data.friend);
+  }
+
+  on_change_box(event) {
+    return;
+  }
+
+  on_push_serialize(event) {
+    this.serialize_and_set();
+  }
+
+  render() {
+    return (
+      <tbody>
+        <tr styleName="row">
+          <td styleName="cell">
+            <input
+              value={this.state.data_str}
+            />
+          </td>
+        </tr>
+        <tr styleName="row">
+          <td styleName="cell">
+            <input
+              type="button"
+              name="Serialize"
+              value="Serialize"
+              onClick={this.on_push_serialize}
+             />
+          </td>
+        </tr>
+      </tbody>
+    );
+  }
+
+}
+SaveLoadFromTextbox = CSSModules(SaveLoadFromTextbox, styles);
+const mapStateToSaveLoadFromTextboxProps = (state) => {
+  return {
+    weapon: state.weapon,
+    summon: state.summon,
+    friend: state.friend,
+    basicinfo: state.basicinfo
+  };
+};
+const mapActionCreatorsToSaveLoadFromTextboxProps = {
+  set_weapon_object: dangerously_replace_weapon_object,
+  set_summon_object: dangerously_replace_summon_object,
+  set_basicinfo_object: dangerously_replace_basicinfo_object,
+  set_friend_object: dangerously_replace_friend_object,
+  set_state_loading,
+  set_state_loaded,
+  set_state_saving,
+  set_state_saved
+};
+SaveLoadFromTextbox = connect(mapStateToSaveLoadFromTextboxProps, mapActionCreatorsToSaveLoadFromTextboxProps)(SaveLoadFromTextbox);

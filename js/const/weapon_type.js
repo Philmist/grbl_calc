@@ -21,6 +21,7 @@ export const SKILL_SLOT = [
   "magna",
   "ex",
   "unknown",
+  "angel",
   "baha",
   "cosmos"
 ];
@@ -76,6 +77,12 @@ export const SKILL_TYPE_EX = [
   "bw3",
   "km",
   "ks"
+];
+
+export const SKILL_TYPE_ANGEL = [
+  "none",
+  "bless1",
+  "bless2"
 ];
 
 export const SKILL_TYPE_BAHA = [
