@@ -61,6 +61,7 @@ class Optimizer extends Component {
     console.info(e.data);
     if (e.data.state === WORKER_STATE.RUNNING) {
       this.setState({ percent: e.data.percent });
+      console.log(e.data.percent);
     }
     if (e.data.state === WORKER_STATE.STOP && e.data.can_run) {
       console.log(e.data);
@@ -89,6 +90,7 @@ class Optimizer extends Component {
         this.props.disable_friend_object(i);
       });
       // 指定された順番に並びかえる
+      // cf. workerから返ってくるのは元配列のindexを配列にしたもの
       this.props.sort_weapon_object(target.weapon);
       this.props.sort_summon_object(target.summon);
       this.props.sort_friend_object(target.friend);
@@ -106,7 +108,6 @@ class Optimizer extends Component {
         command: WORKER_COMMAND.RESET
       });
       this.props.input_unlock();
-      this.setState({ gen_count: 0 });
       this.setState({ running: false });
     }
   }

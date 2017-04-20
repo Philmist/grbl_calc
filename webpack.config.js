@@ -87,7 +87,7 @@ module.exports = [
   {  // 編成計算機のWebWorkerファイル(必要最低限)
     devtool: isProd ? "#hidden-source-map" : "#source-map",
     entry: {
-      js: "./js/worker_ga.js",
+      js: "./js/worker_optimizer.js",
     },
     output: {
       filename: "./dist/optimizer.js",

@@ -36,11 +36,11 @@ counterpart.setLocale("ja");
 
 
 // 適用するミドルウェアを設定する
-const middlewares = [thunkMiddleware];
+let middlewares = [thunkMiddleware];
 if (process.env.NODE_ENV === "development") {
   // reduxのためのロギングミドルウェア
   // これを使うことで開発コンソールにstateの変移が吐きだされる
-  const loggerMiddleware = createLogger();
+  let loggerMiddleware = createLogger();
   middlewares.push(loggerMiddleware);
 }
 
@@ -65,7 +65,7 @@ const store = createStore(
   applyMiddleware(...middlewares)
 );
 */
-const store = createStore(reducer, applyMiddleware(...middlewares));
+let store = createStore(reducer, applyMiddleware(...middlewares));
 
 
 // アプリ全体の定義
