@@ -30,90 +30,35 @@ import styles from "optimizer.css";
 
 // 最適化をまとめるセクション
 class Optimizer extends Component {
+  // コンストラクタ(関数をバインドする)
   constructor() {
     super();
-    this.state = {
-      max_gen: 300,
-      max_pop: 500,
-      mut_prob: 0.08,
-      percent: 0,
-      running: false
-    };
     this.on_message = ::this.on_message;
     this.optimizer_func = ::this.optimizer_func;
   }
 
+  // コンポーネントが表示される時の処理
   componentDidMount() {
     // 最適化用のWebWorkerを読み込み
     this.optimize_worker = new Worker("./dist/optimizer.js");  // Webpackのコンフィグ参照
     // イベントリスナーを追加
     this.optimize_worker.addEventListener("message", this.on_message);
-    this.optimize_worker.postMessage({ command: WORKER_COMMAND.GET_STATE });
   }
 
+  // コンポーネントが廃棄される時の処理
   componentWillUnmount() {
     this.optimize_worker.removeEventListener("message", this.on_message);
     this.optimize_worker.terminate();
     this.optimize_worker = undefined;
   }
 
-  on_message(e) {
-    console.info(e.data);
-    if (e.data.state === WORKER_STATE.RUNNING) {
-      this.setState({ percent: e.data.percent });
-    }
-    if (e.data.state === WORKER_STATE.STOP && e.data.can_run) {
-      console.log(e.data);
-      this.setState({ percent: 0 });
-      this.optimize_worker.postMessage({
-        command: WORKER_COMMAND.INIT
-      });
-      this.optimize_worker.postMessage({ command: WORKER_COMMAND.RUN });
-    }
-    if (e.data.state === WORKER_STATE.FINISH) {
-      console.info(e.data);
-      // 結果を格納する
-      let target = {
-        weapon: e.data.weapon,
-        summon: e.data.summon,
-        friend: e.data.friend
-      };
-      // 一度選択状態を解除する
-      this.props.weapon.forEach((v, i) => {
-        this.props.disable_weapon_object(i);
-      });
-      this.props.summon.forEach((v, i) => {
-        this.props.disable_summon_object(i);
-      });
-      this.props.friend.forEach((v, i) => {
-        this.props.disable_friend_object(i);
-      });
-      // 指定された順番に並びかえる
-      // cf. workerから返ってくるのは元配列のindexを配列にしたもの
-      this.props.sort_weapon_object(target.weapon);
-      this.props.sort_summon_object(target.summon);
-      this.props.sort_friend_object(target.friend);
-      // 一番上から選択状態にする
-      [...Array(WEAPON_CHECKED_MAX).keys()].forEach((v, i) => {
-        this.props.enable_weapon_object(i);
-      });
-      [...Array(SUMMON_CHECKED_MAX).keys()].forEach((v, i) => {
-        this.props.enable_summon_object(i);
-      });
-      [...Array(FRIEND_CHECKED_MAX).keys()].forEach((v, i) => {
-        this.props.enable_friend_object(i);
-      });
-      this.optimize_worker.postMessage({
-        command: WORKER_COMMAND.RESET
-      });
-      this.props.input_unlock();
-      this.setState({ running: false });
-    }
+  // Workerから送られてきたメッセージをここで処理する
+  on_message(message) {
+    console.log(message);
   }
 
+  // ボタンが押された時の挙動(武装最適化処理)
   optimizer_func() {
-    this.props.input_lock();
-    this.setState({ running : true });
     this.optimize_worker.postMessage({
       command: WORKER_COMMAND.SET_BASIC_INFO,
       data: this.props.basicinfo
@@ -130,15 +75,6 @@ class Optimizer extends Component {
       command: WORKER_COMMAND.SET_FRIEND,
       data: this.props.friend
     });
-    this.optimize_worker.postMessage({
-      command: WORKER_COMMAND.SET_GA_PARAM,
-      data: {
-        generation: this.state.max_gen,
-        population: this.state.max_pop,
-        mutation_probability: { all: this.state.mut_prob }
-      }
-    });
-    this.optimize_worker.postMessage({ command: WORKER_COMMAND.GET_STATE });
   }
 
   render() {
