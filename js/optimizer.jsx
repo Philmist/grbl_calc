@@ -35,6 +35,10 @@ class Optimizer extends Component {
     super();
     this.on_message = ::this.on_message;
     this.optimizer_func = ::this.optimizer_func;
+    this.state = {
+      running: false,
+      percent: 0
+    };
   }
 
   // コンポーネントが表示される時の処理
@@ -54,7 +58,7 @@ class Optimizer extends Component {
 
   // Workerから送られてきたメッセージをここで処理する
   on_message(message) {
-    console.log(message);
+    console.log(message.data);
   }
 
   // ボタンが押された時の挙動(武装最適化処理)

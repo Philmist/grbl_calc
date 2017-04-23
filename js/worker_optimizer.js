@@ -80,7 +80,6 @@ function set_friend(data) {
       return;
     }
     optimizer_target.friend = data.data;
-    optimizer_flag.i_friend = true;
     postMessage({ result: true, message: "friend data is set." });
   } else {
     postMessage({ result: false, message: "data must be Array." });
