@@ -59,10 +59,68 @@ class Optimizer extends Component {
   // Workerから送られてきたメッセージをここで処理する
   on_message(message) {
     console.log(message.data);
+    if (message.data.state === WORKER_STATE.RUNNING) {
+      this.setState({ percent: message.data.percent });
+    }
+    if (message.data.state === WORKER_STATE.FINISH) {
+      // 結果を格納する
+      let selected = {
+        weapon: message.data.s_weapon,
+        summon: message.data.s_summon,
+        friend: message.data.s_friend
+      };
+      let target = {
+        weapon: message.data.i_weapon,
+        summon: message.data.i_summon,
+        friend: message.data.i_friend
+      };
+      // 一度選択状態を解除する
+      this.props.weapon.forEach((v, i) => {
+        this.props.disable_weapon_object(i);
+      });
+      this.props.summon.forEach((v, i) => {
+        this.props.disable_summon_object(i);
+      });
+      this.props.friend.forEach((v, i) => {
+        this.props.disable_friend_object(i);
+      });
+
+      // 選択状態を変更
+      target.weapon.forEach((v, i) => {
+        if (v.selected) {
+          this.props.enable_weapon_object(i);
+        } else {
+          this.props.disable_weapon_object(i);
+        }
+      });
+      target.summon.forEach((v, i) => {
+        if (v.selected) {
+          this.props.enable_summon_object(i);
+        } else {
+          this.props.disable_summon_object(i);
+        }
+      });
+      target.friend.forEach((v, i) => {
+        if (v.selected) {
+          this.props.enable_friend_object(i);
+        } else {
+          this.props.disable_friend_object(i);
+        }
+      });
+
+      this.optimize_worker.postMessage({
+        command: WORKER_COMMAND.RESET
+      });
+      
+      this.props.input_unlock();
+      this.setState({ running: false });
+    }
   }
 
   // ボタンが押された時の挙動(武装最適化処理)
   optimizer_func() {
+    this.props.input_lock();
+    this.setState({ running: true });
     this.optimize_worker.postMessage({
       command: WORKER_COMMAND.SET_BASIC_INFO,
       data: this.props.basicinfo
@@ -77,6 +135,10 @@ class Optimizer extends Component {
     });
     this.optimize_worker.postMessage({
       command: WORKER_COMMAND.SET_FRIEND,
+      data: this.props.friend
+    });
+    this.optimize_worker.postMessage({
+      command: WORKER_COMMAND.RUN,
       data: this.props.friend
     });
   }
