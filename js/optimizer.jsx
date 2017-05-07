@@ -64,11 +64,6 @@ class Optimizer extends Component {
     }
     if (message.data.state === WORKER_STATE.FINISH) {
       // 結果を格納する
-      let selected = {
-        weapon: message.data.s_weapon,
-        summon: message.data.s_summon,
-        friend: message.data.s_friend
-      };
       let target = {
         weapon: message.data.i_weapon,
         summon: message.data.i_summon,
@@ -107,12 +102,23 @@ class Optimizer extends Component {
           this.props.disable_friend_object(i);
         }
       });
+      
+      // メイン召喚石だけ一番上に移動
+      let summon_array = [];
+      summon_array.push(message.data.top_summon);
+      for (let i=0; i<target.summon.length; i++) {
+        if ( message.data.top_summon != i ) {
+          summon_array.push(i);
+        }
+      }
+      this.props.sort_summon_object(summon_array);
 
       this.optimize_worker.postMessage({
         command: WORKER_COMMAND.RESET
       });
       
       this.props.input_unlock();
+      this.setState({ percent: 0 });
       this.setState({ running: false });
     }
   }

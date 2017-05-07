@@ -120,99 +120,165 @@ function run_optimizer(data) {
   
   // 一旦選択状態を解除し、上から順番に選択
   optimizer_target.weapon.forEach((v, i) => { optimizer_target.weapon[i].selected = false; });
+  [...Array(WEAPON_CHECKED_MAX).keys()].forEach((v, i) => { optimizer_target.weapon[i].selected = true; });
+
+  // 召喚系は全て解除
   optimizer_target.summon.forEach((v, i) => { optimizer_target.summon[i].selected = false; });
   optimizer_target.friend.forEach((v, i) => { optimizer_target.friend[i].selected = false; });
-  [...Array(WEAPON_CHECKED_MAX).keys()].forEach((v, i) => { optimizer_target.weapon[i].selected = true; });
-  [...Array(SUMMON_CHECKED_MAX).keys()].forEach((v, i) => { optimizer_target.summon[i].selected = true; });
-  [...Array(FRIEND_CHECKED_MAX).keys()].forEach((v, i) => { optimizer_target.friend[i].selected = true; });
 
-  // 更新がされなくなるまでループ
-  while (optimizer_state == WORKER_STATE.RUNNING) {
+  let final_result = 0;
 
-    let change_flag = false; //武器を切り替えたかどうかの変更
+  // 自武器編成のコピーを用意
+  let temp_weapon;
+  let temp_summon;
+  let temp_friend;
 
-    // 武器10本を順番に切り替えて今より強くなるかを判断
-    for (var i=0; i<WEAPON_CHECKED_MAX; i++) {
+  // メイン召喚番号
+  let main_summon = 0;
+  let main_friend = 0;
+  
+  // メイン召喚状態保存
+  let best_summon_state;
+  
+  // 全体工程のループ数を算出
+  let max_loop = optimizer_target.summon.length * optimizer_target.friend.length;
 
-      let change_weapon = -1; //切り替える対象の武器
+  // 自分の召喚全てを判定
+  for (let s1=0; s1<optimizer_target.summon.length; s1++) {
 
-      // 選択済でない場合は切り替え対象でないのでスキップ
-      if (optimizer_target.weapon[i].selected == false) continue;
+    // 自召喚のコピーを用意
+    temp_summon = optimizer_target.summon.concat();
 
-      // 現在の攻撃力を一旦記憶
-      let temp_weapon = optimizer_target.weapon.filter(function(val) {
-        return (val instanceof Object && val.selected);
-      });
-      let temp_summon = optimizer_target.summon.filter(function(val) {
-        return (val instanceof Object && val.selected);
-      });
-      let temp_friend = optimizer_target.friend.filter(function(val) {
-        return (val instanceof Object && val.selected);
-      });
+    // 指定召喚を一番上に移動
+    temp_summon.forEach((v, i) => { temp_summon[i].selected = false; });
+    temp_summon[s1].selected = true;
 
-      let param = Object.assign({}, optimizer_target.basic_info, {
-        weapon: temp_weapon,
-        summon: temp_summon,
-        friend: temp_friend
-      });
+    // 攻撃力順に並べ変え
+    temp_summon.sort(function(a,b){
+      if( a.selected == true ) return -1;
+      if( b.selected == true ) return 1;
+      if( a.atk > b.atk ) return -1;
+      if( a.atk < b.atk ) return 1;
+      return 0;
+    });
+    console.log("自召喚切替");
+    console.log(temp_summon[0].name);
 
-      let max_result = calculate_atkval(param, JOB_DATA).total_atk;
+    // フレンドの召喚全てを判定
+    for (let s2=0; s2<optimizer_target.friend.length; s2++) {
 
-      optimizer_target.weapon[i].selected = false; // 切り替えてテストするために一旦選択を外す
-      
-      // 指定した武器に対して、現在装備していない武器を切り替えてテスト
-      for (var j=0; j<optimizer_target.weapon.length; j++) {
+      // フレ召喚のコピーを用意
+      temp_friend = optimizer_target.friend[s2];
 
-        // 自分自身か、もしくは選択済である場合はスキップ
-        if (i == j || optimizer_target.weapon[j].selected == true) continue;
+      let change_flag = false; //武器を切り替えたかどうかの変更
+      let max_result = 0;
+
+      // 更新がされなくなるまでループ
+      while (1) {
+        // 変化フラグ初期化
+        change_flag = false;
         
-        optimizer_target.weapon[j].selected = true;
-        
-        let temp_weapon = optimizer_target.weapon.filter(function(val) {
-          return (val instanceof Object && val.selected);
-        });
-        let temp_summon = optimizer_target.summon.filter(function(val) {
-          return (val instanceof Object && val.selected);
-        });
-        let temp_friend = optimizer_target.friend.filter(function(val) {
-          return (val instanceof Object && val.selected);
-        });
+        // 武器10本を順番に切り替えて今より強くなるかを判断
+        for (let i=0; i<optimizer_target.weapon.length; i++) {
 
-        let param = Object.assign({}, optimizer_target.basic_info, {
-          weapon: temp_weapon,
-          summon: temp_summon,
-          friend: temp_friend
-        });
+          let change_weapon = -1; //切り替える対象の武器
 
-        let result = calculate_atkval(param, JOB_DATA);
-        
-        // 切り替えた結果が上回っているかどうかの判定
-        if (max_result < result.total_atk) {
-          change_weapon = j;
-          max_result = result.total_atk;
+          // 選択済でない場合は切り替え対象でないのでスキップ
+          if (optimizer_target.weapon[i].selected == false) continue;
+
+          // 現在の攻撃力を一旦記憶
+          let calc_weapon = optimizer_target.weapon.filter(function(val) {
+            return (val instanceof Object && val.selected);
+          });
+
+          let param = Object.assign({}, optimizer_target.basic_info, {
+            weapon: calc_weapon.slice(0,10),
+            summon: temp_summon.slice(0,5),
+            friend: temp_friend
+          });
+
+          max_result = calculate_atkval(param, JOB_DATA).total_atk;
+
+          optimizer_target.weapon[i].selected = false; // 切り替えてテストするために一旦選択を外す
+          
+          // 指定した武器に対して、現在装備していない武器を切り替えてテスト
+          for (let j=0; j<optimizer_target.weapon.length; j++) {
+
+            // 自分自身か、もしくは選択済である場合はスキップ
+            if (i == j || optimizer_target.weapon[j].selected == true) continue;
+            
+            optimizer_target.weapon[j].selected = true;
+            
+            temp_weapon = optimizer_target.weapon.filter(function(val) {
+              return (val instanceof Object && val.selected);
+            });
+
+            let param = Object.assign({}, optimizer_target.basic_info, {
+              weapon: temp_weapon.slice(0,10),
+              summon: temp_summon.slice(0,5),
+              friend: temp_friend
+            });
+
+            let result = calculate_atkval(param, JOB_DATA);
+            
+            // 切り替えた結果が上回っているかどうかの判定
+            if (max_result < result.total_atk) {
+              change_weapon = j;
+              max_result = result.total_atk;
+            }
+            
+            optimizer_target.weapon[j].selected = false; // 切り替えテストが終わったので一旦選択から外す
+          }
+          if (change_weapon != -1) {
+            optimizer_target.weapon[change_weapon].selected = true; // 武器を切り替えるために選択状態にする
+            change_flag = true;
+          } else {
+            optimizer_target.weapon[i].selected = true; // 切り替える必要がなかったため、元に戻す
+          }
+          
         }
-        
-        optimizer_target.weapon[j].selected = false; // 切り替えテストが終わったので一旦選択から外す
-      }
-      if (change_weapon != -1) {
-        optimizer_target.weapon[change_weapon].selected = true; // 武器を切り替えるために選択状態にする
-        change_flag = true;
-      } else {
-        optimizer_target.weapon[i].selected = true; // 切り替える必要がなかったため、元に戻す
+
+        // 一度も切り替えが無かった場合は終了して次の召喚へ
+        if (change_flag == false) break;
       }
       
-    }
+      if (max_result > final_result) {
+        best_summon_state = temp_summon.concat();
+        main_summon = s1;
+        main_friend = s2;
+        final_result = max_result;
+        console.log("更新！ "+max_result);
+        console.log(temp_weapon.slice(0,10));
+        console.log(temp_summon.slice(0,5));
+        console.log(temp_friend);
+      }
 
-    if (change_flag == false) optimizer_state = WORKER_STATE.FINISH; // 一度も切り替えが無かった場合は終了
-    
+      let done_loop = s2 + s1 * optimizer_target.friend.length;
+      console.log("done:"+done_loop+" max:"+max_loop);
+      postMessage({
+        message: "Optimizer is running....",
+        state: optimizer_state,
+        percent: Math.floor(done_loop * 100 / max_loop)
+      });
+    }
   }
+  
+  optimizer_target.summon.forEach((v, i) => { optimizer_target.summon[i].selected = false; });
+  [...Array(SUMMON_CHECKED_MAX).keys()].forEach((v, i) => { best_summon_state[i].selected = true; });
+
+  optimizer_target.friend.forEach((v, i) => { optimizer_target.friend[i].selected = false; });
+  optimizer_target.friend[main_friend].selected = true;
+
+  optimizer_state = WORKER_STATE.FINISH;
   
   postMessage({
     message: "Optimizer finished.",
     state: optimizer_state,
     i_weapon: optimizer_target.weapon,
     i_summon: optimizer_target.summon,
-    i_friend: optimizer_target.friend
+    i_friend: optimizer_target.friend,
+    top_summon: main_summon,
+    top_friend: main_friend
   });
 }
 
