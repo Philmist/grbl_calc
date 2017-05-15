@@ -105,6 +105,8 @@ function run_optimizer(data) {
     return;
   }
 
+  let cosmos_table = []; // コスモス武器のチェック
+  
   while(1) {
     if (
       (optimizer_flag.i_basic == true) &&
@@ -118,11 +120,45 @@ function run_optimizer(data) {
   
   optimizer_state = WORKER_STATE.RUNNING;
   
-  // 一旦選択状態を解除し、上から順番に選択
-  optimizer_target.weapon.forEach((v, i) => { optimizer_target.weapon[i].selected = false; });
-  [...Array(WEAPON_CHECKED_MAX).keys()].forEach((v, i) => { optimizer_target.weapon[i].selected = true; });
+  // ロックされている武器本数を確認
+  let total_locked = 0;
+  let total_locked_cosmos = 0;
+  for (let i=0; i<optimizer_target.weapon.length; i++) {
+    if (optimizer_target.weapon[i].locked == true) {
+      total_locked++;
+      if (optimizer_target.weapon[i].skill_slot[0] == "cosmos" || optimizer_target.weapon[i].skill_slot[1] == "cosmos") {
+        total_locked_cosmos++; // ロックされているコスモスの本数
+      }
+    }
+  }
+  
+console.log(total_locked);
 
-  // 召喚系は全て解除
+  if (total_locked > WEAPON_CHECKED_MAX || total_locked_cosmos > 1) {
+    optimizer_state = WORKER_STATE.TERMINATE;
+    
+    postMessage({
+      message: "Optimizer terminated.",
+      state: optimizer_state
+    });
+    return;
+  }
+
+  // コスモス武器の個数と場所をチェック
+  let total_cosmos = 1;
+  cosmos_table.push(-1);
+  if (total_locked < WEAPON_CHECKED_MAX || total_locked_cosmos == 1) { 
+    // ロックされてる武器本数が10本の場合、もしくはコスモス武器がロックされている場合は考慮しない
+    for (let i=0; i<optimizer_target.weapon.length; i++) {
+      if (optimizer_target.weapon[i].skill_slot[0] == "cosmos" || optimizer_target.weapon[i].skill_slot[1] == "cosmos") {
+        cosmos_table.push(i);
+        total_cosmos++;
+      }
+    }
+  }
+
+  // 選択状態は一旦すべて解除
+  optimizer_target.weapon.forEach((v, i) => { optimizer_target.weapon[i].selected = false; });
   optimizer_target.summon.forEach((v, i) => { optimizer_target.summon[i].selected = false; });
   optimizer_target.friend.forEach((v, i) => { optimizer_target.friend[i].selected = false; });
 
@@ -164,7 +200,7 @@ function run_optimizer(data) {
     console.log("自召喚切替");
     console.log(temp_summon[0].name);
 
-    // フレンドの召喚全てを判定
+    // フレンドの召喚全てを順番に判定
     for (let s2=0; s2<optimizer_target.friend.length; s2++) {
 
       // フレ召喚のコピーを用意
@@ -173,73 +209,114 @@ function run_optimizer(data) {
       let change_flag = false; //武器を切り替えたかどうかの変更
       let max_result = 0;
 
-      // 更新がされなくなるまでループ
-      while (1) {
-        // 変化フラグ初期化
-        change_flag = false;
+      // コスモス武器は個別に選択してチェック
+      for (let cosmos=0; cosmos<total_cosmos; cosmos++) {
+
+        let locked_weapon = 0;
         
-        // 武器10本を順番に切り替えて今より強くなるかを判断
+        // 一旦選択状態を解除
+        optimizer_target.weapon.forEach((v, i) => { optimizer_target.weapon[i].selected = false; });
+
+        // まずはコスモス武器を１つ選択固定
+        if (cosmos_table[cosmos] != -1) {
+          optimizer_target.weapon[cosmos_table[cosmos]].selected = true;
+          locked_weapon++;
+        }
+
+        // ロックされている武器を選択固定
         for (let i=0; i<optimizer_target.weapon.length; i++) {
+          if (optimizer_target.weapon[i].skill_slot[0] == "cosmos" || optimizer_target.weapon[i].skill_slot[1] == "cosmos") {
+            break; // コスモス武器は除外
+          }
+          if (optimizer_target.weapon[i].locked == true) {
+            optimizer_target.weapon[i].selected = true;
+            locked_weapon++;
+          }
+        }
 
-          let change_weapon = -1; //切り替える対象の武器
+        // 残りは上から順番に選択
+        let selected_weapon = locked_weapon;
+        for (let i=0; i<optimizer_target.weapon.length; i++) {
+          if (optimizer_target.weapon[i].skill_slot[0] == "cosmos" || optimizer_target.weapon[i].skill_slot[1] == "cosmos") {
+            break; // コスモス武器は除外
+          }
+          if (optimizer_target.weapon[i].locked == false) {
+            optimizer_target.weapon[i].selected = true;
+            selected_weapon++;
+            if (selected_weapon == WEAPON_CHECKED_MAX) break;
+          }
+        }
 
-          // 選択済でない場合は切り替え対象でないのでスキップ
-          if (optimizer_target.weapon[i].selected == false) continue;
+        // 更新がされなくなるまでループ
+        while (1) {
+          // 変化フラグ初期化
+          change_flag = false;
 
-          // 現在の攻撃力を一旦記憶
-          let calc_weapon = optimizer_target.weapon.filter(function(val) {
-            return (val instanceof Object && val.selected);
-          });
+          // 武器10本を順番に切り替えて今より強くなるかを判断
+          for (let i=0; i<optimizer_target.weapon.length; i++) {
 
-          let param = Object.assign({}, optimizer_target.basic_info, {
-            weapon: calc_weapon.slice(0,10),
-            summon: temp_summon.slice(0,5),
-            friend: temp_friend
-          });
+            let change_weapon = -1; //切り替える対象の武器
 
-          max_result = calculate_atkval(param, JOB_DATA).total_atk;
+            // 選択済でない場合は切り替え対象でないのでスキップ
+            if (optimizer_target.weapon[i].selected == false) continue;
+            // その武器がロックされている場合も切り替え対象でないのでスキップ
+            if (optimizer_target.weapon[i].locked == true) continue;
 
-          optimizer_target.weapon[i].selected = false; // 切り替えてテストするために一旦選択を外す
-          
-          // 指定した武器に対して、現在装備していない武器を切り替えてテスト
-          for (let j=0; j<optimizer_target.weapon.length; j++) {
-
-            // 自分自身か、もしくは選択済である場合はスキップ
-            if (i == j || optimizer_target.weapon[j].selected == true) continue;
-            
-            optimizer_target.weapon[j].selected = true;
-            
-            temp_weapon = optimizer_target.weapon.filter(function(val) {
+            // 現在の攻撃力を一旦記憶
+            let calc_weapon = optimizer_target.weapon.filter(function(val) {
               return (val instanceof Object && val.selected);
             });
 
             let param = Object.assign({}, optimizer_target.basic_info, {
-              weapon: temp_weapon.slice(0,10),
+              weapon: calc_weapon.slice(0,10),
               summon: temp_summon.slice(0,5),
               friend: temp_friend
             });
 
-            let result = calculate_atkval(param, JOB_DATA);
+            max_result = calculate_atkval(param, JOB_DATA).total_atk;
+
+            optimizer_target.weapon[i].selected = false; // 切り替えてテストするために一旦選択を外す
             
-            // 切り替えた結果が上回っているかどうかの判定
-            if (max_result < result.total_atk) {
-              change_weapon = j;
-              max_result = result.total_atk;
+            // 指定した武器に対して、現在装備していない武器を切り替えてテスト
+            for (let j=0; j<optimizer_target.weapon.length; j++) {
+
+              // 自分自身か、もしくは選択済である場合はスキップ
+              if (i == j || optimizer_target.weapon[j].selected == true) continue;
+              
+              optimizer_target.weapon[j].selected = true;
+              
+              temp_weapon = optimizer_target.weapon.filter(function(val) {
+                return (val instanceof Object && val.selected);
+              });
+
+              let param = Object.assign({}, optimizer_target.basic_info, {
+                weapon: temp_weapon.slice(0,10),
+                summon: temp_summon.slice(0,5),
+                friend: temp_friend
+              });
+
+              let result = calculate_atkval(param, JOB_DATA);
+              
+              // 切り替えた結果が上回っているかどうかの判定
+              if (max_result < result.total_atk) {
+                change_weapon = j;
+                max_result = result.total_atk;
+              }
+              
+              optimizer_target.weapon[j].selected = false; // 切り替えテストが終わったので一旦選択から外す
+            }
+            if (change_weapon != -1) {
+              optimizer_target.weapon[change_weapon].selected = true; // 武器を切り替えるために選択状態にする
+              change_flag = true;
+            } else {
+              optimizer_target.weapon[i].selected = true; // 切り替える必要がなかったため、元に戻す
             }
             
-            optimizer_target.weapon[j].selected = false; // 切り替えテストが終わったので一旦選択から外す
           }
-          if (change_weapon != -1) {
-            optimizer_target.weapon[change_weapon].selected = true; // 武器を切り替えるために選択状態にする
-            change_flag = true;
-          } else {
-            optimizer_target.weapon[i].selected = true; // 切り替える必要がなかったため、元に戻す
-          }
-          
-        }
 
-        // 一度も切り替えが無かった場合は終了して次の召喚へ
-        if (change_flag == false) break;
+          // 一度も切り替えが無かった場合は終了して次のチェックへ
+          if (change_flag == false) break;
+        }
       }
       
       if (max_result > final_result) {
