@@ -33,8 +33,44 @@ import styles from "calculator.css";
 // 内部では渡されたpropsから実際に計算している
 // このpropsで渡されたパラメータは正しい(形式に沿っている)ことが前提
 class Result extends Component {
+
+  // コンストラクタ
+  // 主にstateの初期化
+  constructor(props) {
+    super(props);
+    this.state = {
+      before: {
+        basic_atk: 0,
+        showed_atk: 0,
+        total_atk: 0
+      },
+      after: {
+        basic_atk: 0,
+        showed_atk: 0,
+        total_atk: 0
+      }
+    };
+  }
+
+  // コンポーネントのpropsが更新された時に呼びだされる
+  // ここではstateに計算結果の前後を入れる
+  componentWillReceiveProps(nextProps) {
+    let calc_result = calculate_atkval(nextProps.parameter, this.props.job);
+    // もしも総合攻撃力が更新されたのならstateを更新する
+    if (this.state.after.total_atk != calc_result.total_atk) {
+      this.setState({ before: Object.assign({}, this.state.after) });
+      this.setState({ after: {
+        basic_atk: calc_result.basic_atk,
+        showed_atk: calc_result.showed_atk,
+        total_atk: calc_result.total_atk
+      }});
+    }
+  }
+
+  // 実際に描画する
   render() {
-    var res = calculate_atkval(this.props.parameter, this.props.job);
+    let res = this.state.after;
+    let bef = this.state.before;
     let t_header = "calculator.result.";
     return (
       <section>
@@ -43,15 +79,15 @@ class Result extends Component {
           <tbody>
             <tr styleName="row">
               <Translate component="th" styleName="header" content={ t_header+"basic_atk" } />
-              <td styleName="result">{res.basic_atk}</td>
+              <td styleName="result">{res.basic_atk} ({res.basic_atk - bef.basic_atk})</td>
             </tr>
             <tr styleName="row">
               <Translate component="th" styleName="header" content={ t_header+"showed_atk" } />
-              <td styleName="result">{res.showed_atk}</td>
+              <td styleName="result">{res.showed_atk} ({res.showed_atk - bef.showed_atk})</td>
             </tr>
             <tr styleName="row">
               <Translate component="th" styleName="header" content={ t_header+"total_atk" } />
-              <td styleName="result">{res.total_atk}</td>
+              <td styleName="result">{res.total_atk} ({res.total_atk - bef.total_atk})</td>
             </tr>
           </tbody>
         </table>
