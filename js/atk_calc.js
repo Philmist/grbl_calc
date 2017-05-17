@@ -58,7 +58,7 @@
     }, ...
   }
 */
-export default function calculate_atkval (param_obj, job_data) {
+export function calculate_atkval (param_obj, job_data) {
   // 攻撃力の定義
   let showed_atk = 0;
   let basic_atk = 0;
@@ -499,4 +499,76 @@ export default function calculate_atkval (param_obj, job_data) {
     "showed_atk": showed_atk,
     "total_atk": total_atk
   };
+}
+
+
+// 武器1つのオブジェクトが妥当な形式かチェックする
+export function is_valid_weapon_obj(weapon_obj) {
+  if (!(weapon_obj instanceof Object)) {
+    return false;
+  }
+  let weapon_keys = Object.keys(weapon_obj);
+  // 攻撃力
+  if (!(weapon_keys.includes("atk") && weapon_obj.atk >= 0)) {
+    return false;
+  }
+  // 武器種別
+  if (!(weapon_keys.includes("type") && typeof weapon_obj.type == "string")) {
+    return false;
+  }
+  // スキルレベル
+  if (!(weapon_keys.includes("skill_level") && weapon_obj.skill_level >= 0)) {
+    return false;
+  }
+  // スキル種別
+  if (!(weapon_keys.includes("skill_type") && weapon_obj.skill_type instanceof Array)) {
+    return false;
+  } else {
+    for (let i = 0; i < weapon_obj.skill_type.length; i++) {
+      if (!(typeof weapon_obj.skill_type[i] == "string")) {
+        return false;
+      }
+    }
+  }
+  // スキル種別
+  if (!(weapon_keys.includes("skill_slot") && weapon_obj.skill_type instanceof Array)) {
+    return false;
+  } else {
+    for (let i = 0; i < weapon_obj.skill_type.length; i++) {
+      if (!(typeof weapon_obj.skill_type[i] == "string")) {
+        return false;
+      }
+    }
+  }
+  // チェックを全部パスした
+  return true;
+}
+
+
+// 召喚1つのオブジェクトが妥当な形式かをチェックする
+export function is_valid_summon_obj(summon_obj) {
+  // 攻撃力
+  if (!(summon_obj.atk >= 0)) {
+    return false;
+  }
+
+  // 加護
+  if (!(summon_obj.skill instanceof Array)) {
+    return false;
+  }
+  for (let i = 0; i < summon_obj.skill.length; i++) {
+    let chk_val = summon_obj.skill[i];
+    if (!(chk_val instanceof Object)) {
+      return false;
+    }
+    if (!(chk_val.hasOwnProperty("type") && typeof chk_val.type == "string")) {
+      return false;
+    }
+    if (!(chk_val.hasOwnProperty("percent") && chk_val.percent >= 0)) {
+      return false;
+    }
+  }
+
+  // チェックを全て通った
+  return true;
 }

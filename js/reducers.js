@@ -99,6 +99,9 @@ export function weapon(state, action) {
     let target = ret_state[action.from];
     ret_state.splice(action.from, 1);
     ret_state.splice(action.to, 0, target);
+  } else if (action.type == RC.weapon.SORT && action.to_array.length === state.length) {  //< 武器を指定された順番に変更
+    ret_state = [];
+    action.to_array.forEach((v) => { ret_state.push(state[v]); });
   } else if (action.type == RC.weapon.DANGER_REPLACE) {
     ret_state = Array.from(action.value);
   }
@@ -176,6 +179,10 @@ export function summon(state, action) {
     state.splice(action.from, 1);
     state.splice(action.to, 0, target);
     state = Array.from(state);
+  } else if (action.type == RC.summon.SORT && action.to_array.length === state.length) {  //< 武器を指定された順番に変更
+    let ret_state = [];
+    action.to_array.forEach((v) => { ret_state.push(state[v]); });
+    state = ret_state;
   } else if (action.type == RC.summon.DANGER_REPLACE) {
     state = Array.from(action.value);
   }
@@ -241,6 +248,10 @@ export function friend(state, action) {
     state.splice(action.from, 1);
     state.splice(action.to, 0, target);
     state = Array.from(state);
+  } else if (action.type == RC.friend.SORT && action.to_array.length === state.length) {  //< 武器を指定された順番に変更
+    let ret_state = [];
+    action.to_array.forEach((v) => { ret_state.push(state[v]); });
+    state = ret_state;
   } else if (action.type == RC.friend.DANGER_REPLACE) {
     state = Array.from(action.value);
   }

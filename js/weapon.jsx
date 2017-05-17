@@ -16,6 +16,7 @@ import Translate from "react-translate-component";
 let _t = Translate.translate;
 
 import ItemTypes from "./const/item_types";
+import { WEAPON_CHECKED_MAX } from "./const/number_const.js";
 import {
   WEAPON_KIND,
   SKILL_SLOT,
@@ -71,7 +72,7 @@ class Weapon extends Component {
 };
 // 色々繋げる
 Weapon = CSSModules(Weapon, styles);
-export default connect((state) => { return { inputlock: state.inputlock ? true : false }; })(Weapon);
+export default connect((state) => { return { inputlock: (state.inputlock > 0) ? true : false }; })(Weapon);
 
 
 // 武器テーブルのヘッダ
@@ -101,7 +102,7 @@ WeaponTableHeader = CSSModules(WeaponTableHeader, styles);
 // 武器並び全体にプロパティを注入する関数
 // reduxのstoreからstateを取りだす
 function mapStateToWeaponTableBodyProps(state) {
-  // どれが最初のenabledな武器かをチェックする
+  // どれが最初のenabledな武器かをチェックし、チェックされている武器の数を数える
   return {
     weapon: state.weapon,  // indexを使うために必要
     checked_length: (state.weapon.filter( i => i.selected )).length
@@ -216,7 +217,6 @@ var mapActionCreatorsToWeaponRowProps = {
   set_weapon_skill_type,
   set_weapon_skill_lv
 };
-const WEAPON_CHECKED_MAX = 10;
 
 
 // 武器の1行を表わすコンポーネント

@@ -20,9 +20,10 @@ import Weapon from "./weapon.jsx";
 import Summon from "./summon.jsx";
 import Friend from "./friend.jsx";
 import System from "./system.jsx";
+import Optimizer from "./optimizer.jsx";
 
 import * as REDCONST from "./const/reducer_type.js";
-import calculate_atkval from "./atk_calc.js";
+import { calculate_atkval } from "./atk_calc.js";
 import { fetch_job_data } from "./actions.js";
 
 import styles from "calculator.css";
@@ -32,8 +33,44 @@ import styles from "calculator.css";
 // 内部では渡されたpropsから実際に計算している
 // このpropsで渡されたパラメータは正しい(形式に沿っている)ことが前提
 class Result extends Component {
+
+  // コンストラクタ
+  // 主にstateの初期化
+  constructor(props) {
+    super(props);
+    this.state = {
+      before: {
+        basic_atk: 0,
+        showed_atk: 0,
+        total_atk: 0
+      },
+      after: {
+        basic_atk: 0,
+        showed_atk: 0,
+        total_atk: 0
+      }
+    };
+  }
+
+  // コンポーネントのpropsが更新された時に呼びだされる
+  // ここではstateに計算結果の前後を入れる
+  componentWillReceiveProps(nextProps) {
+    let calc_result = calculate_atkval(nextProps.parameter, this.props.job);
+    // もしも総合攻撃力が更新されたのならstateを更新する
+    if (this.state.after.total_atk != calc_result.total_atk) {
+      this.setState({ before: Object.assign({}, this.state.after) });
+      this.setState({ after: {
+        basic_atk: calc_result.basic_atk,
+        showed_atk: calc_result.showed_atk,
+        total_atk: calc_result.total_atk
+      }});
+    }
+  }
+
+  // 実際に描画する
   render() {
-    var res = calculate_atkval(this.props.parameter, this.props.job);
+    let res = this.state.after;
+    let bef = this.state.before;
     let t_header = "calculator.result.";
     return (
       <section>
@@ -42,15 +79,15 @@ class Result extends Component {
           <tbody>
             <tr styleName="row">
               <Translate component="th" styleName="header" content={ t_header+"basic_atk" } />
-              <td styleName="result">{res.basic_atk}</td>
+              <td styleName="result">{res.basic_atk} ({res.basic_atk - bef.basic_atk})</td>
             </tr>
             <tr styleName="row">
               <Translate component="th" styleName="header" content={ t_header+"showed_atk" } />
-              <td styleName="result">{res.showed_atk}</td>
+              <td styleName="result">{res.showed_atk} ({res.showed_atk - bef.showed_atk})</td>
             </tr>
             <tr styleName="row">
               <Translate component="th" styleName="header" content={ t_header+"total_atk" } />
-              <td styleName="result">{res.total_atk}</td>
+              <td styleName="result">{res.total_atk} ({res.total_atk - bef.total_atk})</td>
             </tr>
           </tbody>
         </table>
@@ -105,26 +142,31 @@ class CalculatorBody extends Component {
   }
   // 実際に要素をレンダリングするための関数
   render() {
-    var { job, params } = this.props;  // var job = this.props.job; (略)
+    let { job, params } = this.props;  // var job = this.props.job; (略)
     return (
       <div styleName="whole_app">
-        <div styleName="header_box">
+        <div styleName="title_header">
           <Translate component="header" styleName="whole_title" content="calculator.title" />
         </div>
         <div styleName="calculator_box">
-          <div styleName="left_box">
-            <BasicInformation />
-            <Zenith />
-            <Result job={job} parameter={params} />
-            <System />
+          <div styleName="calculator_row">
+            <div styleName="left_box">
+              <BasicInformation />
+              <Zenith />
+              <Result job={job} parameter={params} />
+              <System />
+            </div>
+            <div styleName="right_box">
+              <Weapon />
+              <Summon />
+              <Friend />
+            </div>
           </div>
-          <div styleName="right_box">
-            <Weapon />
-            <Summon />
-            <Friend />
+          <div styleName="footer_box">
+            <Optimizer />
           </div>
         </div>
-        <div styleName="footer_box">
+        <div styleName="footer">
           <ul styleName="nav">
             <li styleName="nav-item"><a href="http://hibin0.web.fc2.com/grbr_weapon_calc/weapon_calc.html">オススメ装備に自信ニキ</a></li>
             <li styleName="nav-item"><a href="http://hibin0.web.fc2.com/">トップページ</a></li>
